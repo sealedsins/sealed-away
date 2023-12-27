@@ -1,0 +1,248 @@
+config:
+  title:
+    buttons:
+      - label: Author
+        link: https://linktr.ee/sealedsins
+    images:
+      - src: !inc /title/background.jpg
+        style:
+          object-fit: cover
+          object-position: center
+          height: 100%
+          width: 100%
+          left: 0
+          top: 0
+      - src: !inc /title/foreground.png
+        style:
+          object-fit: cover
+          object-position: center
+          height: 100%
+          width: 100%
+          left: 0
+          top: 0
+      - src: !inc /title/logo-left.png
+        media:
+          mobile: false
+          tablet: false
+        style:
+          filter: 'drop-shadow(0px 0px 15px #FFFFFF66)'
+          width: 25vw
+          height: 20vh
+          left: 8.5vw
+          top: 36.5vh
+      - src: !inc /title/logo-right.png
+        media:
+          mobile: false
+          tablet: false
+        style:
+          filter: 'drop-shadow(0px 0px 15px #FFFFFF66)'
+          width: 25vw
+          height: 20vh
+          right: 8.5vw
+          top: 36.5vh
+      - src: !inc /title/logo-tablet.png
+        media:
+          desktop: false
+          mobile: false
+        style:
+          filter: 'drop-shadow(0px 0px 15px #FFFFFF66)'
+          width: 85vw
+          height: 20vh
+          max-height: 80px
+          left: 7.5vw
+          top: 3.5em
+      - src: !inc /title/logo-mobile.png
+        media:
+          desktop: false
+          tablet: false
+        style:
+          filter: 'drop-shadow(0px 0px 15px #FFFFFF66)'
+          width: 85vw
+          height: 20vh
+          left: 7.5vw
+          top: 1.75vh
+script:
+  # Section: Start.
+  - label: start
+  - page:
+      background:
+        position: center
+        color: '#000'
+      text: |
+        * DING! *
+  - page:
+      background:
+        image: !inc /cutscene/intro/box-closed.jpg
+      text: |
+        Althea stood before the massive black box with the "Succubus Technologies" label, heart racing with anticipation.
+        She had been waiting months for this moment, and now it was finally here.
+  - page:
+      text: |
+        With a deep breath, she raised the lid, unveiling what lay inside.
+  - page:
+      background:
+        image: !inc /cutscene/intro/box-open.jpg
+      text: |
+        The skin in the box was a deep, rich scarlet, and as Althea gazed upon it, she was struck by how lifelike it looked. The shade of red seemed to shift and shimmer in the ambient light, casting a captivating, almost hypnotic glow.
+  - page:
+      text: |
+        The horns on the headpiece were short and sharp, and the long, tapered tail snaked around the legs of the suit in a sinuous curve. The material shimmered in the light, appearing as if it were almost alive.
+  - page:
+      text: |
+        Althea's hands trembled as she reached into the box, running her fingers over the smooth, stretchy material. The suit felt cool and supple against her skin, sending a shiver of excitement down her spine.
+  - page:
+      text: |
+        She marveled at the suit's intricate design, admiring the way the red material seemed to glow in the dim light of her apartment.
+
+  # Section: Box open.
+  - label: boxOpen
+  - page:
+      text: |
+        She couldn't wait to try it on.
+  - menu:
+      Examine:
+        - page:
+            text: |
+              As Althea took a closer look at the suit, she started to notice the intricate details that had been incorporated into its design. The surface was adorned with subtle patterns that resemble the delicate texture of scales, giving it an even more alluring and exotic appearance...
+        - page:
+            text: |
+              ...and the horns on the headpiece were not just for show - they were made of a slightly firmer, yet still flexible material. As she ran her fingers over them, she could feel the intricate ridges and curves, giving them a tactile and realistic feel.
+        - page:
+            text: |
+              As Althea's gaze trailed down the suit, she could not help but notice the strategic placement of sheaths in the crotch area. They are seamlessly integrated into the design, allowing for easy access without compromising the suit's aesthetic.
+        - page:
+            text: |
+              Creators of this suit had thought of every detail, making it clear that it was meant for more than just a visual transformation.
+        - jump: boxOpen
+      Undress:
+        - jump: undress
+
+  # Section: Undress.
+  - label: undress
+  - page:
+      text: |
+        Althea's fingers glided over the suit, captivated by the way it responded to her touch. She could feel her heart racing with excitement as she imagined herself wearing it, transforming into a seductive, otherworldly creature.
+  - page:
+      background:
+        position: top
+        image: !inc /cutscene/intro/undressing.jpg
+      text: |
+        Althea reached for the hem of her shirt and slowly pulled it over her head. She kicked off her shoes and slipped out of her shorts, leaving her standing completely naked.
+  - page:
+      # background:
+      #   image: !inc /cutscene/intro/undressing-back.jpg
+      text: |
+        The air in the room felt cool against her bare skin, making her shiver with anticipation.
+      # text: |
+      # As she slid into the suit, Althea couldn't help but gasp at the sensation of the laminate sliding over her legs. It was like nothing she had ever felt before - it was incredibly soft and pliant, unlike any other ordinary clothing.
+  # - page:
+  - page:
+      background:
+        image: !inc /cutscene/intro/suit-thighs.jpg
+      text: |
+        With a deep breath, Althea reached for the folded skin in front of her, feeling it yield to her touch as she carefully started to pull it on. She carefully glided the suit up over her thighs, feeling how it mould itself to her body, the stretchy material hugging her curves and accentuating her figure in all the right places.
+  - page:
+      text: |
+        Althea gasped as she felt the suit tighten around her waist, the corset-like design cinching her in and making her feel almost weightless. The material clung to her curves, enhancing her natural shape and making her feel more powerful and alluring than ever before.
+  - page:
+      background:
+        image: !inc /cutscene/intro/suit-gloves.jpg
+      text: |
+        Finally, she have reached the end of the attached gloves with a long black nails and paused to take a look at herself in a wall mirror.
+
+  # Section: Mirror.
+  - label: mirror
+  - page:
+      background:
+        image: !inc /cutscene/intro/suit-no-mask.jpg
+      text: |
+        The suit had completely transformed her body below the neck, leaving her feeling like a being from another dimension. She ran her hands over the smooth surface of the suit, feeling the way it seemed to merge with her skin.
+  - page:
+      background:
+        image:
+      text: |
+        Finally, she slid the mask of the suit up over her head. The cool, smooth material caressed her cheeks and chin, and she shivered as she felt it slide over her lips, sealing her mouth in a tight, sensual embrace.
+  - page:
+      text: |
+        With one last deep breath, she pulled up the back zipper, encasing herself inside the suit.
+
+  # Section: Transformed.
+  - label: transformed
+  - page:
+      background:
+        image: !inc /cutscene/intro/suit-mask-1.jpg
+      text: |
+        As she opened her eyes, Althea gasped in amazement.
+  - page:
+      text: |
+        Her face had been transformed into that of a demonic succubus, complete with red skin, horns, and glowing yellow eyes that seemed to pierce the darkness around her.
+  - page:
+      background:
+        image: !inc /cutscene/intro/suit-mask-2.jpg
+      text: |
+        The mask covered her entire face, the material stretching tight over her features to give her an almost otherworldly appearance.
+  - page:
+      text: |
+        Althea admired herself in the mirror, turning her head from side to side to take in every detail of her new demonic face. She couldn't believe how different she looked - it was like she had been reborn as a completely new person.
+  - page:
+      text: |
+        Her reflection seemed to glow with an otherworldly energy, and she knew that she was ready to explore the darker side of her desires.
+  - page:
+      background:
+        image: !inc /cutscene/intro/suit-mask-3.jpg
+      text: |
+        She smiled at herself in the mirror, feeling the surge of power that the suit had given her. It was as if she had stepped into a new identity, one that was both thrilling and dangerous.
+  - page:
+      text: |
+        The suit fit her like a glove, hugging every curve of her body and accentuating her every feature. The sensation was intoxicating, and she couldn't resist the urge to explore her new form.
+  - page:
+      background:
+        image: !inc /cutscene/intro/masturbating-top.jpg
+      text: |
+        Althea traced the curve of her breasts, feeling the material compress and release with each breath. The sensation was incredible, and she couldn't help but moan softly as she traced the curve of her cleavage. Her fingers then traveled down to her waist, feeling the tightness of the corset-like design that cinched her in and highlighted her curves.
+  - page:
+      background:
+        image: !inc /cutscene/intro/masturbating-bottom.jpg
+      text: |
+        As she reached the groin area, Althea hesitated for a moment. She wondered how the artificial vagina would feel and what kind of pleasure it would bring her. After a moment of hesitation, she couldn't resist any longer and carefully pushed the sheath into her body, feeling it slide in smoothly.
+  - page:
+      text: |
+        At first, there was a moment of discomfort as her body adjusted to the foreign object, but soon the sensation turned to pleasure, and Althea let out a soft moan. The pressure of the suit against her skin was exhilarating, making her feel like she was being enveloped in a cocoon of pleasure.
+  - page:
+      text: |
+        Her fingers worked their way deeper inside her, her breath coming in short, shallow gasps as she lost herself in the pleasure of the moment. She could feel the material of her second skin tightening and relaxing around her, almost as if it was responding to her every movement.
+  - page:
+      background:
+        image: !inc /cutscene/intro/masturbating-bottom-dark.jpg
+      text: |
+        Althea's hand moved faster, her fingers working in and out of herself with increasing speed and urgency. The sensation of the material rubbing against her clit was driving her wild, sending shivers of pleasure through her body.
+  - page:
+      text: |
+        She moaned louder, her eyes closing as the pleasure built to an almost unbearable level. Althea felt her body start to tense up, her toes curling as she approached the edge of orgasm.
+  - page:
+      text: |
+        And then it hit her - a wave of pure, intense pleasure that swept over her like a tidal wave. Althea's entire body convulsed with pleasure as she came, her fingers still buried deep inside her.
+  - page:
+      background:
+        image:
+      text: |
+        For a few blissful moments, she was lost in the sensation, completely consumed by the pleasure that the suit had given her.
+  - page:
+      background:
+        image:
+      text: |
+        But as the waves of pleasure slowly receded, Althea felt herself starting to slip away. Her body went limp as she fell to the bed behind her, her mind consumed by the pleasure.
+  - page:
+      text: |
+        For a moment, she lay there, her body writhing with the aftershocks of the orgasm.
+        But as the sensations began to ebb away, Althea's eyes fluttered closed, and she passed out.
+  - page:
+      name: Narrator
+      text: |
+        So... That's how the v0.1 demo ends. 
+        I hope you enjoyed it.
+  - page:
+      name: Narrator
+      text: |
+        I believe this won't be the last time we meet.
+        See you later!

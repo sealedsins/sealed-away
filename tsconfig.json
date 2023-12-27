@@ -1,0 +1,14 @@
+{
+	"extends": "@tsconfig/recommended/tsconfig.json",
+	"compilerOptions": {
+		"strict": true,
+		"module": "esnext",
+		"moduleResolution": "node",
+		"types": ["jest", "vite/client", "vue"],
+		"noUncheckedIndexedAccess": true,
+		"noFallthroughCasesInSwitch": true,
+		"exactOptionalPropertyTypes": false,
+		"noImplicitOverride": true,
+		"resolveJsonModule": true
+	}
+}

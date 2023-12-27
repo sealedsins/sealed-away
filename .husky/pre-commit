@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# npx --no-install lint-staged
+npm run format-check
+npm run test
+npm run todo
