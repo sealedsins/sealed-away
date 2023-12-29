@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import TitleImage from '../components/image.vue';
 import TitleButton from '../components/button.vue';
 import { useScene, useParser } from '../stores';
 import { onKeydown } from '../utils/input';
@@ -39,7 +40,7 @@ onKeydown((e) => {
 <template>
 	<div class="menu">
 		<div class="menu__images">
-			<img
+			<TitleImage
 				v-for="image in images"
 				:src="image.src"
 				:style="image.style"

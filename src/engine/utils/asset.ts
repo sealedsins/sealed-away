@@ -1,7 +1,7 @@
 /**
  * Sealed Sins, 2023.
  */
-const assets = import.meta.glob('/assets/**/*', { eager: true, as: 'url' });
+export const assets = import.meta.glob('/assets/**/*', { eager: true, as: 'url' });
 
 /**
  * Resolves full path to the given asset.
@@ -51,17 +51,3 @@ export const readAsText = (src: Blob) =>
 		reader.onloadend = () => resolve(reader.result as string);
 		reader.onerror = () => reject();
 	});
-
-/**
- * Prefetch known resources.
- */
-export const prefetch = () => {
-	Object.keys(assets).map((key) => {
-		const fullSrc = assets[key]!;
-		const link = document.createElement('link');
-		link.href = fullSrc;
-		link.rel = 'prefetch';
-		link.as = 'fetch';
-		document.head.appendChild(link);
-	});
-};

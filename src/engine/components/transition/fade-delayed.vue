@@ -7,7 +7,7 @@
 <style scoped lang="scss">
 .transition-fade-delayed-enter-active,
 .transition-fade-delayed-leave-active {
-	transition: opacity 0.25s ease-in-out;
+	transition: opacity 0.75s ease-in-out;
 }
 
 .transition-fade-delayed-enter-from,

@@ -2,20 +2,35 @@
 import { storeToRefs } from 'pinia';
 import { shallowRef, onMounted, onErrorCaptured } from 'vue';
 import TransitionFadeDelayed from './components/transition/fade-delayed.vue';
-import { useParser, useScene } from './stores';
+import { useCache, useParser, useScene } from './stores';
 
+import LoadingView from './views/loading.vue';
 import TitleView from './views/title.vue';
 import SceneView from './views/scene.vue';
-import FatalView from './views/fatal.vue';
+import ErrorView from './views/error.vue';
 
 const props = defineProps<{
 	src: string;
 }>();
 
+const cache = useCache();
 const { scene } = storeToRefs(useScene());
 const parser = useParser();
 
 const error = shallowRef<Error>();
+const ready = shallowRef(false);
+
+const isDevMode = import.meta.env.DEV;
+const loadGame = async () => {
+	if (isDevMode) {
+		console.log('Development mode is detected, disabling asset preloading.');
+		await parser.fetch(props.src);
+	} else {
+		console.log('Loading game assets...');
+		await cache.loadAll();
+		await parser.fetch(props.src);
+	}
+};
 
 onErrorCaptured((err) => {
 	error.value = err;
@@ -24,16 +39,19 @@ onErrorCaptured((err) => {
 
 onMounted(async () => {
 	try {
-		await parser.fetch(props.src);
+		await loadGame();
 	} catch (err) {
 		error.value = err as Error;
+	} finally {
+		ready.value = true;
 	}
 });
 </script>
 
 <template>
-	<TransitionFadeDelayed appear mode="out-in" :style="{ transitionDuration: '.5s' }">
-		<FatalView v-if="error" :error="error" />
+	<TransitionFadeDelayed mode="out-in">
+		<LoadingView v-if="!ready && !isDevMode" />
+		<ErrorView v-else-if="error" :error="error" />
 		<SceneView v-else-if="scene" />
 		<TitleView v-else />
 	</TransitionFadeDelayed>

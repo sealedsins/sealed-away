@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, watchEffect } from 'vue';
+import { ref, computed } from 'vue';
 import { onKeydown } from '../utils/input';
 import { useScene } from '../stores';
 
 import TransitionFade from '../components/transition/fade.vue';
 import SceneButton from '../components/button.vue';
-import SceneBackground from '../components/scene/background.vue';
+import SceneImage from '../components/image.vue';
 import SceneTypewriter from '../components/scene/typewriter.vue';
 import ScenePause from '../components/scene/pause.vue';
 
@@ -58,12 +58,13 @@ onKeydown((e) => {
 </script>
 
 <template>
-	<div v-if="state" class="scene">
-		<SceneBackground
+	<div v-if="state" class="scene" :style="{ backgroundColor: state.background.color }">
+		<SceneImage
+			class="background"
 			:src="state.background.image ?? undefined"
 			:style="{
-				backgroundPosition: state.background.position,
-				backgroundColor: state.background.color,
+				transition: 'opacity 0.5s ease-in-out, object-position 2.5s ease-in-out',
+				objectPosition: state.background.position,
 			}"
 		/>
 		<TransitionFade>
@@ -127,6 +128,16 @@ $interface-width: 1100px;
 	@media (max-width: $breakpoint-mobile) {
 		font-size: 14.5px;
 	}
+}
+
+.background {
+	position: absolute;
+	object-fit: cover;
+
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
 }
 
 .interface {
