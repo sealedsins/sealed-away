@@ -1,6 +1,6 @@
 <template>
 	<div class="loading">
-		<div class="loading__title">Loading...</div>
+		<div class="loading__title">Loading…</div>
 		<font-awesome-icon class="loading__icon" icon="fa-solid fa-spinner" />
 	</div>
 </template>
@@ -20,8 +20,9 @@
 	justify-content: center;
 	align-items: center;
 
-	font-size: 1.5em;
-	letter-spacing: 0.125em;
+	font-size: 1.25em;
+	font-weight: 100;
+	letter-spacing: 0.075em;
 	color: #fff;
 
 	width: 100%;
@@ -30,7 +31,7 @@
 	top: 0;
 
 	&__title {
-		margin-bottom: 0.75em;
+		margin-bottom: 0.65em;
 	}
 
 	&__icon {
