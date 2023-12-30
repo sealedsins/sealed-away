@@ -185,6 +185,17 @@ export class Scene extends Script {
 				this.setMenu(keys.map((x) => ({ id: camelCase(x), label: x, code: data[x]! })));
 				break;
 			}
+			case 'play': {
+				const argSchema = zod.object({
+					path: zod.string(),
+					volume: zod.number().optional(),
+				});
+				const sound = argSchema.parse(this.eval(args));
+				const audio = new Audio(sound.path);
+				audio.volume = sound.volume ?? 1.0;
+				audio.play();
+				break;
+			}
 			default: {
 				super.exec(value);
 				break;

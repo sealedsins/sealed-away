@@ -122,6 +122,9 @@ script:
   - page:
       text: |
         Althea's fingers glided over the suit, captivated by the way it responded to her touch. She could feel her heart racing with excitement as she imagined herself wearing it, transforming into a seductive, otherworldly creature.
+  - play:
+      path: !inc /audio/equip.ogg
+      volume: 0.35
   - page:
       background:
         position: top
@@ -162,6 +165,9 @@ script:
         image:
       text: |
         Finally, she slid the mask of the suit up over her head. The cool, smooth material caressed her cheeks and chin, and she shivered as she felt it slide over her lips, sealing her mouth in a tight, sensual embrace.
+  - play:
+      path: !inc /audio/zipper.ogg
+      volume: 0.35
   - page:
       text: |
         With one last deep breath, she pulled up the back zipper, encasing herself inside the suit.

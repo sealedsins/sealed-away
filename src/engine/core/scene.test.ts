@@ -121,4 +121,18 @@ describe('Scene', () => {
 			text: 'Nice choice! You have picked B.',
 		});
 	});
+
+	it('implements `play` command', () => {
+		const scene = new Scene([{ label: 'start' }, { play: { path: 'test' } }]);
+
+		const playMock = jest.fn();
+		window.HTMLMediaElement.prototype.play = playMock;
+
+		scene.next({ type: 'next' });
+		scene.next({ type: 'next' });
+
+		expect(scene.isDone()).toEqual(true);
+		expect(playMock).toBeCalled();
+		playMock.mockRestore();
+	});
 });
