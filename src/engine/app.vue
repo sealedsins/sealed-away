@@ -32,6 +32,13 @@ const loadGame = async () => {
 	}
 };
 
+const loadMeta = async () => {
+	const meta = parser.data?.config?.meta;
+	if (meta) {
+		document.title = meta.title ?? document.title;
+	}
+};
+
 onErrorCaptured((err) => {
 	error.value = err;
 	return false;
@@ -40,6 +47,7 @@ onErrorCaptured((err) => {
 onMounted(async () => {
 	try {
 		await loadGame();
+		await loadMeta();
 	} catch (err) {
 		error.value = err as Error;
 	} finally {

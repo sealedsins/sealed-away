@@ -12,6 +12,9 @@ import * as asset from '../utils/asset';
  */
 // prettier-ignore
 export const ConfigSchema = zod.object({
+	meta: zod.object({
+		title: zod.string(),
+	}),
 	title: zod.object({
 		buttons: zod.array(
 			zod.object({

@@ -1,4 +1,6 @@
 config:
+  meta:
+    title: Sealed Away
   title:
     buttons:
       - label: Author
