@@ -38,28 +38,28 @@ onKeydown((e) => {
 </script>
 
 <template>
-	<div class="menu">
-		<div class="menu__images">
+	<div class="title">
+		<div class="title__images">
 			<TitleImage
 				v-for="image in images"
 				:src="image.src"
 				:style="image.style"
 				:class="[
-					'menu__image',
+					'title__image',
 					{
-						['menu__image--hide-desktop']: image.media?.desktop === false,
-						['menu__image--hide-tablet']: image.media?.tablet === false,
-						['menu__image--hide-mobile']: image.media?.mobile === false,
+						['title__image--hide-desktop']: image.media?.desktop === false,
+						['title__image--hide-tablet']: image.media?.tablet === false,
+						['title__image--hide-mobile']: image.media?.mobile === false,
 					},
 				]"
 			/>
 		</div>
-		<div class="menu__buttons">
-			<TitleButton class="menu__button" @click="handleStart"> Start </TitleButton>
-			<TitleButton class="menu__button" @click="handleLoad" disabled> Load </TitleButton>
+		<div class="title__buttons">
+			<TitleButton class="title__button" @click="handleStart"> Start </TitleButton>
+			<TitleButton class="title__button" @click="handleLoad" disabled> Load </TitleButton>
 			<TitleButton
 				v-for="button in buttons"
-				class="menu__button"
+				class="title__button"
 				@click="handleButton(button)"
 			>
 				{{ button.label }}
@@ -72,7 +72,7 @@ onKeydown((e) => {
 @import '../styles/mixins.scss';
 $interface-width: 1100px;
 
-.menu {
+.title {
 	display: flex;
 	position: absolute;
 	background: #333;

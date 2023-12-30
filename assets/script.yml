@@ -12,14 +12,14 @@ config:
           width: 100%
           left: 0
           top: 0
-      - src: !inc /title/foreground.png
-        style:
-          object-fit: cover
-          object-position: center
-          height: 100%
-          width: 100%
-          left: 0
-          top: 0
+      # - src: !inc /title/foreground.png
+      #   style:
+      #     object-fit: cover
+      #     object-position: center
+      #     height: 100%
+      #     width: 100%
+      #     left: 0
+      #     top: 0
       - src: !inc /title/logo-left.png
         media:
           mobile: false

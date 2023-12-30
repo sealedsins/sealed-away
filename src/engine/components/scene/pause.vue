@@ -5,8 +5,8 @@ const emit = defineEmits(['resume', 'exit']);
 
 <template>
 	<div class="pause">
-		<SceneButton @click="emit('resume')"> Resume </SceneButton>
-		<SceneButton @click="emit('exit')"> Exit </SceneButton>
+		<SceneButton class="pause__button" @click="emit('resume')"> Resume </SceneButton>
+		<SceneButton class="pause__button" @click="emit('exit')"> Exit </SceneButton>
 	</div>
 </template>
 
@@ -32,7 +32,7 @@ $interface-width: 475px;
 	height: 100%;
 	width: 100%;
 
-	> * {
+	&__button {
 		max-width: $interface-width;
 		margin-bottom: 0.5em;
 		width: 100%;
