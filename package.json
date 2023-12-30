@@ -2,8 +2,7 @@
 	"name": "sealed-away",
 	"type": "module",
 	"version": "0.1.0",
-	"license": "MIT",
-	"private": true,
+	"license": "SEE LICENSE IN LICENSE",
 	"author": "Sealed Sins <sealedsins@gmail.com>",
 	"source": "src/index.html",
 	"scripts": {
