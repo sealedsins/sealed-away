@@ -82,7 +82,7 @@ script:
       text: |
         With a deep breath, she raised the lid, unveiling what lay inside.
   - play:
-      path: !inc /audio/box.ogg
+      path: !inc /audio/box.mp3
       volume: 0.45
   - page:
       background:
@@ -128,7 +128,7 @@ script:
       text: |
         Althea's fingers glided over the suit, captivated by the way it responded to her touch. She could feel her heart racing with excitement as she imagined herself wearing it, transforming into a seductive, otherworldly creature.
   - play:
-      path: !inc /audio/equip.ogg
+      path: !inc /audio/equip.mp3
       volume: 0.85
   - page:
       background:
@@ -145,7 +145,7 @@ script:
       # As she slid into the suit, Althea couldn't help but gasp at the sensation of the laminate sliding over her legs. It was like nothing she had ever felt before - it was incredibly soft and pliant, unlike any other ordinary clothing.
   # - page:
   - play:
-      path: !inc /audio/rubber-3.ogg
+      path: !inc /audio/rubber-3.mp3
       volume: 0.35
   - page:
       background:
@@ -156,7 +156,7 @@ script:
       text: |
         Althea gasped as she felt the suit tighten around her waist, the corset-like design cinching her in and making her feel almost weightless. The material clung to her curves, enhancing her natural shape and making her feel more powerful and alluring than ever before.
   - play:
-      path: !inc /audio/rubber-2.ogg
+      path: !inc /audio/rubber-2.mp3
       volume: 0.35
   - page:
       background:
@@ -172,7 +172,7 @@ script:
       text: |
         The suit had completely transformed her body below the neck, leaving her feeling like a being from another dimension. She ran her hands over the smooth surface of the suit, feeling the way it seemed to merge with her skin.
   - play:
-      path: !inc /audio/rubber-1.ogg
+      path: !inc /audio/rubber-1.mp3
       volume: 0.35
   - page:
       background:
@@ -180,7 +180,7 @@ script:
       text: |
         Finally, she slid the mask of the suit up over her head. The cool, smooth material caressed her cheeks and chin, and she shivered as she felt it slide over her lips, sealing her mouth in a tight, sensual embrace.
   - play:
-      path: !inc /audio/zipper.ogg
+      path: !inc /audio/zipper.mp3
       volume: 0.35
   - page:
       text: |
@@ -221,7 +221,7 @@ script:
       text: |
         Althea traced the curve of her breasts, feeling the material compress and release with each breath. The sensation was incredible, and she couldn't help but moan softly as she traced the curve of her cleavage. Her fingers then traveled down to her waist, feeling the tightness of the corset-like design that cinched her in and highlighted her curves.
   - play:
-      path: !inc /audio/insert.ogg
+      path: !inc /audio/insert.mp3
       volume: 0.45
   - page:
       background:
@@ -229,19 +229,19 @@ script:
       text: |
         As she reached the groin area, Althea hesitated for a moment. She wondered how the artificial vagina would feel and what kind of pleasure it would bring her. After a moment of hesitation, she couldn't resist any longer and carefully pushed the sheath into her body, feeling it slide in smoothly.
   - play:
-      path: !inc /audio/moan-1.ogg
+      path: !inc /audio/moan-1.mp3
       volume: 0.35
   - page:
       text: |
         At first, there was a moment of discomfort as her body adjusted to the foreign object, but soon the sensation turned to pleasure, and Althea let out a soft moan. The pressure of the suit against her skin was exhilarating, making her feel like she was being enveloped in a cocoon of pleasure.
   - play:
-      path: !inc /audio/moan-2.ogg
+      path: !inc /audio/moan-2.mp3
       volume: 0.35
   - page:
       text: |
         Her fingers worked their way deeper inside her, her breath coming in short, shallow gasps as she lost herself in the pleasure of the moment. She could feel the material of her second skin tightening and relaxing around her, almost as if it was responding to her every movement.
   - play:
-      path: !inc /audio/moan-1.ogg
+      path: !inc /audio/moan-1.mp3
       volume: 0.35
   - page:
       background:
@@ -249,13 +249,13 @@ script:
       text: |
         Althea's hand moved faster, her fingers working in and out of herself with increasing speed and urgency. The sensation of the material rubbing against her clit was driving her wild, sending shivers of pleasure through her body.
   - play:
-      path: !inc /audio/moan-3.ogg
+      path: !inc /audio/moan-3.mp3
       volume: 0.35
   - page:
       text: |
         She moaned louder, her eyes closing as the pleasure built to an almost unbearable level. Althea felt her body start to tense up, her toes curling as she approached the edge of orgasm.
   - play:
-      path: !inc /audio/moan-5.ogg
+      path: !inc /audio/moan-5.mp3
       volume: 0.35
   - page:
       text: |
@@ -266,7 +266,7 @@ script:
       text: |
         For a few blissful moments, she was lost in the sensation, completely consumed by the pleasure that the suit had given her.
   - play:
-      path: !inc /audio/moan-muffled.ogg
+      path: !inc /audio/moan-muffled.mp3
   - page:
       background:
         image:
