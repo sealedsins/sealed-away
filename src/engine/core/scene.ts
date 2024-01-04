@@ -5,6 +5,7 @@ import zod from 'zod';
 import { merge, camelCase } from 'lodash';
 import { DeepPartial } from 'utility-types';
 import { Script, ScriptError } from './script';
+import { StackFrame, StackSlice } from './stack';
 
 /**
  * Scene state.
@@ -30,6 +31,7 @@ export type SceneEvent = (
 export type SceneMenu = Array<{
 	id: string;
 	label: string;
+	path: StackFrame['path'];
 	code: Array<unknown>;
 }>;
 
@@ -141,7 +143,7 @@ export class Scene extends Script {
 					throw new ScriptError(`Unknown menu item: ${event.id}`);
 				}
 				this.setMenu(null);
-				this.pushStack(...item.code);
+				this.stack.push(item.path, item.code);
 				this.next({ type: 'next' });
 				break;
 			}
@@ -166,13 +168,13 @@ export class Scene extends Script {
 	 * Evaluates `value` as a command and executes it.
 	 * This also includes scene commands.
 	 */
-	protected override exec(value: unknown) {
+	protected override exec(value: unknown, slice?: StackSlice) {
 		const { type, args } = this.unpack(value);
 		switch (type) {
 			case 'page': {
 				const argSchema = SceneStateSchema.strict().deepPartial();
 				const data = argSchema.parse(this.eval(args));
-				const next = this.peekStack();
+				const next = this.stack.peek()?.value;
 				this.setVar(SceneGlobal.YIELD, !next || this.unpack(next).type !== 'menu');
 				this.setState(data);
 				break;
@@ -180,9 +182,17 @@ export class Scene extends Script {
 			case 'menu': {
 				const argSchema = zod.record(zod.string(), zod.array(zod.unknown()));
 				const data = argSchema.parse(args);
+				const path = slice ? [...slice.frame.path, slice.index] : [];
 				const keys = Object.keys(data);
 				this.setVar(SceneGlobal.YIELD, true);
-				this.setMenu(keys.map((x) => ({ id: camelCase(x), label: x, code: data[x]! })));
+				this.setMenu(
+					keys.map((label) => ({
+						id: camelCase(label),
+						label,
+						path: [...path, 'menu', label],
+						code: data[label]!,
+					})),
+				);
 				break;
 			}
 			case 'play': {

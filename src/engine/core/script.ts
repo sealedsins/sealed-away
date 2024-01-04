@@ -1,10 +1,18 @@
 /**
  * Sealed Sins, 2023.
  */
-import zod, { ZodError } from 'zod';
+import { isPlainObject, isArray, isEqual, mapValues } from 'lodash';
 import { fromZodError } from 'zod-validation-error';
-import { isPlainObject, isArray, isEmpty, isEqual, mapValues } from 'lodash';
-import traverse from 'traverse';
+import zod, { ZodError } from 'zod';
+import { Stack, StackSlice } from './stack';
+
+/**
+ * Script call stack.
+ */
+export type ScriptStack = Array<{
+	path: Array<string>;
+	code: unknown;
+}>;
 
 /**
  * Script expression container.
@@ -31,7 +39,7 @@ export class ScriptError extends Error {
 	public override name = 'ScriptError';
 
 	// prettier-ignore
-	constructor(message: string, public path?: Array<string>) {
+	constructor(message: string, public path?: Array<string | number>) {
 		super(message);
 	}
 }
@@ -40,11 +48,11 @@ export class ScriptError extends Error {
  * Script interpreter.
  */
 export class Script {
-	private vars: Record<string, unknown> = {};
-	private stack: Array<unknown> = [];
+	protected vars: Record<string, unknown> = {};
+	protected stack = new Stack();
 
-	constructor(public readonly source: Array<unknown> = []) {
-		this.pushStack(...source);
+	constructor(public source: Array<unknown> = []) {
+		this.stack.push([], source);
 	}
 
 	/**
@@ -65,36 +73,7 @@ export class Script {
 	 * Returns script execution state.
 	 */
 	public isDone() {
-		return isEmpty(this.stack);
-	}
-
-	/**
-	 * Saves script state to a string.
-	 */
-	public save() {
-		return JSON.stringify({
-			source: this.source,
-			vars: this.vars,
-			stack: this.stack,
-		});
-	}
-
-	/**
-	 * Loads script state from a string.
-	 */
-	public load(state: string) {
-		try {
-			const schema = zod.object({
-				source: zod.array(zod.unknown()),
-				vars: zod.record(zod.string(), zod.unknown()),
-				stack: zod.array(zod.any()),
-			});
-			const parsed = schema.parse(JSON.parse(state));
-			Object.assign(this, parsed);
-			return this;
-		} catch (err) {
-			throw new ScriptError('Invalid save state.');
-		}
+		return this.stack.isEmpty();
 	}
 
 	/**
@@ -116,16 +95,17 @@ export class Script {
 	 */
 	// prettier-ignore
 	public step() {
-		const cmd = this.stack.shift();
-		if (!cmd) {
+		const slice = this.stack.pull();
+		if (!slice) {
 			return;
 		}
 		try {
-			this.exec(cmd);
+			this.exec(slice.value, slice);
 		} catch (err: any) {
-			const vld = err instanceof ZodError && fromZodError(err, { prefix: 'Command Arguments' });
-			const msg = vld ? vld.message : err.message;
-			throw new ScriptError(msg, this.trace(cmd));
+			const path = [...slice.frame.path, slice.index];
+			const args = err instanceof ZodError && fromZodError(err, { prefix: 'Arguments' });
+			const text = args ? args.message : err.message;
+			throw new ScriptError(text, path);
 		}
 	}
 
@@ -153,49 +133,16 @@ export class Script {
 	}
 
 	/**
-	 * Performs search for a given `value` within script `source` and returns its path.
-	 * @internal
-	 */
-	protected trace(value: unknown) {
-		return traverse.paths(this.source).find((path) => {
-			return traverse.get(this.source, path) === value;
-		});
-	}
-
-	/**
 	 * Unpacks command object into its type and arguments.
 	 * @internal
 	 */
 	protected unpack(value: unknown) {
-		if (!isPlainObject(value) || isEmpty(value)) {
-			const json = JSON.stringify(value);
-			const text = `Invalid command: ${json}`;
-			throw new ScriptError(text);
+		if (!isPlainObject(value) || Object.keys(value!).length !== 1) {
+			const msg = `Invalid command: ${JSON.stringify(value)}`;
+			throw new ScriptError(msg);
 		}
-		const entries = Object.entries(value as object);
-		if (entries.length > 1) {
-			const json = JSON.stringify(value);
-			const text = `Multiple directives are not allowed: ${json}`;
-			throw new ScriptError(text);
-		}
-		const [type, args] = entries[0]!;
+		const [type, args] = Object.entries(value!)[0]!;
 		return { type, args };
-	}
-
-	/**
-	 * Pulls the top of the execution stack.
-	 * @internal
-	 */
-	protected peekStack() {
-		return this.stack[0];
-	}
-
-	/**
-	 * Pushes commands to the top of the execution stack.
-	 * @internal
-	 */
-	protected pushStack(...args: Array<unknown>) {
-		this.stack.unshift(...args);
 	}
 
 	/**
@@ -204,12 +151,12 @@ export class Script {
 	 * @internal
 	 */
 	protected jump(label: string) {
-		const index = this.source.findIndex((cmd) => isEqual(cmd, { label }));
-		if (index >= 0) {
-			this.stack = this.source.slice(index);
-		} else {
+		const targetIndex = this.source.findIndex((cmd) => isEqual(cmd, { label }));
+		if (targetIndex < 0) {
 			throw new ScriptError(`Label "${label}" is not found`);
 		}
+		this.stack.clear();
+		this.stack.push([], this.source.slice(targetIndex));
 	}
 
 	/**
@@ -233,10 +180,12 @@ export class Script {
 
 	/**
 	 * Evaluates `value` as a command and executes it.
+	 * @param value - Command to execute.
+	 * @param slice - Optional stack slice (used to debug some commands).
 	 * @remarks Override this method to implement own commands.
 	 * @internal
 	 */
-	protected exec(value: unknown) {
+	protected exec(value: unknown, slice?: StackSlice<unknown>) {
 		const { type, args } = this.unpack(value);
 		switch (type) {
 			case 'if': {
@@ -245,13 +194,16 @@ export class Script {
 					then: zod.array(zod.unknown()).optional(),
 					else: zod.array(zod.unknown()).optional(),
 				});
+				const path = slice ? [...slice.frame.path, slice.index] : [];
 				const { cond, ...branch } = argSchema.parse(args);
 				const isTrue = !!this.eval(cond);
 				if (isTrue && branch.then) {
-					this.pushStack(...branch.then);
+					const branchPath = [...path, 'if', 'then'];
+					this.stack.push(branchPath, branch.then);
 				}
 				if (!isTrue && branch.else) {
-					this.pushStack(...branch.else);
+					const branchPath = [...path, 'if', 'else'];
+					this.stack.push(branchPath, branch.else);
 				}
 				break;
 			}
@@ -291,24 +243,6 @@ export class Script {
 				});
 				const { name, value } = argSchema.parse(this.eval(args));
 				this.setVar(name, value);
-				break;
-			}
-			case 'save': {
-				const argSchema = zod.string();
-				const slot = argSchema.parse(args);
-				const data = this.save();
-				localStorage.setItem(slot, data);
-				break;
-			}
-			case 'load': {
-				const argSchema = zod.string();
-				const slot = argSchema.parse(args);
-				const data = localStorage.getItem(slot);
-				if (!data) {
-					throw new ScriptError(`Empty save slot: ${slot}`);
-				} else {
-					this.load(data);
-				}
 				break;
 			}
 			default: {

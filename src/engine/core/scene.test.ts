@@ -64,8 +64,8 @@ describe('Scene', () => {
 		expect(() => scene.next({ type: 'next' })).toThrowError(
 			expect.objectContaining({
 				name: 'ScriptError',
-				message: "Command Arguments: Unrecognized key(s) in object: 'unknownProperty'",
-				path: ['4'],
+				message: "Arguments: Unrecognized key(s) in object: 'unknownProperty'",
+				path: [4],
 			}),
 		);
 	});
@@ -104,7 +104,7 @@ describe('Scene', () => {
 		expect(scene.getMenu()).toBeTruthy();
 
 		scene.next({ type: 'menu', id: 'labelA' });
-		expect(scene.getVar('choice')).toEqual('A');
+		expect(scene.getVar('choice')).toBe('A');
 		expect(scene.getMenu()).toBeNull();
 		expect(scene.getState()).toMatchObject({
 			text: 'Nice choice! You have picked A.',
@@ -115,7 +115,7 @@ describe('Scene', () => {
 		expect(scene.getMenu()).toBeTruthy();
 
 		scene.next({ type: 'menu', id: 'labelB' });
-		expect(scene.getVar('choice')).toEqual('B');
+		expect(scene.getVar('choice')).toBe('B');
 		expect(scene.getMenu()).toBeNull();
 		expect(scene.getState()).toMatchObject({
 			text: 'Nice choice! You have picked B.',
@@ -123,7 +123,11 @@ describe('Scene', () => {
 	});
 
 	it('implements `play` command', () => {
-		const scene = new Scene([{ label: 'start' }, { play: { path: 'test' } }]);
+		// prettier-ignore
+		const scene = new Scene([
+			{ label: 'start' }, 
+			{ play: { path: 'test' }, 
+		}]);
 
 		const playMock = jest.fn();
 		window.HTMLMediaElement.prototype.play = playMock;
@@ -131,7 +135,7 @@ describe('Scene', () => {
 		scene.next({ type: 'next' });
 		scene.next({ type: 'next' });
 
-		expect(scene.isDone()).toEqual(true);
+		expect(scene.isDone()).toBe(true);
 		expect(playMock).toBeCalled();
 		playMock.mockRestore();
 	});
