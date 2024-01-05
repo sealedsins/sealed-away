@@ -1,32 +1,38 @@
 /**
  * Sealed Sins, 2023-2024.
  */
-import { pick } from 'lodash';
+import { pick, isEqual } from 'lodash';
 
 /**
  * Call Stack Frame.
- * @internal
  */
-export interface StackFrame<T = unknown> {
+export interface StackFrame {
 	path: Array<string | number>;
 	programCounter: number;
-	code: Array<T>;
+	code: Array<unknown>;
 }
 
 /**
  * Call Stack Slice.
  */
-export interface StackSlice<T = unknown> {
-	frame: StackFrame<T>;
+export interface StackSlice {
+	frame: StackFrame;
 	index: number;
-	value: T;
+	value: unknown;
+}
+
+/**
+ * Call Stack Error.
+ */
+export class StackError extends Error {
+	public override name = 'StackError';
 }
 
 /**
  * Call Stack.
  */
-export class Stack<T = unknown> {
-	private stack: Array<StackFrame<T>> = [];
+export class Stack {
+	private stack: Array<StackFrame> = [];
 
 	/**
 	 * Returns stack status.
@@ -47,15 +53,21 @@ export class Stack<T = unknown> {
 	 * @param path - Frame path metadata (used for debug).
 	 * @param code - Frame code.
 	 */
-	public push(path: StackFrame<T>['path'], code: StackFrame<T>['code']) {
-		const programCounter = 0;
-		this.stack.unshift({ path, programCounter, code });
+	public push(path: StackFrame['path'], code: StackFrame['code']) {
+		if (this.find(path)) {
+			throw new StackError('Frame with such path already exists.');
+		}
+		this.stack.unshift({
+			path,
+			programCounter: 0,
+			code,
+		});
 	}
 
 	/**
 	 * Pulls a slice from the top of the stack.
 	 */
-	public pull(): StackSlice<T> | null {
+	public pull(): StackSlice | null {
 		const frame = this.stack[0];
 		if (!frame) {
 			return null;
@@ -65,7 +77,7 @@ export class Stack<T = unknown> {
 			this.stack.shift();
 			return this.pull();
 		}
-		const slice: StackSlice<T> = {
+		const slice: StackSlice = {
 			frame,
 			index: frame.programCounter,
 			value,
@@ -87,12 +99,19 @@ export class Stack<T = unknown> {
 	}
 
 	/**
+	 * Finds frame with a given path and returns it.
+	 */
+	public find(path: StackFrame['path']) {
+		const frame = this.stack.find((frame) => isEqual(frame.path, path));
+		return frame ?? null;
+	}
+
+	/**
 	 * Stringifies stack state and returns it.
 	 */
 	public save() {
-		const data = pick(this, ['stack', 'index']);
-		const json = JSON.stringify(data);
-		return btoa(json);
+		const state = pick(this, ['stack']);
+		return JSON.stringify(state);
 	}
 
 	/**
@@ -100,7 +119,7 @@ export class Stack<T = unknown> {
 	 * @param state - State to load.
 	 */
 	public load(state: string) {
-		const data = JSON.parse(atob(state));
+		const data = JSON.parse(state);
 		Object.assign(this, data);
 		return this;
 	}

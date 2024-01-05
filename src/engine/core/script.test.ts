@@ -7,64 +7,31 @@ const spyOnLog = () => {
 	return jest.spyOn(console, 'log').mockImplementation();
 };
 
-const spyOnStorage = () => {
-	const setItem = jest.spyOn(Storage.prototype, 'setItem');
-	const getItem = jest.spyOn(Storage.prototype, 'getItem');
-	return { setItem, getItem };
-};
-
 describe('Script', () => {
 	afterEach(() => {
 		jest.restoreAllMocks();
 	});
 
-	// it('is serializable', () => {
-	// 	const scriptOrigin = new Script([
-	// 		{ print: 'Hello A!' },
-	// 		{ print: 'Hello B!' },
-	// 		{ print: 'Hello C!' },
-	// 	]);
-	// 	const log = spyOnLog();
+	it('implements save and load functionality', () => {
+		const scriptOrigin = new Script([
+			{ print: 'Hello A!' },
+			{ print: 'Hello B!' },
+			{ print: 'Hello C!' },
+		]);
+		const log = spyOnLog();
 
-	// 	scriptOrigin.step();
-	// 	expect(log).toHaveBeenLastCalledWith('Hello A!');
-	// 	const save = scriptOrigin.save();
-	// 	scriptOrigin.step();
-	// 	expect(log).toHaveBeenLastCalledWith('Hello B!');
+		scriptOrigin.step();
+		expect(log).toHaveBeenLastCalledWith('Hello A!');
+		const save = scriptOrigin.save();
+		scriptOrigin.step();
+		expect(log).toHaveBeenLastCalledWith('Hello B!');
 
-	// 	const scriptLoaded = new Script().load(save);
-	// 	scriptLoaded.step();
-	// 	expect(log).toHaveBeenLastCalledWith('Hello B!');
-	// 	scriptLoaded.step();
-	// 	expect(log).toHaveBeenLastCalledWith('Hello C!');
-	// });
-
-	// it('is extenadble', () => {
-	// 	const Scene = class extends Script {
-	// 		protected override exec(value: unknown) {
-	// 			const { type, args } = this.unpack(value);
-	// 			switch (type) {
-	// 				case 'page': {
-	// 					this.setVar('state', this.eval(args));
-	// 					break;
-	// 				}
-	// 				default: {
-	// 					super.exec(value);
-	// 					break;
-	// 				}
-	// 			}
-	// 		}
-	// 	};
-	// 	// prettier-ignore
-	// 	const scene = new Scene([
-	// 		{ page: 'Hello!' },
-	// 		{ page: 'World!' },
-	// 	]);
-	// 	scene.step();
-	// 	expect(scene.getVar('state')).toBe('Hello!');
-	// 	scene.step();
-	// 	expect(scene.getVar('state')).toBe('World!');
-	// });
+		const scriptLoaded = new Script().load(save);
+		scriptLoaded.step();
+		expect(log).toHaveBeenLastCalledWith('Hello B!');
+		scriptLoaded.step();
+		expect(log).toHaveBeenLastCalledWith('Hello C!');
+	});
 
 	it('throws a correct stack trace in the root', () => {
 		// prettier-ignore
@@ -99,6 +66,32 @@ describe('Script', () => {
 				name: 'ScriptError',
 				message: 'error',
 				path: [1, 'if', 'then', 0],
+			}),
+		);
+	});
+
+	it('throws a correct stack trace in a loaded state', () => {
+		const scriptOrigin = new Script([
+			{ print: 'Hello A!' },
+			{ print: 'Hello B!' },
+			{ throw: 'Hello C!' },
+		]);
+		const log = spyOnLog();
+
+		scriptOrigin.step();
+		expect(log).toHaveBeenLastCalledWith('Hello A!');
+		const save = scriptOrigin.save();
+		scriptOrigin.step();
+		expect(log).toHaveBeenLastCalledWith('Hello B!');
+
+		const scriptLoaded = new Script().load(save);
+		scriptLoaded.step();
+		expect(log).toHaveBeenLastCalledWith('Hello B!');
+		expect(() => scriptLoaded.step()).toThrowError(
+			expect.objectContaining({
+				name: 'ScriptError',
+				message: 'Hello C!',
+				path: [2],
 			}),
 		);
 	});

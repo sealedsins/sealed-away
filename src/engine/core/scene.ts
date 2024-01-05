@@ -125,10 +125,7 @@ export class Scene extends Script {
 				if (menu) {
 					return;
 				}
-				this.setState({
-					name: '',
-					text: '',
-				});
+				this.setState({ name: '', text: '' });
 				while (!this.getVar(SceneGlobal.YIELD) && !this.isDone()) {
 					this.step();
 				}

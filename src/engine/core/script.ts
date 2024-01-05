@@ -1,18 +1,10 @@
 /**
  * Sealed Sins, 2023.
  */
-import { isPlainObject, isArray, isEqual, mapValues } from 'lodash';
-import { fromZodError } from 'zod-validation-error';
 import zod, { ZodError } from 'zod';
+import { fromZodError } from 'zod-validation-error';
+import { mapValues, pick, isPlainObject, isArray, isEqual } from 'lodash';
 import { Stack, StackSlice } from './stack';
-
-/**
- * Script call stack.
- */
-export type ScriptStack = Array<{
-	path: Array<string>;
-	code: unknown;
-}>;
 
 /**
  * Script expression container.
@@ -88,6 +80,25 @@ export class Script {
 	 */
 	public setVar<T = unknown>(name: string, value: T) {
 		this.vars[name] = value;
+	}
+
+	/**
+	 * Saves script state.
+	 */
+	public save() {
+		const stack = this.stack.save();
+		const state = JSON.stringify(pick(this, ['source', 'vars']));
+		return JSON.stringify({ state, stack });
+	}
+
+	/**
+	 * Loads script state.
+	 */
+	public load(state: string) {
+		const data = JSON.parse(state);
+		this.stack = this.stack.load(data.stack);
+		Object.assign(this, JSON.parse(data.state));
+		return this;
 	}
 
 	/**
@@ -185,7 +196,7 @@ export class Script {
 	 * @remarks Override this method to implement own commands.
 	 * @internal
 	 */
-	protected exec(value: unknown, slice?: StackSlice<unknown>) {
+	protected exec(value: unknown, slice?: StackSlice) {
 		const { type, args } = this.unpack(value);
 		switch (type) {
 			case 'if': {
