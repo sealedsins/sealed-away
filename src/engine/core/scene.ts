@@ -192,7 +192,7 @@ export class Scene extends Script {
 					volume: zod.number().optional(),
 				});
 				const data = argSchema.parse(this.eval(args));
-				this.emit({ type: 'play', data });
+				this.emit('play', data);
 				break;
 			}
 			default: {

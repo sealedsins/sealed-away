@@ -33,6 +33,22 @@ describe('Script', () => {
 		expect(log).toHaveBeenLastCalledWith('Hello C!');
 	});
 
+	it('emits `step` event', () => {
+		const script = new Script([
+			{ print: 'Hello A!' },
+			{ print: 'Hello B!' },
+			{ print: 'Hello C!' },
+		]);
+		spyOnLog();
+		const listener = jest.fn();
+		script.subscribe(listener);
+		script.step();
+		script.step();
+		script.step();
+		expect(listener).toHaveBeenCalledTimes(3);
+		expect(script.isDone()).toBe(true);
+	});
+
 	it('throws a correct stack trace in the root', () => {
 		// prettier-ignore
 		const script = new Script([

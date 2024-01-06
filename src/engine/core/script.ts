@@ -106,7 +106,8 @@ export class Script {
 	 * Emits `event` to active subscribers.
 	 * @param event - Event to dispatch.
 	 */
-	public emit<T>(event: ScriptEvent<T>) {
+	public emit<T>(type: string, data?: T) {
+		const event = { type, data };
 		this.subs.forEach((listener) => listener.call(this, event));
 	}
 
@@ -157,6 +158,7 @@ export class Script {
 		}
 		try {
 			this.exec(slice.value, slice);
+			this.emit('step');
 		} catch (err: any) {
 			const path = [...slice.frame.path, slice.index];
 			const args = err instanceof ZodError && fromZodError(err, { prefix: 'Arguments' });
@@ -312,7 +314,7 @@ export class Script {
 					data: zod.any(),
 				});
 				const data = argSchema.parse(this.eval(args));
-				this.emit(data);
+				this.emit(data.type, data.data);
 				break;
 			}
 			default: {

@@ -3,7 +3,7 @@
  */
 import { defineStore } from 'pinia';
 import { shallowRef, triggerRef } from 'vue';
-import { Scene, ScriptEvent, ScriptListener } from '../core';
+import { Scene, ScriptListener } from '../core';
 import { useParser } from './parser';
 
 /**
@@ -48,8 +48,8 @@ export const useScene = defineStore('scene', () => {
 	 * Emits scene event.
 	 * @param event - Event to dispatch.
 	 */
-	const emit = (event: ScriptEvent) => {
-		scene.value?.emit(event);
+	const emit = <T>(...args: Parameters<Scene['emit']>) => {
+		scene.value?.emit(...args);
 		refresh();
 	};
 
