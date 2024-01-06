@@ -1,5 +1,5 @@
 /**
- * Sealed Sins, 2023.
+ * Sealed Sins, 2023-2024.
  */
 import zod, { ZodError } from 'zod';
 import { fromZodError } from 'zod-validation-error';

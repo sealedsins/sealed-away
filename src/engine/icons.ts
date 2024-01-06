@@ -1,5 +1,5 @@
 /**
- * Sealed Sins, 2023.
+ * Sealed Sins, 2023-2024.
  */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';

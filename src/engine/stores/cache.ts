@@ -1,5 +1,5 @@
 /**
- * Sealed Sins, 2023.
+ * Sealed Sins, 2023-2024.
  */
 import { defineStore } from 'pinia';
 import { shallowRef } from 'vue';
@@ -18,6 +18,8 @@ export const useCache = defineStore('cache', () => {
 	/**
 	 * Loads `src` as a Blob.
 	 * Uses stores cache.
+	 * @param src - Source to load.
+	 * @returns Cached blob.
 	 */
 	const load = async (src: string) => {
 		const cached = cache.value.get(src);

@@ -1,5 +1,5 @@
 /**
- * Sealed Sins, 2023.
+ * Sealed Sins, 2023-2024.
  */
 import { defineStore } from 'pinia';
 import { shallowRef, triggerRef } from 'vue';
@@ -37,6 +37,7 @@ export const useScene = defineStore('scene', () => {
 
 	/**
 	 * Executes menu pick.
+	 * @param id - Menu item ID to pick.
 	 */
 	const pick = (id: string) => {
 		scene.value?.pick(id);
@@ -45,6 +46,7 @@ export const useScene = defineStore('scene', () => {
 
 	/**
 	 * Emits scene event.
+	 * @param event - Event to dispatch.
 	 */
 	const emit = (event: ScriptEvent) => {
 		scene.value?.emit(event);
@@ -53,21 +55,23 @@ export const useScene = defineStore('scene', () => {
 
 	/**
 	 * Subscribes to the scene events.
+	 * @param listener - Event listener.
+	 * @returns Unsubscribe function.
 	 */
 	const subscribe = (listener: ScriptListener) => {
 		const unsubscribe = scene.value?.subscribe(listener);
-		return unsubscribe;
+		return unsubscribe ?? (() => {});
 	};
 
 	/**
-	 * Refreshes Scene state.
+	 * Refreshes scene state.
 	 */
 	const refresh = () => {
 		triggerRef(scene);
 	};
 
 	/**
-	 * Resets Scene state.
+	 * Resets scene state.
 	 */
 	const $reset = () => {
 		scene.value = undefined;

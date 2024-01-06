@@ -1,5 +1,5 @@
 /**
- * Sealed Sins, 2023.
+ * Sealed Sins, 2023-2024.
  */
 import zod from 'zod';
 import { merge, camelCase } from 'lodash';
@@ -82,6 +82,7 @@ export class Scene extends Script {
 
 	/**
 	 * Sets scene state (partial).
+	 * @param update - Partial state.
 	 */
 	public setState(update: DeepPartial<SceneState>) {
 		const state = this.getVar<SceneState>(SceneGlobal.STATE);
@@ -99,6 +100,7 @@ export class Scene extends Script {
 
 	/**
 	 * Sets scene menu.
+	 * @param menu - New menu state.
 	 */
 	public setMenu(menu: SceneMenu | null) {
 		this.setVar(SceneGlobal.MENU, menu);
@@ -106,7 +108,7 @@ export class Scene extends Script {
 
 	/**
 	 * Executes the next scene script step.
-	 * This is meant to be used internally, do not call this directly.
+	 * This method is meant to be used internally.
 	 * @internal
 	 */
 	public override step() {
@@ -134,6 +136,7 @@ export class Scene extends Script {
 	/**
 	 * Executes menu pick.
 	 * Does nothing if no active menu is present.
+	 * @param id - Menu item ID to pick.
 	 */
 	public pick(id: string) {
 		const menu = this.getMenu();
@@ -152,6 +155,9 @@ export class Scene extends Script {
 	/**
 	 * Evaluates `value` as a command and executes it.
 	 * This also includes scene commands.
+	 * @param value - Command to execute.
+	 * @param slice - Optional stack slice (used to debug some commands).
+	 * @internal
 	 */
 	protected override exec(value: unknown, slice?: StackSlice) {
 		const { type, args } = this.unpack(value);

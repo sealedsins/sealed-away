@@ -1,5 +1,5 @@
 /**
- * Sealed Sins, 2023-2024.
+ * Sealed Sins, 2023-2024-2024.
  */
 import { pick, isEqual } from 'lodash';
 

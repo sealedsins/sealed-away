@@ -1,5 +1,5 @@
 /**
- * Sealed Sins, 2023.
+ * Sealed Sins, 2023-2024.
  */
 import zod from 'zod';
 import { defineStore } from 'pinia';
@@ -73,6 +73,7 @@ export const useParser = defineStore('parser', () => {
 
 	/**
 	 * Parses given `data` and stores the result inside the parser context.
+	 * @param data - Data to parse.
 	 */
 	const parse = (data: string) => {
 		context.value = parser.value.parse(data);
@@ -81,9 +82,10 @@ export const useParser = defineStore('parser', () => {
 
 	/**
 	 * Fetches given `src`, then parses it and stores the result inside the parser context.
+	 * @param src - Path to load and parse.
 	 */
-	const fetch = async (url: string) => {
-		const blob = await asset.load(url);
+	const fetch = async (src: string) => {
+		const blob = await asset.load(src);
 		const data = await asset.readAsText(blob);
 		parse(data);
 	};

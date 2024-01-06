@@ -1,5 +1,5 @@
 /**
- * Sealed Sins, 2023.
+ * Sealed Sins, 2023-2024.
  */
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
