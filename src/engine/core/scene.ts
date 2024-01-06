@@ -16,15 +16,6 @@ export type SceneState = (
 );
 
 /**
- * Scene event.
- */
-// prettier-ignore
-export type SceneEvent = (
-	| { type: 'next' } 
-	| { type: 'menu'; id: string }
-);
-
-/**
  * Scene menu.
  */
 // prettier-ignore
@@ -114,51 +105,48 @@ export class Scene extends Script {
 	}
 
 	/**
-	 * Processes given event and updates scene state accordingly.
-	 */
-	public next(event: SceneEvent) {
-		const menu = this.getMenu();
-		this.setVar(SceneGlobal.EVENT, event);
-		this.setVar(SceneGlobal.YIELD, false);
-		switch (event.type) {
-			case 'next': {
-				if (menu) {
-					return;
-				}
-				this.setState({ name: '', text: '' });
-				while (!this.getVar(SceneGlobal.YIELD) && !this.isDone()) {
-					this.step();
-				}
-				break;
-			}
-			case 'menu': {
-				if (!menu) {
-					return;
-				}
-				const item = menu.find((item) => item.id === event.id);
-				if (!item) {
-					throw new ScriptError(`Unknown menu item: ${event.id}`);
-				}
-				this.setMenu(null);
-				this.stack.push(item.path, item.code);
-				this.next({ type: 'next' });
-				break;
-			}
-			default: {
-				throw new ScriptError(`Unexpected event: ${JSON.stringify(event)}`);
-				break;
-			}
-		}
-	}
-
-	/**
 	 * Executes the next scene script step.
+	 * This is meant to be used internally, do not call this directly.
 	 * @internal
 	 */
 	public override step() {
 		if (!this.getVar(SceneGlobal.YIELD)) {
 			super.step();
 		}
+	}
+
+	/**
+	 * Executes the next scene frame.
+	 * Does nothing if an active menu is present.
+	 */
+	public next() {
+		const menu = this.getMenu();
+		if (menu) {
+			return;
+		}
+		this.setVar(SceneGlobal.YIELD, false);
+		this.setState({ name: '', text: '' });
+		while (!this.getVar(SceneGlobal.YIELD) && !this.isDone()) {
+			this.step();
+		}
+	}
+
+	/**
+	 * Executes menu pick.
+	 * Does nothing if no active menu is present.
+	 */
+	public pick(id: string) {
+		const menu = this.getMenu();
+		if (!menu) {
+			return;
+		}
+		const item = menu.find((item) => item.id === id);
+		if (!item) {
+			throw new ScriptError(`Unknown menu ID: ${id}`);
+		}
+		this.setMenu(null);
+		this.stack.push(item.path, item.code);
+		this.next();
 	}
 
 	/**
@@ -197,10 +185,8 @@ export class Scene extends Script {
 					path: zod.string(),
 					volume: zod.number().optional(),
 				});
-				const sound = argSchema.parse(this.eval(args));
-				const audio = new Audio(sound.path);
-				audio.volume = sound.volume ?? 1.0;
-				audio.play();
+				const data = argSchema.parse(this.eval(args));
+				this.emit({ type: 'play', data });
 				break;
 			}
 			default: {

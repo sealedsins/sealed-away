@@ -213,4 +213,25 @@ describe('Script', () => {
 		script.step();
 		expect(script.getVar('c')).toBe(200);
 	});
+
+	it('implements `emit` command', () => {
+		const script = new Script([
+			{ emit: { type: 'test' } },
+			{ emit: { type: 'test', data: 'A' } },
+			{ emit: { type: 'test', data: 'B' } },
+			{ emit: { type: 'poop' } },
+		]);
+		const listener = jest.fn();
+		const unsubscribe = script.subscribe(listener);
+		script.step();
+		expect(listener).toHaveBeenCalledWith({ type: 'test' });
+		script.step();
+		expect(listener).toHaveBeenCalledWith({ type: 'test', data: 'A' });
+		script.step();
+		expect(listener).toHaveBeenCalledWith({ type: 'test', data: 'B' });
+		unsubscribe();
+		listener.mockReset();
+		script.step();
+		expect(listener).not.toHaveBeenCalled();
+	});
 });

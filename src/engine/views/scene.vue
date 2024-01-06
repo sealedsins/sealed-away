@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import { ScriptEvent } from '../core';
+import { useScene, useCache } from '../stores';
 import { onKeydown } from '../utils/input';
-import { useScene } from '../stores';
 
 import TransitionFade from '../components/transition/fade.vue';
 import SceneButton from '../components/button.vue';
@@ -10,6 +11,7 @@ import SceneTypewriter from '../components/scene/typewriter.vue';
 import ScenePause from '../components/scene/pause.vue';
 
 const store = useScene();
+const cache = useCache();
 
 const typewriter = ref<typeof SceneTypewriter>();
 const paused = ref(false);
@@ -26,12 +28,12 @@ const handleNext = () => {
 	} else if (store.scene?.isDone()) {
 		handleExit();
 	} else {
-		store.emit({ type: 'next' });
+		store.next();
 	}
 };
 
 const handleMenu = (id: string) => {
-	store.emit({ type: 'menu', id });
+	store.pick(id);
 };
 
 const handleExit = () => {
@@ -45,6 +47,22 @@ const handleFullscreen = () => {
 		document.exitFullscreen();
 	}
 };
+
+const handlePlay = async (event: ScriptEvent) => {
+	const audio = new Audio();
+	const data = event.data as { path: string; volume?: number };
+	audio.src = await cache.readAsBase64(await cache.load(data.path));
+	audio.volume = data.volume ?? 1.0;
+	audio.play();
+};
+
+onMounted(() => {
+	store.subscribe((event) => {
+		if (event.type === 'play') {
+			handlePlay(event);
+		}
+	});
+});
 
 onKeydown((e) => {
 	if (e.repeat || paused.value) {

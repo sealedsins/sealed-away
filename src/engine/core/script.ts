@@ -3,8 +3,23 @@
  */
 import zod, { ZodError } from 'zod';
 import { fromZodError } from 'zod-validation-error';
-import { mapValues, pick, isPlainObject, isArray, isEqual } from 'lodash';
+import { pick, mapValues, isPlainObject, isArray, isEqual } from 'lodash';
 import { Stack, StackSlice } from './stack';
+
+/**
+ * Script event.
+ */
+export interface ScriptEvent<T = unknown> {
+	type: string;
+	data?: T;
+}
+
+/**
+ * Script event listener.
+ */
+export interface ScriptListener<T = unknown> {
+	(event: ScriptEvent<T>): void;
+}
 
 /**
  * Script expression container.
@@ -40,8 +55,9 @@ export class ScriptError extends Error {
  * Script interpreter.
  */
 export class Script {
-	protected vars: Record<string, unknown> = {};
 	protected stack = new Stack();
+	protected subs: Array<ScriptListener<unknown>> = [];
+	protected vars: Record<string, unknown> = {};
 
 	constructor(public source: Array<unknown> = []) {
 		this.stack.push([], source);
@@ -70,6 +86,8 @@ export class Script {
 
 	/**
 	 * Gets script variable.
+	 * @param name - Variable name.
+	 * @returns Variable value.
 	 */
 	public getVar<T = unknown>(name: string) {
 		return this.vars[name] as T;
@@ -77,13 +95,39 @@ export class Script {
 
 	/**
 	 * Sets script variable.
+	 * @param name - Variable name.
+	 * @param value - Variable value.
 	 */
 	public setVar<T = unknown>(name: string, value: T) {
 		this.vars[name] = value;
 	}
 
 	/**
+	 * Emits `event` to active subscribers.
+	 * @param event - Event to dispatch.
+	 */
+	public emit<T>(event: ScriptEvent<T>) {
+		this.subs.forEach((listener) => listener.call(this, event));
+	}
+
+	/**
+	 * Subscribes to incoming events.
+	 * Use the `emit` command to trigger this.
+	 * @param listener - Event listener.
+	 * @returns Unsubscribe function.
+	 */
+	public subscribe<T>(listener: ScriptListener<T>) {
+		const subs = this.subs as Array<ScriptListener<T>>;
+		subs.push(listener);
+		return () => {
+			const index = subs.indexOf(listener);
+			subs.splice(index, 1);
+		};
+	}
+
+	/**
 	 * Saves script state.
+	 * @returns Script state.
 	 */
 	public save() {
 		const stack = this.stack.save();
@@ -93,6 +137,8 @@ export class Script {
 
 	/**
 	 * Loads script state.
+	 * @param state - State to load.
+	 * @returns Script.
 	 */
 	public load(state: string) {
 		const data = JSON.parse(state);
@@ -104,7 +150,6 @@ export class Script {
 	/**
 	 * Executes the next script step.
 	 */
-	// prettier-ignore
 	public step() {
 		const slice = this.stack.pull();
 		if (!slice) {
@@ -122,6 +167,7 @@ export class Script {
 
 	/**
 	 * Renders `template` as a JS expression and returns its value.
+	 * @param template - Expression to render.
 	 * @internal
 	 */
 	protected renderExpression(template: string) {
@@ -132,6 +178,7 @@ export class Script {
 
 	/**
 	 * Renders `template` as a string template and returns its value.
+	 * @param template - Template to render.
 	 * @internal
 	 */
 	protected renderTemplate(template: string) {
@@ -145,6 +192,7 @@ export class Script {
 
 	/**
 	 * Unpacks command object into its type and arguments.
+	 * @param value - Command to unpack.
 	 * @internal
 	 */
 	protected unpack(value: unknown) {
@@ -152,13 +200,14 @@ export class Script {
 			const msg = `Invalid command: ${JSON.stringify(value)}`;
 			throw new ScriptError(msg);
 		}
-		const [type, args] = Object.entries(value!)[0]!;
+		const [type, args] = Object.entries(value!)[0] as [string, unknown];
 		return { type, args };
 	}
 
 	/**
 	 * Jumps to the given `label`.
 	 * Labels are allowed only in the top-level code.
+	 * @param label - Label to jump.
 	 * @internal
 	 */
 	protected jump(label: string) {
@@ -173,6 +222,7 @@ export class Script {
 	/**
 	 * Evaluates `value` as an expression.
 	 * All instances of `ScriptExp` and `ScriptFmt` are going to be resolved.
+	 * @param value - Value to evaluate.
 	 * @internal
 	 */
 	protected eval(value: unknown): unknown {
@@ -254,6 +304,15 @@ export class Script {
 				});
 				const { name, value } = argSchema.parse(this.eval(args));
 				this.setVar(name, value);
+				break;
+			}
+			case 'emit': {
+				const argSchema = zod.object({
+					type: zod.string(),
+					data: zod.any(),
+				});
+				const data = argSchema.parse(this.eval(args));
+				this.emit(data);
 				break;
 			}
 			default: {

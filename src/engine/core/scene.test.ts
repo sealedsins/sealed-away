@@ -43,7 +43,7 @@ describe('Scene', () => {
 			},
 		]);
 
-		scene.next({ type: 'next' });
+		scene.next();
 		expect(scene.getState()).toMatchObject({
 			name: 'Narrator',
 			text: 'Hello!',
@@ -52,7 +52,7 @@ describe('Scene', () => {
 			},
 		});
 
-		scene.next({ type: 'next' });
+		scene.next();
 		expect(scene.getState()).toMatchObject({
 			name: 'Narrator',
 			text: 'World!',
@@ -61,7 +61,7 @@ describe('Scene', () => {
 			},
 		});
 
-		expect(() => scene.next({ type: 'next' })).toThrowError(
+		expect(() => scene.next()).toThrowError(
 			expect.objectContaining({
 				name: 'ScriptError',
 				message: "Arguments: Unrecognized key(s) in object: 'unknownProperty'",
@@ -92,29 +92,29 @@ describe('Scene', () => {
 			{ jump: 'start' },
 		]);
 
-		scene.next({ type: 'next' });
+		scene.next();
 		expect(scene.getState()).toMatchObject({ text: 'Pick One!' });
 		expect(scene.getMenu()).toMatchObject([
 			{ id: 'labelA', label: 'Label A' },
 			{ id: 'labelB', label: 'Label B' },
 		]);
 
-		scene.next({ type: 'next' });
+		scene.next();
 		expect(scene.getVar('choice')).toBeUndefined();
 		expect(scene.getMenu()).toBeTruthy();
 
-		scene.next({ type: 'menu', id: 'labelA' });
+		scene.pick('labelA');
 		expect(scene.getVar('choice')).toBe('A');
 		expect(scene.getMenu()).toBeNull();
 		expect(scene.getState()).toMatchObject({
 			text: 'Nice choice! You have picked A.',
 		});
 
-		scene.next({ type: 'next' });
+		scene.next();
 		expect(scene.getState()).toMatchObject({ text: 'Pick One!' });
 		expect(scene.getMenu()).toBeTruthy();
 
-		scene.next({ type: 'menu', id: 'labelB' });
+		scene.pick('labelB');
 		expect(scene.getVar('choice')).toBe('B');
 		expect(scene.getMenu()).toBeNull();
 		expect(scene.getState()).toMatchObject({
@@ -125,18 +125,16 @@ describe('Scene', () => {
 	it('implements `play` command', () => {
 		// prettier-ignore
 		const scene = new Scene([
-			{ label: 'start' }, 
 			{ play: { path: 'test' }, 
 		}]);
 
-		const playMock = jest.fn();
-		window.HTMLMediaElement.prototype.play = playMock;
-
-		scene.next({ type: 'next' });
-		scene.next({ type: 'next' });
-
+		const playListener = jest.fn();
+		scene.subscribe(playListener);
+		scene.next();
 		expect(scene.isDone()).toBe(true);
-		expect(playMock).toBeCalled();
-		playMock.mockRestore();
+		expect(playListener).toHaveBeenCalledWith({
+			type: 'play',
+			data: { path: 'test' },
+		});
 	});
 });

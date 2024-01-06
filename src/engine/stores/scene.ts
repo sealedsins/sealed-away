@@ -2,10 +2,9 @@
  * Sealed Sins, 2023.
  */
 import { defineStore } from 'pinia';
-import { shallowRef, triggerRef, watch } from 'vue';
-import { Scene, SceneEvent } from '../core';
+import { shallowRef, triggerRef } from 'vue';
+import { Scene, ScriptEvent, ScriptListener } from '../core';
 import { useParser } from './parser';
-// import * as asset from '../utils/asset';
 
 /**
  * Scene store.
@@ -24,16 +23,40 @@ export const useScene = defineStore('scene', () => {
 	const init = () => {
 		if (parser.data) {
 			scene.value = new Scene(parser.data.script);
-			scene.value.next({ type: 'next' });
+			scene.value.next();
 		}
 	};
 
 	/**
-	 * Emits new Scene event.
+	 * Executes the next scene frame.
 	 */
-	const emit = (event: SceneEvent) => {
-		scene.value?.next(event);
+	const next = () => {
+		scene.value?.next();
 		refresh();
+	};
+
+	/**
+	 * Executes menu pick.
+	 */
+	const pick = (id: string) => {
+		scene.value?.pick(id);
+		refresh();
+	};
+
+	/**
+	 * Emits scene event.
+	 */
+	const emit = (event: ScriptEvent) => {
+		scene.value?.emit(event);
+		refresh();
+	};
+
+	/**
+	 * Subscribes to the scene events.
+	 */
+	const subscribe = (listener: ScriptListener) => {
+		const unsubscribe = scene.value?.subscribe(listener);
+		return unsubscribe;
 	};
 
 	/**
@@ -53,7 +76,10 @@ export const useScene = defineStore('scene', () => {
 	return {
 		scene,
 		init,
+		next,
+		pick,
 		emit,
+		subscribe,
 		refresh,
 		$reset,
 	};
