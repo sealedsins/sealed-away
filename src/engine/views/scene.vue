@@ -16,17 +16,37 @@ const cache = useCache();
 const typewriter = ref<typeof SceneTypewriter>();
 const paused = ref(false);
 
-const state = computed(() => store.scene?.getState());
-const menu = computed(() => store.scene?.getMenu());
+/**
+ * Scene state.
+ */
+const state = computed(() => {
+	return store.scene?.getState();
+});
 
+/**
+ * Scene menu.
+ */
+const menu = computed(() => {
+	return store.scene?.getMenu();
+});
+
+/**
+ * Fullscreen support indicator.
+ */
 const hasFullscreen = computed(() => {
 	return !!document.documentElement.requestFullscreen;
 });
 
+/**
+ * Scene save file precense indicator.
+ */
 const hasSaveFile = computed(() => {
 	return !!store.storage[0];
 });
 
+/**
+ * Event handler: Scene next step.
+ */
 const handleNext = () => {
 	if (typewriter.value?.typing) {
 		typewriter.value?.skipTyping();
@@ -37,24 +57,39 @@ const handleNext = () => {
 	}
 };
 
+/**
+ * Event handler: Scene menu pick.
+ */
 const handleMenu = (id: string) => {
 	store.pick(id);
 };
 
+/**
+ * Event handler: Save button (pause menu).
+ */
 const handleSave = () => {
 	paused.value = false;
 	store.save(0);
 };
 
+/**
+ * Event handler: Load button (pause menu).
+ */
 const handleLoad = () => {
 	paused.value = false;
 	store.load(0);
 };
 
+/**
+ * Event handler: Exit button (pause menu).
+ */
 const handleExit = () => {
 	store.$reset();
 };
 
+/**
+ * Event handler: Toggle fullscreen button click.
+ */
 const handleFullscreen = () => {
 	if (!document.fullscreenElement) {
 		document.documentElement.requestFullscreen();
@@ -63,6 +98,9 @@ const handleFullscreen = () => {
 	}
 };
 
+/**
+ * Event handler: Scene `play` event.
+ */
 const handlePlay = async (event: ScriptEvent) => {
 	const audio = new Audio();
 	const data = event.data as { path: string; volume?: number };

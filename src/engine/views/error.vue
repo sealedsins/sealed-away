@@ -8,10 +8,31 @@ const props = defineProps<{
 	error: Error;
 }>();
 
-const name = computed(() => props.error.name);
-const message = computed(() => props.error.message);
-const stack = computed(() => props.error.stack);
+/**
+ * Error name.
+ */
+const name = computed(() => {
+	return props.error.name;
+});
 
+/**
+ * Error message.
+ */
+const message = computed(() => {
+	return props.error.message;
+});
+
+/**
+ * Error stack.
+ */
+const stack = computed(() => {
+	return props.error.stack;
+});
+
+/**
+ * Error path.
+ * Parser context is used to map error path to its actual code position.
+ */
 const path = computed(() => {
 	if (props.error instanceof ParserError) {
 		const pos = props.error.pos;

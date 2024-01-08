@@ -30,6 +30,8 @@ export class ParserContext {
 
 	/**
 	 * Converts node path into its location in source code.
+	 * @param path - Path to trace.
+	 * @returns Code line and column.
 	 */
 	public trace(path: Array<string | number>) {
 		const node = this.doc.getIn(path, true);
@@ -42,6 +44,8 @@ export class ParserContext {
 
 	/**
 	 * Validates context using given schema and returns its data.
+	 * @param schema - Target schema.
+	 * @returns Parsed data.
 	 */
 	public parse<T extends ZodType>(schema: T) {
 		if (this.doc.errors.length) {
@@ -67,6 +71,11 @@ export class ParserContext {
  */
 export class Parser {
 	private customTags: Tags;
+
+	/**
+	 * Parse constructor.
+	 * @param customTags - Custom tags for YAML parser.
+	 */
 	constructor(customTags: Tags = []) {
 		this.customTags = [
 			...customTags,
@@ -77,6 +86,8 @@ export class Parser {
 
 	/**
 	 * Parses given `source`, transforming it into `ParserContext`.
+	 * @param source - Source to parse.
+	 * @retruns Parsed context.
 	 */
 	public parse(source: string) {
 		const lineCounter = new LineCounter();

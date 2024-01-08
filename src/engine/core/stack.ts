@@ -36,6 +36,7 @@ export class Stack {
 
 	/**
 	 * Returns stack status.
+	 * @returns Boolean indicating stack status.
 	 */
 	public isEmpty() {
 		return !this.peek();
@@ -66,6 +67,7 @@ export class Stack {
 
 	/**
 	 * Pulls a slice from the top of the stack.
+	 * @returns Stack slice from the top of the stack.
 	 */
 	public pull(): StackSlice | null {
 		const frame = this.stack[0];
@@ -88,6 +90,7 @@ export class Stack {
 
 	/**
 	 * Peeks a slice from the top of the stack.
+	 * @returns Stack slice from the top of the stack.
 	 */
 	public peek() {
 		const slice = this.pull();
@@ -100,6 +103,7 @@ export class Stack {
 
 	/**
 	 * Finds frame with a given path and returns it.
+	 * @returns Target frame or null.
 	 */
 	public find(path: StackFrame['path']) {
 		const frame = this.stack.find((frame) => isEqual(frame.path, path));
@@ -108,6 +112,7 @@ export class Stack {
 
 	/**
 	 * Stringifies stack state and returns it.
+	 * @returns Stringified stack state.
 	 */
 	public save() {
 		const state = pick(this, ['stack']);
@@ -117,6 +122,7 @@ export class Stack {
 	/**
 	 * Parses given stack state and restores it.
 	 * @param state - State to load.
+	 * @returns Stack.
 	 */
 	public load(state: string) {
 		const data = JSON.parse(state);

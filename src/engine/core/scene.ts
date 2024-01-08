@@ -74,6 +74,7 @@ export class Scene extends Script {
 
 	/**
 	 * Gets scene state.
+	 * @returns Scene state.
 	 */
 	public getState() {
 		const state = this.getVar<SceneState>(SceneGlobal.STATE);
@@ -92,6 +93,7 @@ export class Scene extends Script {
 
 	/**
 	 * Gets scene menu.
+	 * @returns Menu state.
 	 */
 	public getMenu() {
 		const menu = this.getVar<SceneMenu | null>(SceneGlobal.MENU);

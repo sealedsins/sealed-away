@@ -8,27 +8,45 @@ import { onKeydown } from '../utils/input';
 const parser = useParser();
 const scene = useScene();
 
-const hasSaveFile = computed(() => {
-	return !!scene.storage[0];
-});
-
+/**
+ * Custom images to render.
+ */
 const images = computed(() => {
 	return parser.data?.config?.title?.images ?? [];
 });
 
+/**
+ * Custom buttons to render.
+ */
 const buttons = computed(() => {
 	return parser.data?.config?.title?.buttons ?? [];
 });
 
+/**
+ * Save file presence indicator.
+ */
+const hasSaveFile = computed(() => {
+	return !!scene.storage[0];
+});
+
+/**
+ * Event handler: Start button click.
+ */
 const handleStart = () => {
 	scene.init();
 };
 
+/**
+ * Event handler: Load button click.
+ */
 const handleLoad = () => {
 	handleStart();
 	scene.load(0);
 };
 
+/**
+ * Event handler: Custom button lick.
+ */
 const handleButton = (button: (typeof buttons)['value'][number]) => {
 	if (button.link) {
 		window.open(button.link);
