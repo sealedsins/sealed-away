@@ -1,12 +1,26 @@
 <script setup lang="ts">
 import SceneButton from '../button.vue';
-const emit = defineEmits(['resume', 'exit']);
+const emit = defineEmits(['resume', 'save', 'load', 'exit']);
+const props = defineProps<{
+	disableLoad?: boolean;
+}>();
 </script>
 
 <template>
+	<!-- prettier-ignore -->
 	<div class="pause">
-		<SceneButton class="pause__button" @click="emit('resume')"> Resume </SceneButton>
-		<SceneButton class="pause__button" @click="emit('exit')"> Exit </SceneButton>
+		<SceneButton class="pause__button" @click="emit('resume')">
+			Resume 
+		</SceneButton>
+		<SceneButton class="pause__button" @click="emit('save')">
+			Save 
+		</SceneButton>
+		<SceneButton class="pause__button" @click="emit('load')" :disabled="disableLoad">
+			Load 
+		</SceneButton>
+		<SceneButton class="pause__button" @click="emit('exit')">
+			Exit
+		</SceneButton>
 	</div>
 </template>
 

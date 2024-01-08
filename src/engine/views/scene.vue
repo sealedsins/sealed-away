@@ -18,8 +18,13 @@ const paused = ref(false);
 
 const state = computed(() => store.scene?.getState());
 const menu = computed(() => store.scene?.getMenu());
+
 const hasFullscreen = computed(() => {
 	return !!document.documentElement.requestFullscreen;
+});
+
+const hasSaveFile = computed(() => {
+	return !!store.storage[0];
 });
 
 const handleNext = () => {
@@ -34,6 +39,16 @@ const handleNext = () => {
 
 const handleMenu = (id: string) => {
 	store.pick(id);
+};
+
+const handleSave = () => {
+	paused.value = false;
+	store.save(0);
+};
+
+const handleLoad = () => {
+	paused.value = false;
+	store.load(0);
 };
 
 const handleExit = () => {
@@ -86,7 +101,14 @@ onKeydown((e) => {
 			}"
 		/>
 		<TransitionFade>
-			<ScenePause v-show="paused" @resume="paused = false" @exit="handleExit()" />
+			<ScenePause
+				v-show="paused"
+				:disableLoad="!hasSaveFile"
+				@resume="paused = false"
+				@save="handleSave()"
+				@load="handleLoad()"
+				@exit="handleExit()"
+			/>
 		</TransitionFade>
 		<TransitionFade>
 			<div v-show="!paused" class="interface" @click.self="handleNext()">

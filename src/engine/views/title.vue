@@ -8,6 +8,10 @@ import { onKeydown } from '../utils/input';
 const parser = useParser();
 const scene = useScene();
 
+const hasSaveFile = computed(() => {
+	return !!scene.storage[0];
+});
+
 const images = computed(() => {
 	return parser.data?.config?.title?.images ?? [];
 });
@@ -21,7 +25,8 @@ const handleStart = () => {
 };
 
 const handleLoad = () => {
-	// TODO save/load feature
+	handleStart();
+	scene.load(0);
 };
 
 const handleButton = (button: (typeof buttons)['value'][number]) => {
@@ -56,7 +61,9 @@ onKeydown((e) => {
 		</div>
 		<div class="title__buttons">
 			<TitleButton class="title__button" @click="handleStart"> Start </TitleButton>
-			<TitleButton class="title__button" @click="handleLoad" disabled> Load </TitleButton>
+			<TitleButton class="title__button" @click="handleLoad" :disabled="!hasSaveFile">
+				Load
+			</TitleButton>
 			<TitleButton
 				v-for="button in buttons"
 				class="title__button"
