@@ -105,7 +105,7 @@ describe('Stack', () => {
 		});
 		expect(stack.isEmpty()).toBe(true);
 
-		// Load state and execute 2/3 of the root context.
+		// Load state and reach line "print c".
 		stack.load(stateInitial);
 		expect(stack.pull()).toMatchObject({
 			frame: { path: [] },
@@ -117,7 +117,11 @@ describe('Stack', () => {
 			index: 1,
 			value: ['print', 'b'],
 		});
-		expect(stack.isEmpty()).toBe(false);
+		expect(stack.peek()).toMatchObject({
+			frame: { path: [] },
+			index: 2,
+			value: ['print', 'c'],
+		});
 
 		// Create another save and execute the rest of the root context.
 		const stateWithOneItem = stack.save();
@@ -134,6 +138,125 @@ describe('Stack', () => {
 			frame: { path: [] },
 			index: 2,
 			value: ['print', 'c'],
+		});
+		expect(stack.isEmpty()).toBe(true);
+	});
+
+	it('implements patching functionality (same line)', () => {
+		const stack = new Stack();
+		stack.push(
+			[],
+			[
+				['print', 'a'],
+				['print', 'b'],
+				['print', 'c'],
+			],
+		);
+
+		// Reach line "print c".
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 0,
+			value: ['print', 'a'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 1,
+			value: ['print', 'b'],
+		});
+		expect(stack.peek()).toMatchObject({
+			frame: { path: [] },
+			index: 2,
+			value: ['print', 'c'],
+		});
+
+		// Patch.
+		stack.patch(
+			[],
+			[
+				['print', 'a'],
+				['print', 'b1'],
+				['print', 'b2'],
+				['print', 'b3'],
+				['print', 'c'],
+				['print', 'd'],
+			],
+		);
+
+		// Execute the rest of the stack.
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 4,
+			value: ['print', 'c'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 5,
+			value: ['print', 'd'],
+		});
+	});
+
+	it('implements patching functionality (previous line)', () => {
+		const stack = new Stack();
+		stack.push(
+			[],
+			[
+				['print', 'a'],
+				['print', 'b'],
+				['print', 'c'],
+			],
+		);
+
+		// Reach line "print b".
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 0,
+			value: ['print', 'a'],
+		});
+		expect(stack.peek()).toMatchObject({
+			frame: { path: [] },
+			index: 1,
+			value: ['print', 'b'],
+		});
+
+		// Patch.
+		stack.patch(
+			[],
+			[
+				['print', 'a'],
+				['print', 'b1'],
+				['print', 'b2'],
+				['print', 'b3'],
+				['print', 'c'],
+				['print', 'd'],
+			],
+		);
+
+		// Execute the rest of the stack.
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 1,
+			value: ['print', 'b1'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 2,
+			value: ['print', 'b2'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 3,
+			value: ['print', 'b3'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 4,
+			value: ['print', 'c'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 5,
+			value: ['print', 'd'],
 		});
 		expect(stack.isEmpty()).toBe(true);
 	});

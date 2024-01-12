@@ -7,30 +7,9 @@ const spyOnLog = () => {
 	return jest.spyOn(console, 'log').mockImplementation();
 };
 
-describe('Script', () => {
+describe('Script Commands', () => {
 	afterEach(() => {
 		jest.restoreAllMocks();
-	});
-
-	it('implements save and load functionality', () => {
-		const scriptOrigin = new Script([
-			{ print: 'Hello A!' },
-			{ print: 'Hello B!' },
-			{ print: 'Hello C!' },
-		]);
-		const log = spyOnLog();
-
-		scriptOrigin.step();
-		expect(log).toHaveBeenLastCalledWith('Hello A!');
-		const save = scriptOrigin.save();
-		scriptOrigin.step();
-		expect(log).toHaveBeenLastCalledWith('Hello B!');
-
-		const scriptLoaded = new Script().load(save);
-		scriptLoaded.step();
-		expect(log).toHaveBeenLastCalledWith('Hello B!');
-		scriptLoaded.step();
-		expect(log).toHaveBeenLastCalledWith('Hello C!');
 	});
 
 	it('emits `step` event', () => {
@@ -249,5 +228,190 @@ describe('Script', () => {
 		listener.mockReset();
 		script.step();
 		expect(listener).not.toHaveBeenCalled();
+	});
+});
+
+describe('Script Methods', () => {
+	afterEach(() => {
+		jest.restoreAllMocks();
+	});
+
+	it('implements save and load functionality', () => {
+		const scriptOrigin = new Script([
+			{ print: 'Hello A!' },
+			{ print: 'Hello B!' },
+			{ print: 'Hello C!' },
+		]);
+		const log = spyOnLog();
+
+		scriptOrigin.step();
+		expect(log).toHaveBeenLastCalledWith('Hello A!');
+		const save = scriptOrigin.save();
+		scriptOrigin.step();
+		expect(log).toHaveBeenLastCalledWith('Hello B!');
+
+		const scriptLoaded = new Script().load(save);
+		scriptLoaded.step();
+		expect(log).toHaveBeenLastCalledWith('Hello B!');
+		scriptLoaded.step();
+		expect(log).toHaveBeenLastCalledWith('Hello C!');
+	});
+
+	it('implements patching functionality (empty script)', () => {
+		const script = new Script();
+
+		const update = [{ print: 'Hello A!' }, { print: 'Hello B!' }, { print: 'Hello C!' }];
+		script.patch(update);
+		expect(script.source).toMatchObject(update);
+
+		const log = spyOnLog();
+		script.step();
+		expect(log).not.toBeCalled();
+		script.step();
+		expect(log).not.toBeCalled();
+		script.step();
+		expect(log).not.toBeCalled();
+	});
+
+	it('implements patching functionality (return to the same line)', () => {
+		const script = new Script([
+			{ print: 'Hello A!' },
+			{ print: 'Hello B!' },
+			{ print: 'Hello C!' },
+		]);
+
+		const log = spyOnLog();
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello A!');
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello B!');
+
+		const update = [
+			{ print: 'Hello A!' },
+			{ print: 'Hello B1!' },
+			{ print: 'Hello B2!' },
+			{ print: 'Hello B3!' },
+			{ print: 'Hello C!' },
+			{ print: 'Hello D!' },
+		];
+		script.patch(update);
+		expect(script.source).toMatchObject(update);
+
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello C!');
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello D!');
+		expect(script.isDone()).toBe(true);
+	});
+
+	it('implements patching functionality (return to the different line)', () => {
+		const script = new Script([
+			{ print: 'Hello A!' },
+			{ print: 'Hello B!' },
+			{ print: 'Hello C!' },
+		]);
+
+		const log = spyOnLog();
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello A!');
+
+		const update = [
+			{ print: 'Hello A!' },
+			{ print: 'Hello B1!' },
+			{ print: 'Hello B2!' },
+			{ print: 'Hello B3!' },
+			{ print: 'Hello C!' },
+			{ print: 'Hello D!' },
+		];
+		script.patch(update);
+		expect(script.source).toMatchObject(update);
+
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello B1!');
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello B2!');
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello B3!');
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello C!');
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello D!');
+		expect(script.isDone()).toBe(true);
+	});
+
+	it('implements patching functionality (return from the nested block)', () => {
+		const script = new Script([
+			{ print: 'Hello A!' },
+			{
+				if: {
+					cond: true,
+					then: [{ print: 'Hello B!' }, { print: 'Hello C!' }],
+				},
+			},
+			{ print: 'Hello D!' },
+			{ print: 'Hello E!' },
+		]);
+
+		const log = spyOnLog();
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello A!');
+		script.step(); // if
+
+		const updateOne = [
+			{ print: 'Hello A!' },
+			{
+				if: {
+					cond: true,
+					then: [
+						{ print: 'Hello B1!' },
+						{ print: 'Hello B2!' },
+						{ print: 'Hello C1!' },
+						{ print: 'Hello C2!' },
+					],
+				},
+			},
+			{ print: 'Hello D!' },
+			{ print: 'Hello E!' },
+		];
+		script.patch(updateOne);
+		expect(script.source).toMatchObject(updateOne);
+
+		script.step(); // if
+		script.step(); // print
+		expect(log).toHaveBeenLastCalledWith('Hello B1!');
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello B2!');
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello C1!');
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello C2!');
+
+		const updateTwo = [
+			{ print: 'Hello A!' },
+			{
+				if: {
+					cond: true,
+					then: [
+						{ print: 'Hello B1!' },
+						{ print: 'Hello B2!' },
+						{ print: 'Hello C1!' },
+						{ print: 'Hello C2!' },
+					],
+				},
+			},
+			{ print: 'Hello D1!' },
+			{ print: 'Hello D2!' },
+			{ print: 'Hello E!' },
+		];
+		script.patch(updateTwo);
+		expect(script.source).toMatchObject(updateTwo);
+
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello D1!');
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello D2!');
+		script.step();
+		expect(log).toHaveBeenLastCalledWith('Hello E!');
+		expect(script.isDone()).toBe(true);
 	});
 });

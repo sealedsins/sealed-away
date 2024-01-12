@@ -2,6 +2,7 @@
  * Sealed Sins, 2023-2024-2024.
  */
 import { pick, isEqual } from 'lodash';
+import { diff } from '../utils/diff';
 
 /**
  * Call Stack Frame.
@@ -35,6 +36,13 @@ export class Stack {
 	private stack: Array<StackFrame> = [];
 
 	/**
+	 * Stack length.
+	 */
+	get length() {
+		return this.stack.length;
+	}
+
+	/**
 	 * Returns stack status.
 	 * @returns Boolean indicating stack status.
 	 */
@@ -53,16 +61,15 @@ export class Stack {
 	 * Pushes new frame to the top of the stack.
 	 * @param path - Frame path metadata (used for debug).
 	 * @param code - Frame code.
+	 * @returns Created frame.
 	 */
 	public push(path: StackFrame['path'], code: StackFrame['code']) {
 		if (this.find(path)) {
 			throw new StackError('Frame with such path already exists.');
 		}
-		this.stack.unshift({
-			path,
-			programCounter: 0,
-			code,
-		});
+		const frame: StackFrame = { programCounter: 0, path, code };
+		this.stack.unshift(frame);
+		return frame;
 	}
 
 	/**
@@ -111,6 +118,14 @@ export class Stack {
 	}
 
 	/**
+	 * Retruns current stack frames.
+	 * @returns Stack frames.
+	 */
+	public dump() {
+		return this.stack;
+	}
+
+	/**
 	 * Stringifies stack state and returns it.
 	 * @returns Stringified stack state.
 	 */
@@ -128,5 +143,44 @@ export class Stack {
 		const data = JSON.parse(state);
 		Object.assign(this, data);
 		return this;
+	}
+
+	/**
+	 * Finds frame with a given path and patches its code.
+	 * This method updates the `programCounter` accordingly.
+	 * @returns Patched frame or null (if frame does not exist).
+	 * @param path - Frame path.
+	 * @param code - Frame code.
+	 */
+	public patch(path: StackFrame['path'], code: StackFrame['code']) {
+		const frame = this.find(path);
+		if (!frame) {
+			return null;
+		}
+		let { programCounter } = frame;
+		let changes = diff(frame.code, code);
+		while (programCounter >= 0) {
+			const match = changes.find((x) => x.indexSource === programCounter);
+			if (!match && programCounter > 0) {
+				programCounter--;
+				continue;
+			}
+			if (!match && programCounter === 0) {
+				frame.programCounter = 0;
+				frame.code = code;
+				break;
+			}
+			if (match && frame.programCounter === programCounter) {
+				frame.programCounter = match.indexUpdate;
+				frame.code = code;
+				break;
+			}
+			if (match && frame.programCounter !== programCounter) {
+				frame.programCounter = match.indexUpdate + 1;
+				frame.code = code;
+				break;
+			}
+		}
+		return frame;
 	}
 }

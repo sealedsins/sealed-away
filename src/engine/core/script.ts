@@ -3,7 +3,7 @@
  */
 import zod, { ZodError } from 'zod';
 import { fromZodError } from 'zod-validation-error';
-import { pick, mapValues, isPlainObject, isArray, isEqual } from 'lodash';
+import { get, pick, mapValues, isPlainObject, isArray, isEqual } from 'lodash';
 import { Stack, StackSlice } from './stack';
 
 /**
@@ -165,6 +165,26 @@ export class Script {
 			const text = args ? args.message : err.message;
 			throw new ScriptError(text, path);
 		}
+	}
+
+	public patch(update: Array<unknown>) {
+		if (isEqual(update, this.source)) {
+			this.source = update;
+			return;
+		}
+		const sourceRoot = this.stack.find([]);
+		if (!sourceRoot || this.stack.isEmpty()) {
+			this.stack.clear();
+			this.source = update;
+			return;
+		}
+		if (this.stack.length > 1) {
+			sourceRoot.programCounter--; // rollback to the previous command
+		}
+		this.stack.clear();
+		this.stack.push([], this.source).programCounter = sourceRoot.programCounter;
+		this.stack.patch([], update);
+		this.source = update;
 	}
 
 	/**

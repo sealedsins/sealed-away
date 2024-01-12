@@ -121,7 +121,9 @@ export const useScene = defineStore('scene', () => {
 	const load = (slot: number) => {
 		const state = storage.value[slot];
 		if (state && scene.value) {
+			const latestSource = scene.value.source;
 			scene.value.load(state.data);
+			scene.value.patch(latestSource);
 			refresh();
 		}
 	};
