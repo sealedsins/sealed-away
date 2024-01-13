@@ -43,10 +43,11 @@ export class Stack {
 	}
 
 	/**
-	 * Clears stack.
+	 * Dumps current stack state.
+	 * @returns Stack frame list.
 	 */
-	public clear() {
-		this.stack = [];
+	public dump() {
+		return this.stack;
 	}
 
 	/**
@@ -58,11 +59,25 @@ export class Stack {
 		if (this.find(path)) {
 			throw new StackError('Frame with such path already exists.');
 		}
-		this.stack.unshift({
-			path,
-			programCounter: 0,
-			code,
-		});
+		const frame = { programCounter: 0, path, code };
+		this.stack.unshift(frame);
+	}
+
+	/**
+	 * Peeks a slice from the top of the stack.
+	 * @returns Stack slice from the top of the stack.
+	 */
+	public peek(): StackSlice | null {
+		const frame = this.stack[0];
+		const value = frame?.code[frame.programCounter];
+		if (!frame || !value) {
+			return null;
+		}
+		return {
+			frame,
+			index: frame.programCounter,
+			value,
+		};
 	}
 
 	/**
@@ -70,34 +85,14 @@ export class Stack {
 	 * @returns Stack slice from the top of the stack.
 	 */
 	public pull(): StackSlice | null {
-		const frame = this.stack[0];
-		if (!frame) {
+		const slice = this.peek();
+		if (!slice) {
 			return null;
 		}
-		const value = frame.code[frame.programCounter];
-		if (!value) {
+		slice.frame.programCounter++;
+		if (slice.frame.programCounter === slice.frame.code.length) {
 			this.stack.shift();
-			return this.pull();
 		}
-		const slice: StackSlice = {
-			frame,
-			index: frame.programCounter,
-			value,
-		};
-		frame.programCounter++;
-		return slice;
-	}
-
-	/**
-	 * Peeks a slice from the top of the stack.
-	 * @returns Stack slice from the top of the stack.
-	 */
-	public peek() {
-		const slice = this.pull();
-		if (!slice) {
-			return slice;
-		}
-		slice.frame.programCounter--;
 		return slice;
 	}
 
