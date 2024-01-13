@@ -3,8 +3,9 @@
  */
 import zod, { ZodError } from 'zod';
 import { fromZodError } from 'zod-validation-error';
-import { pick, mapValues, isPlainObject, isArray, isEqual } from 'lodash';
+import { mapValues, isPlainObject, isArray, isEqual } from 'lodash';
 import { Stack, StackSlice } from './stack';
+import { Scope } from './scope';
 
 /**
  * Script event.
@@ -55,9 +56,9 @@ export class ScriptError extends Error {
  * Script interpreter.
  */
 export class Script {
-	protected stack = new Stack();
 	protected subs: Array<ScriptListener<unknown>> = [];
-	protected vars: Record<string, unknown> = {};
+	protected stack = new Stack();
+	protected scope = new Scope();
 
 	constructor(public source: Array<unknown> = []) {
 		this.stack.push([], source);
@@ -90,7 +91,7 @@ export class Script {
 	 * @returns Variable value.
 	 */
 	public getVar<T = unknown>(name: string) {
-		return this.vars[name] as T;
+		return this.scope.get<T>(name);
 	}
 
 	/**
@@ -99,7 +100,7 @@ export class Script {
 	 * @param value - Variable value.
 	 */
 	public setVar<T = unknown>(name: string, value: T) {
-		this.vars[name] = value;
+		return this.scope.set<T>(name, value);
 	}
 
 	/**
@@ -131,9 +132,10 @@ export class Script {
 	 * @returns Script state.
 	 */
 	public save() {
+		const { source } = this;
 		const stack = this.stack.save();
-		const state = JSON.stringify(pick(this, ['source', 'vars']));
-		return JSON.stringify({ state, stack });
+		const scope = this.scope.save();
+		return JSON.stringify({ source, scope, stack });
 	}
 
 	/**
@@ -144,7 +146,8 @@ export class Script {
 	public load(state: string) {
 		const data = JSON.parse(state);
 		this.stack = this.stack.load(data.stack);
-		Object.assign(this, JSON.parse(data.state));
+		this.scope = this.scope.load(data.scope);
+		this.source = data.source;
 		return this;
 	}
 
@@ -165,31 +168,6 @@ export class Script {
 			const text = args ? args.message : err.message;
 			throw new ScriptError(text, path);
 		}
-	}
-
-	/**
-	 * Renders `template` as a JS expression and returns its value.
-	 * @param template - Expression to render.
-	 * @internal
-	 */
-	protected renderExpression(template: string) {
-		const render = new Function(...Object.keys(this.vars), `return (${template})`);
-		const result = render.call(this.vars, ...Object.values(this.vars));
-		return result as unknown;
-	}
-
-	/**
-	 * Renders `template` as a string template and returns its value.
-	 * @param template - Template to render.
-	 * @internal
-	 */
-	protected renderTemplate(template: string) {
-		let output = template;
-		for (const [match, exp] of template.matchAll(/{{(.+?)}}/gm)) {
-			const value = this.renderExpression(exp!);
-			output = output.replace(match, `${value}`);
-		}
-		return output;
 	}
 
 	/**
@@ -233,9 +211,9 @@ export class Script {
 		} else if (isArray(value)) {
 			return value.map((item) => this.eval(item));
 		} else if (value instanceof ScriptExp) {
-			return this.renderExpression(value.exp);
+			return this.scope.renderExpression(value.exp);
 		} else if (value instanceof ScriptFmt) {
-			return this.renderTemplate(value.fmt);
+			return this.scope.renderTemplate(value.fmt);
 		} else {
 			return value;
 		}
@@ -284,7 +262,7 @@ export class Script {
 			case 'eval': {
 				const argSchema = zod.string();
 				const code = argSchema.parse(this.eval(args));
-				new Function(code).call(this.vars);
+				new Function(code).call(this.scope.dump());
 				break;
 			}
 			case 'print': {

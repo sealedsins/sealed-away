@@ -1,5 +1,5 @@
 /**
- * Sealed Sins, 2023-2024-2024.
+ * Sealed Sins, 2023-2024.
  */
 import { pick, isEqual } from 'lodash';
 
@@ -107,7 +107,7 @@ export class Stack {
 
 	/**
 	 * Stringifies stack state and returns it.
-	 * @returns Stringified stack state.
+	 * @returns Stack state (JSON).
 	 */
 	public save() {
 		const state = pick(this, ['stack']);
@@ -116,7 +116,7 @@ export class Stack {
 
 	/**
 	 * Parses given stack state and restores it.
-	 * @param state - State to load.
+	 * @param state - Stack state to load (JSON).
 	 * @returns Stack.
 	 */
 	public load(state: string) {

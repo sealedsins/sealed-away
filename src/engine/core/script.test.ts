@@ -14,23 +14,22 @@ describe('Script', () => {
 
 	it('implements save and load functionality', () => {
 		const scriptOrigin = new Script([
-			{ print: 'Hello A!' },
-			{ print: 'Hello B!' },
-			{ print: 'Hello C!' },
+			{ set: { name: 'test', value: 100 } },
+			{ set: { name: 'test', value: 150 } },
+			{ set: { name: 'test', value: 200 } },
 		]);
-		const log = spyOnLog();
 
 		scriptOrigin.step();
-		expect(log).toHaveBeenLastCalledWith('Hello A!');
+		expect(scriptOrigin.getVar('test')).toBe(100);
 		const save = scriptOrigin.save();
 		scriptOrigin.step();
-		expect(log).toHaveBeenLastCalledWith('Hello B!');
+		expect(scriptOrigin.getVar('test')).toBe(150);
 
 		const scriptLoaded = new Script().load(save);
 		scriptLoaded.step();
-		expect(log).toHaveBeenLastCalledWith('Hello B!');
+		expect(scriptLoaded.getVar('test')).toBe(150);
 		scriptLoaded.step();
-		expect(log).toHaveBeenLastCalledWith('Hello C!');
+		expect(scriptLoaded.getVar('test')).toBe(200);
 	});
 
 	it('emits `step` event', () => {
