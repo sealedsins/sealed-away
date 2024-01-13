@@ -4,7 +4,7 @@
 import { pick, isEqual } from 'lodash';
 
 /**
- * Call Stack Frame.
+ * Call Stack frame.
  */
 export interface StackFrame {
 	path: Array<string | number>;
@@ -13,13 +13,24 @@ export interface StackFrame {
 }
 
 /**
- * Call Stack Slice.
+ * Call Stack slice.
  */
 export interface StackSlice {
 	frame: StackFrame;
 	index: number;
 	value: unknown;
 }
+
+/**
+ * Call Stack history item.
+ * @internal
+ */
+// prettier-ignore
+export type StackChange = (
+	| { type: 'push' }
+	| { type: 'pull:shift'; frame: StackFrame }
+	| { type: 'pull:increment' }
+);
 
 /**
  * Call Stack Error.
@@ -32,6 +43,7 @@ export class StackError extends Error {
  * Call Stack.
  */
 export class Stack {
+	private history: Array<StackChange> = [];
 	private stack: Array<StackFrame> = [];
 
 	/**
@@ -59,7 +71,12 @@ export class Stack {
 		if (this.find(path)) {
 			throw new StackError('Frame with such path already exists.');
 		}
-		const frame = { programCounter: 0, path, code };
+		const frame = {
+			programCounter: 0,
+			path,
+			code,
+		};
+		this.history.push({ type: 'push' });
 		this.stack.unshift(frame);
 	}
 
@@ -89,9 +106,13 @@ export class Stack {
 		if (!slice) {
 			return null;
 		}
-		slice.frame.programCounter++;
-		if (slice.frame.programCounter === slice.frame.code.length) {
+		const frame = slice.frame;
+		frame.programCounter++;
+		if (frame.programCounter === frame.code.length) {
+			this.history.push({ type: 'pull:shift', frame });
 			this.stack.shift();
+		} else {
+			this.history.push({ type: 'pull:increment' });
 		}
 		return slice;
 	}
@@ -110,7 +131,7 @@ export class Stack {
 	 * @returns Stringified stack state.
 	 */
 	public save() {
-		const state = pick(this, ['stack']);
+		const state = pick(this, ['stack', 'history']);
 		return JSON.stringify(state);
 	}
 
@@ -123,5 +144,36 @@ export class Stack {
 		const data = JSON.parse(state);
 		Object.assign(this, data);
 		return this;
+	}
+
+	/**
+	 * Undoes the last stack action.
+	 */
+	public undo() {
+		const change = this.history.pop();
+		if (!change) {
+			return;
+		}
+		switch (change.type) {
+			case 'push': {
+				this.stack.shift();
+				break;
+			}
+			case 'pull:shift': {
+				const frame = change.frame;
+				frame.programCounter = frame.code.length - 1;
+				this.stack.unshift(frame);
+				break;
+			}
+			case 'pull:increment': {
+				const frame = this.stack[0]!;
+				frame.programCounter--;
+				break;
+			}
+			default: {
+				throw new StackError('Unknown history item');
+				break;
+			}
+		}
 	}
 }

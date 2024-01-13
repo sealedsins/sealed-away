@@ -137,4 +137,72 @@ describe('Stack', () => {
 		});
 		expect(stack.isEmpty()).toBe(true);
 	});
+
+	it('implements undo functionality', () => {
+		const stack = new Stack();
+		stack.push(
+			[],
+			[
+				['print', 'c'],
+				['print', 'd'],
+			],
+		);
+		stack.push(
+			['nested'],
+			[
+				['print', 'a'],
+				['print', 'b'],
+			],
+		);
+		expect(stack.pull()).toMatchObject({
+			frame: { path: ['nested'] },
+			index: 0,
+			value: ['print', 'a'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: ['nested'] },
+			index: 1,
+			value: ['print', 'b'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 0,
+			value: ['print', 'c'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 1,
+			value: ['print', 'd'],
+		});
+		expect(stack.isEmpty());
+
+		stack.undo();
+		expect(stack.peek()).toMatchObject({
+			frame: { path: [] },
+			index: 1,
+			value: ['print', 'd'],
+		});
+		stack.undo();
+		expect(stack.peek()).toMatchObject({
+			frame: { path: [] },
+			index: 0,
+			value: ['print', 'c'],
+		});
+		stack.undo();
+		expect(stack.peek()).toMatchObject({
+			frame: { path: ['nested'] },
+			index: 1,
+			value: ['print', 'b'],
+		});
+		stack.undo();
+		expect(stack.peek()).toMatchObject({
+			frame: { path: ['nested'] },
+			index: 0,
+			value: ['print', 'a'],
+		});
+
+		stack.undo();
+		stack.undo();
+		expect(stack.isEmpty()).toBe(true);
+	});
 });
