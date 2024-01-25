@@ -51,6 +51,13 @@ export class Stack {
 	}
 
 	/**
+	 * Clears current stack state.
+	 */
+	public clear() {
+		this.stack.length = 0;
+	}
+
+	/**
 	 * Pushes new frame to the top of the stack.
 	 * @param path - Frame path metadata (used for debug).
 	 * @param code - Frame code.

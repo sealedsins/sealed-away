@@ -20,6 +20,15 @@ export class Scope {
 	}
 
 	/**
+	 * Clears scope variables.
+	 */
+	public clear() {
+		for (const key of Object.keys(this.vars)) {
+			delete this.vars[key];
+		}
+	}
+
+	/**
 	 * Gets scope variable.
 	 * @param name - Variable name.
 	 * @returns Variable value.
@@ -42,10 +51,10 @@ export class Scope {
 	 * @param template - Expression to render.
 	 * @returns Rendered expression.
 	 */
-	public renderExpression(template: string) {
+	public renderExpression<T = unknown>(template: string) {
 		const render = new Function(...Object.keys(this.vars), `return (${template})`);
 		const result = render.call(this.vars, ...Object.values(this.vars));
-		return result as unknown;
+		return result as T;
 	}
 
 	/**
