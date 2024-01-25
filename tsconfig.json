@@ -4,7 +4,7 @@
 		"strict": true,
 		"module": "esnext",
 		"moduleResolution": "node",
-		"types": ["jest", "vite/client", "vue"],
+		"types": ["vite/client", "vue"],
 		"noUncheckedIndexedAccess": true,
 		"noFallthroughCasesInSwitch": true,
 		"exactOptionalPropertyTypes": false,

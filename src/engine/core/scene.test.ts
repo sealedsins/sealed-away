@@ -1,6 +1,7 @@
 /**
  * Sealed Sins, 2023-2024.
  */
+import { describe, it, expect, vi } from 'vitest';
 import { Scene } from './scene';
 
 describe('Scene', () => {
@@ -128,7 +129,7 @@ describe('Scene', () => {
 			{ play: { path: 'test' }, 
 		}]);
 
-		const playListener = jest.fn();
+		const playListener = vi.fn();
 		scene.subscribe(playListener);
 		scene.next();
 		expect(scene.isDone()).toBe(true);

@@ -1,3 +1,7 @@
+/**
+ * Sealed Sins, 2023-2024.
+ */
+import { describe, it, expect } from 'vitest';
 import { Stack } from './stack';
 
 describe('Stack', () => {

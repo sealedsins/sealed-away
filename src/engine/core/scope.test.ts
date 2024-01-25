@@ -1,6 +1,7 @@
 /**
  * Sealed Sins, 2023-2024.
  */
+import { describe, it, expect } from 'vitest';
 import { Scope } from './scope';
 
 describe('Scope', () => {

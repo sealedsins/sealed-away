@@ -1,15 +1,16 @@
 /**
  * Sealed Sins, 2023-2024.
  */
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { Script } from './script';
 
 const spyOnLog = () => {
-	return jest.spyOn(console, 'log').mockImplementation();
+	return vi.spyOn(console, 'log').mockImplementation(() => null);
 };
 
 describe('Script', () => {
 	afterEach(() => {
-		jest.restoreAllMocks();
+		vi.restoreAllMocks();
 	});
 
 	it('implements save and load functionality', () => {
@@ -39,7 +40,7 @@ describe('Script', () => {
 			{ print: 'Hello C!' },
 		]);
 		spyOnLog();
-		const listener = jest.fn();
+		const listener = vi.fn();
 		script.subscribe(listener);
 		script.step();
 		script.step();
@@ -236,7 +237,7 @@ describe('Script', () => {
 			{ emit: { type: 'test', data: 'B' } },
 			{ emit: { type: 'poop' } },
 		]);
-		const listener = jest.fn();
+		const listener = vi.fn();
 		const unsubscribe = script.subscribe(listener);
 		script.step();
 		expect(listener).toHaveBeenCalledWith({ type: 'test' });
