@@ -14,9 +14,9 @@
 		"serve-build": "serve -p 8080 dist",
 		"format-check": "prettier '**/*.{vue,ts,md,scss,yml,json}' --check",
 		"format": "prettier '**/*.{vue,ts,md,scss,yml,json}' --write",
-		"test-watch": "vitest watch",
-		"test-coverage": "vitest run --coverage.enabled --coverage.all false --dir ./src/engine/core",
-		"test": "vitest run --reporter verbose",
+		"test-watch": "vitest watch --dom",
+		"test-coverage": "vitest run --dom --coverage.enabled --coverage.all false --dir ./src/engine/core",
+		"test": "vitest run --dom --reporter verbose",
 		"todo": "leasot -x 'src/**/*.ts'"
 	},
 	"dependencies": {

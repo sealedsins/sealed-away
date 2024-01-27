@@ -2,11 +2,12 @@
 import { computed } from 'vue';
 import TitleImage from '../components/image.vue';
 import TitleButton from '../components/button.vue';
-import { useScene, useParser } from '../stores';
+import { useScene, useParser, useSaves } from '../stores';
 import { onKeydown } from '../utils/input';
 
 const parser = useParser();
 const scene = useScene();
+const saves = useSaves();
 
 /**
  * Custom images to render.
@@ -26,7 +27,7 @@ const buttons = computed(() => {
  * Save file presence indicator.
  */
 const hasSaveFile = computed(() => {
-	return !!scene.storage[0];
+	return saves.slots.length > 0;
 });
 
 /**
@@ -41,7 +42,7 @@ const handleStart = () => {
  */
 const handleLoad = () => {
 	handleStart();
-	scene.load(0);
+	saves.load(0);
 };
 
 /**

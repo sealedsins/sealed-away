@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { ScriptEvent } from '../core';
-import { useScene, useCache } from '../stores';
+import { useScene, useCache, useSaves } from '../stores';
 import { onKeydown } from '../utils/input';
 
 import TransitionFade from '../components/transition/fade.vue';
@@ -12,6 +12,7 @@ import ScenePause from '../components/scene/pause.vue';
 
 const store = useScene();
 const cache = useCache();
+const saves = useSaves();
 
 const typewriter = ref<typeof SceneTypewriter>();
 const paused = ref(false);
@@ -41,7 +42,7 @@ const hasFullscreen = computed(() => {
  * Scene save file precense indicator.
  */
 const hasSaveFile = computed(() => {
-	return !!store.storage[0];
+	return saves.slots.length > 0;
 });
 
 /**
@@ -69,7 +70,7 @@ const handleMenu = (id: string) => {
  */
 const handleSave = () => {
 	paused.value = false;
-	store.save(0);
+	saves.save(0);
 };
 
 /**
@@ -77,7 +78,7 @@ const handleSave = () => {
  */
 const handleLoad = () => {
 	paused.value = false;
-	store.load(0);
+	saves.load(0);
 };
 
 /**
