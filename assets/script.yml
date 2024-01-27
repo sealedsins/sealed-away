@@ -31,7 +31,7 @@ config:
           width: 25vw
           height: 20vh
           left: 8.5vw
-          top: 36.5vh
+          top: 37.5vh
       - src: !inc /title/logo-right.png
         media:
           mobile: false
@@ -41,7 +41,7 @@ config:
           width: 25vw
           height: 20vh
           right: 8.5vw
-          top: 36.5vh
+          top: 37.5vh
       - src: !inc /title/logo-tablet.png
         media:
           desktop: false
