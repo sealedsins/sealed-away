@@ -27,10 +27,19 @@ export const useSaves = defineStore('saves', () => {
 	const store = useScene();
 
 	/**
+	 * Initial Local Storage state.
+	 */
+	let initialState: Array<Save>;
+	try {
+		initialState = loadCompressed(STORAGE_DOMAIN) ?? [];
+	} catch (err) {
+		initialState = [];
+	}
+
+	/**
 	 * Save slots.
 	 */
-	const initialState = loadCompressed<Array<Save>>(STORAGE_DOMAIN) ?? [];
-	const slots = reactive(initialState);
+	const slots = reactive<Array<Save>>(initialState);
 
 	/**
 	 * Saves scene state to the given `slot`.
