@@ -101,7 +101,7 @@ $interface-width: 1100px;
 .title {
 	display: flex;
 	position: absolute;
-	background: #333;
+	background: #000;
 
 	flex-direction: column;
 	justify-content: space-between;
