@@ -1,7 +1,16 @@
 /**
  * Sealed Sins, 2023-2024.
  */
-export const assets = import.meta.glob('/assets/**/*', { eager: true, as: 'url' });
+
+/**
+ * Asset path storage.
+ * @internal
+ */
+export const assets = import.meta.glob<true, string, string>('/assets/**/*', {
+	eager: true,
+	import: 'default',
+	query: '?url',
+});
 
 /**
  * Resolves full path to the given asset.
@@ -15,7 +24,7 @@ export const resolve = (src: string) => {
 	if (!resolved) {
 		throw new Error(`Asset is not found: ${src}`);
 	} else {
-		return resolved;
+		return resolved as string;
 	}
 };
 
