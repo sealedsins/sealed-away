@@ -141,4 +141,130 @@ describe('Stack', () => {
 		});
 		expect(stack.isEmpty()).toBe(true);
 	});
+
+	it('implements patching functionality (same line)', () => {
+		const stack = new Stack();
+
+		// prettier-ignore
+		stack.push([], [
+			['print', 'a'],
+			['print', 'b'],
+			['print', 'c'],
+			['print', 'd'],
+		]);
+
+		// Reach line "print d".
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 0,
+			value: ['print', 'a'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 1,
+			value: ['print', 'b'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 2,
+			value: ['print', 'c'],
+		});
+		expect(stack.peek()).toMatchObject({
+			frame: { path: [] },
+			index: 3,
+			value: ['print', 'd'],
+		});
+
+		// Patch.
+		// prettier-ignore
+		stack.patch([], [
+			['print', 'a'],
+			['print', 'b1'],
+			['print', 'b2'],
+			['print', 'b3'],
+			['print', 'c'],
+			['print', 'd'],
+			['print', 'e'],
+		]);
+
+		// Execute the rest of the stack.
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 5,
+			value: ['print', 'd'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 6,
+			value: ['print', 'e'],
+		});
+	});
+
+	it('implements patching functionality (previous line)', () => {
+		const stack = new Stack();
+
+		// prettier-ignore
+		stack.push([], [
+			['print', 'a'],
+			['print', 'b'],
+			['print', 'c'],
+		]);
+
+		// Reach line "print c".
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 0,
+			value: ['print', 'a'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 1,
+			value: ['print', 'b'],
+		});
+		expect(stack.peek()).toMatchObject({
+			frame: { path: [] },
+			index: 2,
+			value: ['print', 'c'],
+		});
+
+		// Patch.
+		// prettier-ignore
+		stack.patch([], [
+			['print', 'a'],
+			['print', 'b'],
+			['print', 'c1'],
+			['print', 'c2'],
+			['print', 'c3'],
+			['print', 'd'],
+			['print', 'e'],
+		]);
+
+		// Execute the rest of the stack.
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 2,
+			value: ['print', 'c1'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 3,
+			value: ['print', 'c2'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 4,
+			value: ['print', 'c3'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 5,
+			value: ['print', 'd'],
+		});
+		expect(stack.pull()).toMatchObject({
+			frame: { path: [] },
+			index: 6,
+			value: ['print', 'e'],
+		});
+		expect(stack.isEmpty()).toBe(true);
+	});
 });

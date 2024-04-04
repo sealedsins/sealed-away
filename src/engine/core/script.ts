@@ -4,6 +4,7 @@
 import zod, { ZodError } from 'zod';
 import { fromZodError } from 'zod-validation-error';
 import { mapValues, isPlainObject, isArray, isEqual } from 'lodash';
+import { sha1 as hash } from 'object-hash';
 import { Stack, StackSlice } from './stack';
 import { Scope } from './scope';
 
@@ -20,6 +21,16 @@ export interface ScriptEvent<T = unknown> {
  */
 export interface ScriptListener<T = unknown> {
 	(event: ScriptEvent<T>): void;
+}
+
+/**
+ * Script save state.
+ * @internal
+ */
+export interface ScriptState {
+	sourceHash: string;
+	stackState: string;
+	scopeState: string;
 }
 
 /**
@@ -132,23 +143,42 @@ export class Script {
 	 * @returns Script state.
 	 */
 	public save() {
-		const { source } = this;
-		const stack = this.stack.save();
-		const scope = this.scope.save();
-		return JSON.stringify({ source, scope, stack });
+		return JSON.stringify({
+			sourceHash: hash(this.source),
+			stackState: this.stack.save(),
+			scopeState: this.scope.save(),
+		} satisfies ScriptState);
 	}
 
 	/**
 	 * Loads script state.
+	 *
+	 * @remarks
+	 * Loading state with a different source may cause unwanted state losses.
+	 * Use with caution.
+	 *
 	 * @param state - State to load.
 	 * @returns Script.
 	 */
 	public load(state: string) {
-		const data = JSON.parse(state);
-		this.stack = this.stack.load(data.stack);
-		this.scope = this.scope.load(data.scope);
-		this.source = data.source;
-		return this;
+		try {
+			const data = JSON.parse(state) as ScriptState;
+			const loadedStack = new Stack().load(data.stackState);
+			const loadedScope = new Scope().load(data.scopeState);
+			if (data.sourceHash === hash(this.source)) {
+				this.stack = loadedStack;
+				this.scope = loadedScope;
+			} else {
+				const { programCounter, code, path: root } = loadedStack.patch([], this.source)!;
+				this.stack.clear();
+				this.stack.push(root, code);
+				this.stack.find(root)!.programCounter = programCounter;
+				this.scope = loadedScope;
+			}
+			return this;
+		} catch (err) {
+			throw new ScriptError(`Error loading save - it may be broken or unsupported.`);
+		}
 	}
 
 	/**

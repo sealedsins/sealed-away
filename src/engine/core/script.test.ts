@@ -14,39 +14,58 @@ describe('Script', () => {
 	});
 
 	it('implements save and load functionality', () => {
-		const scriptOrigin = new Script([
-			{ set: { name: 'test', value: 100 } },
-			{ set: { name: 'test', value: 150 } },
-			{ set: { name: 'test', value: 200 } },
-		]);
+		// prettier-ignore
+		const source = [
+			{ print: 'Hello A!' }, 
+			{ print: 'Hello B!' }, 
+			{ print: 'Hello C!' },
+		];
 
+		const log = spyOnLog();
+		const scriptOrigin = new Script(source);
 		scriptOrigin.step();
-		expect(scriptOrigin.getVar('test')).toBe(100);
+		expect(log).toHaveBeenLastCalledWith('Hello A!');
 		const save = scriptOrigin.save();
 		scriptOrigin.step();
-		expect(scriptOrigin.getVar('test')).toBe(150);
+		expect(log).toHaveBeenLastCalledWith('Hello B!');
 
-		const scriptLoaded = new Script().load(save);
+		const scriptLoaded = new Script(source).load(save);
 		scriptLoaded.step();
-		expect(scriptLoaded.getVar('test')).toBe(150);
+		expect(log).toHaveBeenLastCalledWith('Hello B!');
 		scriptLoaded.step();
-		expect(scriptLoaded.getVar('test')).toBe(200);
+		expect(log).toHaveBeenLastCalledWith('Hello C!');
 	});
 
-	it('emits `step` event', () => {
-		const script = new Script([
+	it('implements save patching functionality', () => {
+		const log = spyOnLog();
+		const scriptOrigin = new Script([
 			{ print: 'Hello A!' },
 			{ print: 'Hello B!' },
 			{ print: 'Hello C!' },
 		]);
-		spyOnLog();
-		const listener = vi.fn();
-		script.subscribe(listener);
-		script.step();
-		script.step();
-		script.step();
-		expect(listener).toHaveBeenCalledTimes(3);
-		expect(script.isDone()).toBe(true);
+		scriptOrigin.step();
+		expect(log).toHaveBeenLastCalledWith('Hello A!');
+		scriptOrigin.step();
+		expect(log).toHaveBeenLastCalledWith('Hello B!');
+		const save = scriptOrigin.save();
+		scriptOrigin.step();
+		expect(log).toHaveBeenLastCalledWith('Hello C!');
+		expect(scriptOrigin.isDone()).toBe(true);
+
+		const scriptLoaded = new Script([
+			{ print: 'Hello A!' },
+			{ print: 'Hello B!' },
+			{ print: 'Hello C1!' },
+			{ print: 'Hello C2!' },
+			{ print: 'Hello D!' },
+		]).load(save);
+		scriptLoaded.step();
+		expect(log).toHaveBeenLastCalledWith('Hello C1!');
+		scriptLoaded.step();
+		expect(log).toHaveBeenLastCalledWith('Hello C2!');
+		scriptLoaded.step();
+		expect(log).toHaveBeenLastCalledWith('Hello D!');
+		expect(scriptLoaded.isDone()).toBe(true);
 	});
 
 	it('throws a correct stack trace in the root', () => {
@@ -87,20 +106,22 @@ describe('Script', () => {
 	});
 
 	it('throws a correct stack trace in a loaded state', () => {
-		const scriptOrigin = new Script([
-			{ print: 'Hello A!' },
-			{ print: 'Hello B!' },
+		// prettier-ignore
+		const source = [
+			{ print: 'Hello A!' }, 
+			{ print: 'Hello B!' }, 
 			{ throw: 'Hello C!' },
-		]);
-		const log = spyOnLog();
+		];
 
+		const log = spyOnLog();
+		const scriptOrigin = new Script(source);
 		scriptOrigin.step();
 		expect(log).toHaveBeenLastCalledWith('Hello A!');
 		const save = scriptOrigin.save();
 		scriptOrigin.step();
 		expect(log).toHaveBeenLastCalledWith('Hello B!');
 
-		const scriptLoaded = new Script().load(save);
+		const scriptLoaded = new Script(source).load(save);
 		scriptLoaded.step();
 		expect(log).toHaveBeenLastCalledWith('Hello B!');
 		expect(() => scriptLoaded.step()).toThrowError(
@@ -113,7 +134,10 @@ describe('Script', () => {
 	});
 
 	it('throws a human-readable message in case of a bad arguments', () => {
-		const script = new Script([{ print: {} }]);
+		// prettier-ignore
+		const script = new Script([
+			{ print: {} },
+		]);
 		expect(() => script.step()).toThrowError(
 			expect.objectContaining({
 				name: 'ScriptError',
@@ -121,6 +145,22 @@ describe('Script', () => {
 				path: [0],
 			}),
 		);
+	});
+
+	it('emits `step` event', () => {
+		const script = new Script([
+			{ print: 'Hello A!' },
+			{ print: 'Hello B!' },
+			{ print: 'Hello C!' },
+		]);
+		spyOnLog();
+		const listener = vi.fn();
+		script.subscribe(listener);
+		script.step();
+		script.step();
+		script.step();
+		expect(listener).toHaveBeenCalledTimes(3);
+		expect(script.isDone()).toBe(true);
 	});
 
 	it('implements `if` command', () => {

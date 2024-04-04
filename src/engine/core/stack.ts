@@ -1,7 +1,9 @@
 /**
  * Sealed Sins, 2023-2024.
  */
+import hash from 'object-hash';
 import { pick, isEqual } from 'lodash';
+import { diffArrays } from 'diff';
 
 /**
  * Call Stack Frame.
@@ -130,5 +132,40 @@ export class Stack {
 		const data = JSON.parse(state);
 		Object.assign(this, data);
 		return this;
+	}
+
+	/**
+	 * Finds frame with a given path and patches its code and program counter accordingly.
+	 * @param path - Frame path.
+	 * @param code - Frame code.
+	 * @returns Patched frame or null (if frame does not exist).
+	 */
+	public patch(path: StackFrame['path'], code: StackFrame['code']) {
+		const frame = this.find(path);
+		if (!frame || hash(code) === hash(frame.code)) {
+			return null;
+		}
+		let index = 0;
+		for (const change of diffArrays(frame.code, code, { comparator: isEqual })) {
+			if (index >= frame.programCounter) {
+				break;
+			}
+			if (change.removed) {
+				frame.programCounter -= change.count!;
+				index -= change.count!;
+				continue;
+			}
+			if (change.added) {
+				frame.programCounter += change.count!;
+				index += change.count!;
+				continue;
+			}
+			if (!change.added && !change.removed) {
+				index += change.count!;
+				continue;
+			}
+		}
+		frame.code = code;
+		return frame;
 	}
 }

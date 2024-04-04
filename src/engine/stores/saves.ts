@@ -7,7 +7,7 @@ import { loadCompressed, saveCompressed } from '../utils/storage';
 import { useScene } from './scene';
 
 /**
- * Save state.
+ * Save structure.
  */
 export interface Save {
 	date: number;
@@ -15,13 +15,13 @@ export interface Save {
 }
 
 /**
- * Save state Local Storage domain.
+ * Save Local Storage Domain (Path).
  * @internal
  */
-export const STORAGE_DOMAIN = 'saves';
+export const SAVE_STORAGE_DOMAIN = 'saves';
 
 /**
- * Save state management store.
+ * Savestate management store.
  */
 export const useSaves = defineStore('saves', () => {
 	const store = useScene();
@@ -31,7 +31,7 @@ export const useSaves = defineStore('saves', () => {
 	 */
 	let initialState: Array<Save>;
 	try {
-		initialState = loadCompressed(STORAGE_DOMAIN) ?? [];
+		initialState = loadCompressed(SAVE_STORAGE_DOMAIN) ?? [];
 	} catch (err) {
 		initialState = [];
 	}
@@ -67,7 +67,7 @@ export const useSaves = defineStore('saves', () => {
 	};
 
 	watchEffect(() => {
-		saveCompressed(STORAGE_DOMAIN, slots);
+		saveCompressed(SAVE_STORAGE_DOMAIN, slots);
 	});
 
 	return {
