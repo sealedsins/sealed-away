@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, nextTick } from 'vue';
 import { ScriptEvent } from '../core';
 import { useScene, useCache, useSaves } from '../stores';
 import { onKeydown } from '../utils/input';
@@ -79,6 +79,9 @@ const handleSave = () => {
 const handleLoad = () => {
 	paused.value = false;
 	saves.load(0);
+	nextTick(() => {
+		typewriter.value?.skipTyping();
+	});
 };
 
 /**
@@ -115,6 +118,9 @@ onMounted(() => {
 		if (event.type === 'play') {
 			handlePlay(event);
 		}
+	});
+	nextTick(() => {
+		typewriter.value?.skipTyping();
 	});
 });
 
