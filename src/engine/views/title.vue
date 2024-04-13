@@ -56,7 +56,7 @@ const handleButton = (button: (typeof buttons)['value'][number]) => {
 
 onKeydown((e) => {
 	if (!e.repeat && (e.code === 'Space' || e.code === 'Enter')) {
-		handleStart();
+		handleLoad();
 	}
 });
 </script>

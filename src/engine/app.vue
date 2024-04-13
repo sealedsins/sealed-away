@@ -58,7 +58,7 @@ onMounted(async () => {
 
 <template>
 	<TransitionFadeDelayed mode="out-in">
-		<LoadingView v-if="!ready && !isDevMode" />
+		<LoadingView v-if="!ready" />
 		<ErrorView v-else-if="error" :error="error" />
 		<SceneView v-else-if="scene" />
 		<TitleView v-else />
