@@ -225,8 +225,11 @@ export class Script {
 		if (targetIndex < 0) {
 			throw new ScriptError(`Label "${label}" is not found`);
 		}
-		this.stack.clear();
-		this.stack.push([], this.source.slice(targetIndex));
+		if (this.stack.isEmpty()) {
+			this.stack.push([], this.source);
+		}
+		const rootFrame = this.stack.find([])!;
+		rootFrame.programCounter = targetIndex;
 	}
 
 	/**
