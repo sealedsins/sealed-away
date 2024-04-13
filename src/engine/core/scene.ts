@@ -197,6 +197,15 @@ export class Scene extends Script {
 				this.emit('play', data);
 				break;
 			}
+			case 'wait': {
+				const argSchema = zod.object({
+					seconds: zod.number(),
+				});
+				const data = argSchema.parse(this.eval(args));
+				this.emit('wait', data);
+				this.setVar(SceneGlobal.YIELD, true);
+				break;
+			}
 			default: {
 				super.exec(value);
 				break;

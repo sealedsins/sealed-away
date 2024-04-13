@@ -138,4 +138,20 @@ describe('Scene', () => {
 			data: { path: 'test' },
 		});
 	});
+
+	it('implements `wait` command', () => {
+		// prettier-ignore
+		const scene = new Scene([
+			{ wait: { seconds: 5 }, 
+		}]);
+
+		const waitListener = vi.fn();
+		scene.subscribe(waitListener);
+		scene.next();
+		expect(scene.isDone()).toBe(true);
+		expect(waitListener).toHaveBeenCalledWith({
+			type: 'wait',
+			data: { seconds: 5 },
+		});
+	});
 });

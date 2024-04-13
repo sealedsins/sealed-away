@@ -16,6 +16,7 @@ const saves = useSaves();
 
 const typewriter = ref<typeof SceneTypewriter>();
 const paused = ref(false);
+const wait = ref(false);
 
 /**
  * Scene state.
@@ -49,6 +50,9 @@ const hasSaveFile = computed(() => {
  * Event handler: Scene next step.
  */
 const handleNext = () => {
+	if (wait.value || paused.value) {
+		return;
+	}
 	if (typewriter.value?.typing) {
 		typewriter.value?.skipTyping();
 	} else if (store.scene?.isDone()) {
@@ -113,14 +117,30 @@ const handlePlay = async (event: ScriptEvent) => {
 	audio.play();
 };
 
+/**
+ * Event handler: Scene `play` event.
+ */
+const handleWait = async (event: ScriptEvent) => {
+	const data = event.data as { seconds: number };
+	const time = data.seconds * 1000;
+	wait.value = true;
+	setTimeout(() => {
+		wait.value = false;
+		store.next();
+	}, time);
+};
+
 onMounted(() => {
+	nextTick(() => {
+		typewriter.value?.skipTyping();
+	});
 	store.subscribe((event) => {
 		if (event.type === 'play') {
 			handlePlay(event);
 		}
-	});
-	nextTick(() => {
-		typewriter.value?.skipTyping();
+		if (event.type === 'wait') {
+			handleWait(event);
+		}
 	});
 });
 
@@ -176,7 +196,7 @@ onKeydown((e) => {
 						</scene-button>
 					</div>
 				</TransitionFade>
-				<div class="text" @click="handleNext()">
+				<div v-if="!wait" class="text" @click="handleNext()">
 					<div v-if="state.name" class="text__name">
 						{{ state.name }}
 					</div>
