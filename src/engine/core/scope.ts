@@ -52,8 +52,9 @@ export class Scope {
 	 * @returns Rendered expression.
 	 */
 	public renderExpression<T = unknown>(template: string) {
-		const render = new Function(...Object.keys(this.vars), `return (${template})`);
-		const result = render.call(this.vars, ...Object.values(this.vars));
+		const kwargs = { ...this.vars, vars: this.vars };
+		const render = new Function(...Object.keys(kwargs), `return (${template})`);
+		const result = render.call(this.vars, ...Object.values(kwargs));
 		return result as T;
 	}
 
