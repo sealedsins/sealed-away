@@ -2,13 +2,13 @@
  * Sealed Sins, 2023-2024.
  */
 import zod from 'zod';
-import { merge, camelCase } from 'lodash';
+import { mergeWith, uniqBy, camelCase } from 'lodash';
 import { DeepPartial } from 'utility-types';
 import { Script, ScriptError } from './script';
 import { StackFrame, StackSlice } from './stack';
 
 /**
- * Scene state.
+ * Scene State.
  */
 // prettier-ignore
 export type SceneState = (
@@ -16,7 +16,15 @@ export type SceneState = (
 );
 
 /**
- * Scene menu.
+ * Scene Sprite.
+ */
+// prettier-ignore
+export type SceneSprite = (
+	zod.infer<typeof SceneSpriteSchema>
+);
+
+/**
+ * Scene Menu.
  */
 // prettier-ignore
 export type SceneMenu = Array<{
@@ -27,7 +35,8 @@ export type SceneMenu = Array<{
 }>;
 
 /**
- * Scene global variable names.
+ * Scene Global Variables.
+ * @internal
  */
 // prettier-ignore
 export const enum SceneGlobal {
@@ -38,25 +47,41 @@ export const enum SceneGlobal {
 }
 
 /**
- * Scene state schema.
+ * Scene Sprite Schema.
  */
-export const SceneStateSchema = zod.object({
-	name: zod.string(),
-	text: zod.string(),
-	background: zod.object({
-		image: zod.string().nullable(),
-		position: zod.string(),
-		color: zod.string(),
-	}),
-});
+export const SceneSpriteSchema = zod
+	.object({
+		id: zod.string(),
+		image: zod.string(),
+		position: zod.string().optional(),
+		style: zod.record(zod.string()).optional(),
+	})
+	.strict();
 
 /**
- * Scene interpreter.
+ * Scene State Schema.
+ */
+export const SceneStateSchema = zod
+	.object({
+		name: zod.string(),
+		text: zod.string(),
+		sprites: zod.array(SceneSpriteSchema),
+		background: zod.object({
+			image: zod.string().nullable(),
+			position: zod.string(),
+			color: zod.string(),
+		}),
+	})
+	.strict();
+
+/**
+ * Scene Interpreter.
  */
 export class Scene extends Script {
 	private initialState: SceneState = {
 		name: '',
 		text: '',
+		sprites: [],
 		background: {
 			image: null,
 			position: 'center',
@@ -85,10 +110,15 @@ export class Scene extends Script {
 	 * Sets scene state (partial).
 	 * @param update - Partial state.
 	 */
+	// prettier-ignore
 	public setState(update: DeepPartial<SceneState>) {
 		const state = this.getVar<SceneState>(SceneGlobal.STATE);
 		const valid = SceneStateSchema.deepPartial().parse(update);
-		this.setVar('state', merge(state, valid));
+		this.setVar(SceneGlobal.STATE, mergeWith(state, valid, (curr, next) => {
+			if (Array.isArray(next) || Array.isArray(curr)) {
+				return next;
+			}
+		}));
 	}
 
 	/**
@@ -204,6 +234,22 @@ export class Scene extends Script {
 				const data = argSchema.parse(this.eval(args));
 				this.emit('wait', data);
 				this.setVar(SceneGlobal.YIELD, true);
+				break;
+			}
+			case 'show': {
+				const argSchema = SceneSpriteSchema;
+				const data = argSchema.parse(this.eval(args));
+				const sprites = uniqBy([data, ...this.getState().sprites], 'id');
+				this.setState({ sprites });
+				break;
+			}
+			case 'hide': {
+				const argSchema = zod.object({
+					id: zod.string(),
+				});
+				const data = argSchema.parse(this.eval(args));
+				const sprites = this.getState().sprites.filter((sprite) => sprite.id !== data.id);
+				this.setState({ sprites });
 				break;
 			}
 			default: {

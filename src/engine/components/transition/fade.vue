@@ -1,17 +1,35 @@
+<script setup lang="ts">
+import { Transition, TransitionGroup } from 'vue';
+defineProps<{ group?: boolean }>();
+</script>
+
 <template>
-	<Transition name="transition-fade">
+	<component
+		:is="group ? TransitionGroup : Transition"
+		:name="group ? 'transition-fade-group' : 'transition-fade'"
+		v-bind="$attrs"
+	>
 		<slot></slot>
-	</Transition>
+	</component>
 </template>
 
-<style scoped lang="scss">
-.transition-fade-enter-active,
-.transition-fade-leave-active {
-	transition: opacity 0.25s ease-in-out;
+<style lang="scss">
+.transition-fade,
+.transition-fade-group {
+	&-enter-active,
+	&-leave-active {
+		transition: opacity 0.25s ease-in-out;
+	}
+
+	&-enter-from,
+	&-leave-to {
+		opacity: 0;
+	}
 }
 
-.transition-fade-enter-from,
-.transition-fade-leave-to {
-	opacity: 0;
+.transition-fade-group {
+	&-leave-to {
+		transition-delay: 0.325s;
+	}
 }
 </style>

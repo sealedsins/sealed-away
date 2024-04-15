@@ -37,7 +37,7 @@ export const ConfigSchema = zod.object({
 			}),
 		),
 	}),
-}).deepPartial().strict();
+}).deepPartial();
 
 /**
  * Parser store schema.

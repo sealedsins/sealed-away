@@ -126,8 +126,8 @@ describe('Scene', () => {
 	it('implements `play` command', () => {
 		// prettier-ignore
 		const scene = new Scene([
-			{ play: { path: 'test' }, 
-		}]);
+			{ play: { path: 'test' }},
+		]);
 
 		const playListener = vi.fn();
 		scene.subscribe(playListener);
@@ -142,8 +142,8 @@ describe('Scene', () => {
 	it('implements `wait` command', () => {
 		// prettier-ignore
 		const scene = new Scene([
-			{ wait: { seconds: 5 }, 
-		}]);
+			{ wait: { seconds: 5 }},
+		]);
 
 		const waitListener = vi.fn();
 		scene.subscribe(waitListener);
@@ -153,5 +153,29 @@ describe('Scene', () => {
 			type: 'wait',
 			data: { seconds: 5 },
 		});
+	});
+
+	it('implements `show` and `hide` command', () => {
+		// prettier-ignore
+		const scene = new Scene([
+			{ show: { id: 'spriteA', image: 'sprite-a.png' }},
+			{ show: { id: 'spriteA', image: 'sprite-a-variant.png' }},
+			{ show: { id: 'spriteB', image: 'sprite-b.png' }},
+			{ page: {} },
+			{ hide: { id: 'spriteA' }},
+			{ hide: { id: 'spriteB' }},
+		]);
+
+		scene.next();
+		expect(scene.getState().sprites.length).toBe(2);
+		expect(scene.getState().sprites).toContainEqual(
+			expect.objectContaining({ id: 'spriteA' }),
+		);
+		expect(scene.getState().sprites).toContainEqual(
+			expect.objectContaining({ id: 'spriteB' }),
+		);
+		scene.next();
+		expect(scene.getState().sprites.length).toBe(0);
+		expect(scene.isDone()).toBe(true);
 	});
 });

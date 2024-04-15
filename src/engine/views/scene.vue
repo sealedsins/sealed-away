@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, nextTick } from 'vue';
+import { sha1 as hash } from 'object-hash';
 import { ScriptEvent } from '../core';
 import { useScene, useCache, useSaves } from '../stores';
 import { onKeydown } from '../utils/input';
@@ -177,6 +178,20 @@ onKeydown((e) => {
 		</TransitionFade>
 		<TransitionFade>
 			<div v-show="!paused" class="interface" @click.self="handleNext()">
+				<div class="sprites">
+					<TransitionFade group>
+						<SceneImage
+							v-for="sprite in state.sprites"
+							class="sprites__item"
+							:key="hash(sprite)"
+							:src="sprite.image"
+							:style="{
+								marginLeft: sprite.position === 'right' && '50%',
+								marginRight: sprite.position === 'left' && '50%',
+							}"
+						/>
+					</TransitionFade>
+				</div>
 				<div class="interface__buttons">
 					<scene-button :focus="false" @click="paused = true">
 						<font-awesome-icon icon="fa-solid fa-pause" />
@@ -333,6 +348,32 @@ $interface-width: 1100px;
 		max-width: $interface-width * 0.5;
 		margin-bottom: 0.5em;
 		width: 100%;
+	}
+}
+
+.sprites {
+	display: flex;
+	position: absolute;
+	justify-content: center;
+	align-items: flex-end;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+
+	@media (max-width: $breakpoint-mobile) {
+		width: 130vw;
+		margin-left: -15vw;
+	}
+
+	&__item {
+		display: block;
+		position: absolute;
+		object-fit: contain;
+		object-position: center bottom;
+		min-width: $breakpoint-tablet * 0.5;
+		width: 30%;
+		height: 90%;
 	}
 }
 </style>
