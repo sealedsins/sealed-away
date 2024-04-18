@@ -1,13 +1,12 @@
 /**
  * Sealed Sins, 2023-2024.
  */
-import { pick } from 'lodash';
 
 /**
  * Variable scope.
  */
-export class Scope {
-	constructor(private vars: Record<string, unknown> = {}) {
+export class Scope<T = unknown> {
+	constructor(private vars: Record<string, T> = {}) {
 		return;
 	}
 
@@ -33,8 +32,8 @@ export class Scope {
 	 * @param name - Variable name.
 	 * @returns Variable value.
 	 */
-	public get<T = unknown>(name: string) {
-		return this.vars[name] as T;
+	public get<E extends T>(name: string) {
+		return this.vars[name] as E;
 	}
 
 	/**
@@ -42,7 +41,7 @@ export class Scope {
 	 * @param name - Variable name.
 	 * @param value - Variable value.
 	 */
-	public set<T = unknown>(name: string, value: T) {
+	public set<E extends T>(name: string, value: E) {
 		this.vars[name] = value;
 	}
 
@@ -70,25 +69,5 @@ export class Scope {
 			output = output.replace(match, `${value}`);
 		}
 		return output;
-	}
-
-	/**
-	 * Stringifies scope state and returns it.
-	 * @returns Scope state (JSON).
-	 */
-	public save() {
-		const state = pick(this, ['vars']);
-		return JSON.stringify(state);
-	}
-
-	/**
-	 * Parses given scope state and restores it.
-	 * @param state - State to load (JSON).
-	 * @returns Scope.
-	 */
-	public load(state: string) {
-		const data = JSON.parse(state);
-		Object.assign(this, data);
-		return this;
 	}
 }

@@ -17,12 +17,13 @@ describe('Script', () => {
 		// prettier-ignore
 		const source = [
 			{ print: 'Hello A!' }, 
-			{ print: 'Hello B!' }, 
+			{ print: Script.fmt('Hello {{ B }}!') }, 
 			{ print: 'Hello C!' },
 		];
 
 		const log = spyOnLog();
 		const scriptOrigin = new Script(source);
+		scriptOrigin.setVar('B', 'B');
 		scriptOrigin.step();
 		expect(log).toHaveBeenLastCalledWith('Hello A!');
 		const save = scriptOrigin.save();
@@ -34,6 +35,7 @@ describe('Script', () => {
 		expect(log).toHaveBeenLastCalledWith('Hello B!');
 		scriptLoaded.step();
 		expect(log).toHaveBeenLastCalledWith('Hello C!');
+		expect(scriptLoaded.getVar('B')).toBe('B');
 	});
 
 	it('implements save patching functionality', () => {

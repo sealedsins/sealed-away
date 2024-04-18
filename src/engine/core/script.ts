@@ -3,13 +3,14 @@
  */
 import zod, { ZodError } from 'zod';
 import { fromZodError } from 'zod-validation-error';
-import { mapValues, isPlainObject, isArray, isEqual } from 'lodash';
-import { sha1 as hash } from 'object-hash';
-import { Stack, StackSlice } from './stack';
+import { get, mapValues, isPlainObject, isArray, isEqual } from 'lodash';
+import { Stack, StackFrame } from './stack';
 import { Scope } from './scope';
+import traverse from 'traverse';
 
 /**
  * Script event.
+ * @typeParam T - Event data type.
  */
 export interface ScriptEvent<T = unknown> {
 	type: string;
@@ -18,6 +19,7 @@ export interface ScriptEvent<T = unknown> {
 
 /**
  * Script event listener.
+ * @typeParam T - Event data type.
  */
 export interface ScriptListener<T = unknown> {
 	(event: ScriptEvent<T>): void;
@@ -28,9 +30,12 @@ export interface ScriptListener<T = unknown> {
  * @internal
  */
 export interface ScriptState {
-	sourceHash: string;
-	stackState: string;
-	scopeState: string;
+	scope: Record<string, unknown>;
+	stack: Array<
+		StackFrame & {
+			path: Array<string | number>;
+		}
+	>;
 }
 
 /**
@@ -72,7 +77,7 @@ export class Script {
 	protected scope = new Scope();
 
 	constructor(public source: Array<unknown> = []) {
-		this.stack.push([], source);
+		this.stack.push(source);
 	}
 
 	/**
@@ -143,11 +148,10 @@ export class Script {
 	 * @returns Script state.
 	 */
 	public save() {
-		return JSON.stringify({
-			sourceHash: hash(this.source),
-			stackState: this.stack.save(),
-			scopeState: this.scope.save(),
-		} satisfies ScriptState);
+		const scope = this.scope.dump();
+		const stack = this.stack.dump().map((x) => ({ path: this.path(x.code)!, ...x }));
+		const state = { stack, scope } satisfies ScriptState;
+		return JSON.stringify(state);
 	}
 
 	/**
@@ -162,18 +166,17 @@ export class Script {
 	 */
 	public load(state: string) {
 		try {
-			const data = JSON.parse(state) as ScriptState;
-			const loadedStack = new Stack().load(data.stackState);
-			const loadedScope = new Scope().load(data.scopeState);
-			if (data.sourceHash === hash(this.source)) {
-				this.stack = loadedStack;
-				this.scope = loadedScope;
-			} else {
-				const { programCounter, code, path: root } = loadedStack.patch([], this.source)!;
-				this.stack.clear();
-				this.stack.push(root, code);
-				this.stack.find(root)!.programCounter = programCounter;
-				this.scope = loadedScope;
+			const { scope, stack } = JSON.parse(state) as ScriptState;
+			this.scope = new Scope(scope);
+			this.stack = new Stack();
+			for (const { path, code, programCounter } of stack) {
+				const updatedCode = this.node(path) as Array<unknown>;
+				if (!updatedCode) {
+					continue;
+				}
+				const frame = this.stack.push(code);
+				frame.programCounter = programCounter;
+				Stack.patch(frame, updatedCode);
 			}
 			return this;
 		} catch (err) {
@@ -190,10 +193,10 @@ export class Script {
 			return;
 		}
 		try {
-			this.exec(slice.value, slice);
+			this.exec(slice.value);
 			this.emit('step');
 		} catch (err: any) {
-			const path = [...slice.frame.path, slice.index];
+			const path = this.path(slice.value) ?? undefined;
 			const args = err instanceof ZodError && fromZodError(err, { prefix: 'Arguments' });
 			const text = args ? args.message : err.message;
 			throw new ScriptError(text, path);
@@ -226,9 +229,9 @@ export class Script {
 			throw new ScriptError(`Label "${label}" is not found`);
 		}
 		if (this.stack.isEmpty()) {
-			this.stack.push([], this.source);
+			this.stack.push(this.source);
 		}
-		const rootFrame = this.stack.find([])!;
+		const rootFrame = this.stack.dump()[0]!;
 		rootFrame.programCounter = targetIndex;
 	}
 
@@ -255,11 +258,10 @@ export class Script {
 	/**
 	 * Evaluates `value` as a command and executes it.
 	 * @param value - Command to execute.
-	 * @param slice - Optional stack slice (used to debug some commands).
 	 * @remarks Override this method to implement own commands.
 	 * @internal
 	 */
-	protected exec(value: unknown, slice?: StackSlice) {
+	protected exec(value: unknown) {
 		const { type, args } = this.unpack(value);
 		switch (type) {
 			case 'if': {
@@ -268,16 +270,13 @@ export class Script {
 					then: zod.array(zod.unknown()).optional(),
 					else: zod.array(zod.unknown()).optional(),
 				});
-				const path = slice ? [...slice.frame.path, slice.index] : [];
 				const { cond, ...branch } = argSchema.parse(args);
 				const isTrue = !!this.eval(cond);
 				if (isTrue && branch.then) {
-					const branchPath = [...path, 'if', 'then'];
-					this.stack.push(branchPath, branch.then);
+					this.stack.push(branch.then);
 				}
 				if (!isTrue && branch.else) {
-					const branchPath = [...path, 'if', 'else'];
-					this.stack.push(branchPath, branch.else);
+					this.stack.push(branch.else);
 				}
 				break;
 			}
@@ -333,5 +332,37 @@ export class Script {
 				break;
 			}
 		}
+	}
+
+	/**
+	 * Gets source node at a given path.
+	 * @param path - Path to check.
+	 * @returns Node or null.
+	 */
+	protected node(path: Array<string | number>): unknown | null {
+		if (isEqual(path, [])) {
+			return this.source;
+		} else {
+			return get(this.source, path, null);
+		}
+	}
+
+	/**
+	 * Gets path for a given source node.
+	 * @params node - Node to search for.
+	 * @returns Node path or null.
+	 */
+	protected path(node: unknown) {
+		const tree = traverse(this.source);
+		const path = tree.paths().find((path) => {
+			return Object.is(node, tree.get(path));
+		});
+		if (!path) {
+			return null;
+		}
+		return path.map((index) => {
+			const numericIndex = parseInt(index);
+			return isNaN(numericIndex) ? index : numericIndex;
+		});
 	}
 }

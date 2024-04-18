@@ -1,40 +1,75 @@
 /**
  * Sealed Sins, 2023-2024.
  */
-import hash from 'object-hash';
-import { pick, isEqual } from 'lodash';
-import { diffArrays } from 'diff';
+import { diffArray } from '../utils/diff';
 
 /**
  * Call Stack Frame.
+ * @typeParam T - Code line type.
+ * @typeParam M - Frame metadata.
  */
-export interface StackFrame {
-	path: Array<string | number>;
+export interface StackFrame<T = unknown, M = never> {
+	meta?: M;
 	programCounter: number;
-	code: Array<unknown>;
+	code: Array<T>;
 }
 
 /**
- * Call Stack Slice.
+ * Execution Stack Slice.
+ * @typeParam T - Code line type.
+ * @typeParam M - Frame metadata.
  */
-export interface StackSlice {
-	frame: StackFrame;
+export interface StackSlice<T = unknown, M = never> {
+	frame: StackFrame<T, M>;
 	index: number;
-	value: unknown;
+	value: T;
 }
 
 /**
- * Call Stack Error.
+ * Execution Stack Error.
  */
 export class StackError extends Error {
 	public override name = 'StackError';
 }
 
 /**
- * Call Stack.
+ * Execution Stack.
+ * @typeParam T - Code line type.
+ * @typeParam M - Frame metadata.
  */
-export class Stack {
-	private stack: Array<StackFrame> = [];
+export class Stack<T = unknown, M = never> {
+	private stack: Array<StackFrame<T, M>> = [];
+
+	/**
+	 * Patches given frame with a new code, updating the program counter accordingly.
+	 * @param frame - Stack frame.
+	 * @param code - Updated code.
+	 * @returns Given stack frame.
+	 */
+	public static patch<T, M>(frame: StackFrame<T, M>, code: StackFrame<T, M>['code']) {
+		let index = 0;
+		for (const change of diffArray(frame.code, code)) {
+			if (index >= frame.programCounter) {
+				break;
+			}
+			if (change.removed) {
+				frame.programCounter = frame.programCounter - 1;
+				index = index - 1;
+				continue;
+			}
+			if (change.added) {
+				frame.programCounter = frame.programCounter + 1;
+				index = index + 1;
+				continue;
+			}
+			if (!change.added && !change.removed) {
+				index++;
+				continue;
+			}
+		}
+		frame.code = code;
+		return frame;
+	}
 
 	/**
 	 * Returns stack status.
@@ -46,10 +81,11 @@ export class Stack {
 
 	/**
 	 * Dumps current stack state.
-	 * @returns Stack frame list.
+	 * @remarks Stack data is returned in reverse order.
+	 * @returns Stack frame data.
 	 */
 	public dump() {
-		return this.stack;
+		return this.stack.reverse();
 	}
 
 	/**
@@ -61,22 +97,20 @@ export class Stack {
 
 	/**
 	 * Pushes new frame to the top of the stack.
-	 * @param path - Frame path metadata (used for debug).
 	 * @param code - Frame code.
+	 * @returns Created frame.
 	 */
-	public push(path: StackFrame['path'], code: StackFrame['code']) {
-		if (this.find(path)) {
-			throw new StackError('Frame with such path already exists.');
-		}
-		const frame = { programCounter: 0, path, code };
+	public push(code: StackFrame<T, M>['code']): StackFrame<T, M> {
+		const frame = { programCounter: 0, code };
 		this.stack.unshift(frame);
+		return frame;
 	}
 
 	/**
 	 * Peeks a slice from the top of the stack.
 	 * @returns Stack slice from the top of the stack.
 	 */
-	public peek(): StackSlice | null {
+	public peek(): StackSlice<T, M> | null {
 		const frame = this.stack[0];
 		const value = frame?.code[frame.programCounter];
 		if (!frame || !value) {
@@ -93,7 +127,7 @@ export class Stack {
 	 * Pulls a slice from the top of the stack.
 	 * @returns Stack slice from the top of the stack.
 	 */
-	public pull(): StackSlice | null {
+	public pull(): StackSlice<T, M> | null {
 		const slice = this.peek();
 		if (!slice) {
 			return null;
@@ -103,69 +137,5 @@ export class Stack {
 			this.stack.shift();
 		}
 		return slice;
-	}
-
-	/**
-	 * Finds frame with a given path and returns it.
-	 * @returns Target frame or null.
-	 */
-	public find(path: StackFrame['path']) {
-		const frame = this.stack.find((frame) => isEqual(frame.path, path));
-		return frame ?? null;
-	}
-
-	/**
-	 * Stringifies stack state and returns it.
-	 * @returns Stack state (JSON).
-	 */
-	public save() {
-		const state = pick(this, ['stack']);
-		return JSON.stringify(state);
-	}
-
-	/**
-	 * Parses given stack state and restores it.
-	 * @param state - Stack state to load (JSON).
-	 * @returns Stack.
-	 */
-	public load(state: string) {
-		const data = JSON.parse(state);
-		Object.assign(this, data);
-		return this;
-	}
-
-	/**
-	 * Finds frame with a given path and patches its code and program counter accordingly.
-	 * @param path - Frame path.
-	 * @param code - Frame code.
-	 * @returns Patched frame or null (if frame does not exist).
-	 */
-	public patch(path: StackFrame['path'], code: StackFrame['code']) {
-		const frame = this.find(path);
-		if (!frame || hash(code) === hash(frame.code)) {
-			return null;
-		}
-		let index = 0;
-		for (const change of diffArrays(frame.code, code, { comparator: isEqual })) {
-			if (index >= frame.programCounter) {
-				break;
-			}
-			if (change.removed) {
-				frame.programCounter -= change.count!;
-				index -= change.count!;
-				continue;
-			}
-			if (change.added) {
-				frame.programCounter += change.count!;
-				index += change.count!;
-				continue;
-			}
-			if (!change.added && !change.removed) {
-				index += change.count!;
-				continue;
-			}
-		}
-		frame.code = code;
-		return frame;
 	}
 }

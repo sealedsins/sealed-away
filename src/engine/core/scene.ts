@@ -30,7 +30,6 @@ export type SceneSprite = (
 export type SceneMenu = Array<{
 	id: string;
 	label: string;
-	path: StackFrame['path'];
 	code: Array<unknown>;
 }>;
 
@@ -180,7 +179,7 @@ export class Scene extends Script {
 			throw new ScriptError(`Unknown menu ID: ${id}`);
 		}
 		this.setMenu(null);
-		this.stack.push(item.path, item.code);
+		this.stack.push(item.code);
 		this.next();
 	}
 
@@ -191,7 +190,7 @@ export class Scene extends Script {
 	 * @param slice - Optional stack slice (used to debug some commands).
 	 * @internal
 	 */
-	protected override exec(value: unknown, slice?: StackSlice) {
+	protected override exec(value: unknown) {
 		const { type, args } = this.unpack(value);
 		switch (type) {
 			case 'page': {
@@ -205,14 +204,12 @@ export class Scene extends Script {
 			case 'menu': {
 				const argSchema = zod.record(zod.string(), zod.array(zod.unknown()));
 				const data = argSchema.parse(args);
-				const path = slice ? [...slice.frame.path, slice.index] : [];
 				const keys = Object.keys(data);
 				this.setVar(SceneGlobal.YIELD, true);
 				this.setMenu(
 					keys.map((label) => ({
 						id: camelCase(label),
 						label,
-						path: [...path, 'menu', label],
 						code: data[label]!,
 					})),
 				);

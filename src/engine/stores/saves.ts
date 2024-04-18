@@ -46,12 +46,13 @@ export const useSaves = defineStore('saves', () => {
 	 * @params slot - Slot to save.
 	 */
 	const save = (slot: number) => {
-		if (store.scene) {
-			slots[slot] = {
-				date: Date.now(),
-				data: store.scene.save(),
-			};
+		if (!store.scene) {
+			return;
 		}
+		slots[slot] = {
+			date: Date.now(),
+			data: store.scene.save(),
+		};
 	};
 
 	/**
@@ -60,10 +61,11 @@ export const useSaves = defineStore('saves', () => {
 	 */
 	const load = (slot: number) => {
 		const state = slots[slot];
-		if (store.scene && state) {
-			store.scene.load(state.data);
-			store.refresh();
+		if (!store.scene || !state) {
+			return;
 		}
+		store.scene.load(state.data);
+		store.refresh();
 	};
 
 	watchEffect(() => {
