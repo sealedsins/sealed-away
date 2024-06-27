@@ -2,10 +2,9 @@
  * Sealed Sins, 2023-2024.
  */
 import zod from 'zod';
+import { PartialDeep } from 'type-fest';
 import { mergeWith, uniqBy, camelCase } from 'lodash';
-import { DeepPartial } from 'utility-types';
-import { Script, ScriptError } from './script';
-import { StackFrame, StackSlice } from './stack';
+import { Script, ScriptNode, ScriptError, ScriptPath, ScriptSource } from './script';
 
 /**
  * Scene State.
@@ -30,7 +29,7 @@ export type SceneSprite = (
 export type SceneMenu = Array<{
 	id: string;
 	label: string;
-	code: Array<unknown>;
+	path: ScriptPath;
 }>;
 
 /**
@@ -88,7 +87,7 @@ export class Scene extends Script {
 		},
 	};
 
-	constructor(source: Array<unknown>) {
+	constructor(source: ScriptSource) {
 		super(source);
 		this.setState(this.initialState);
 		this.setVar(SceneGlobal.YIELD, true);
@@ -110,7 +109,7 @@ export class Scene extends Script {
 	 * @param update - Partial state.
 	 */
 	// prettier-ignore
-	public setState(update: DeepPartial<SceneState>) {
+	public setState(update: PartialDeep<SceneState>) {
 		const state = this.getVar<SceneState>(SceneGlobal.STATE);
 		const valid = SceneStateSchema.deepPartial().parse(update);
 		this.setVar(SceneGlobal.STATE, mergeWith(state, valid, (curr, next) => {
@@ -179,38 +178,37 @@ export class Scene extends Script {
 			throw new ScriptError(`Unknown menu ID: ${id}`);
 		}
 		this.setMenu(null);
-		this.stack.push(item.code);
+		this.stack.push(this.node(item.path) as ScriptSource);
 		this.next();
 	}
 
 	/**
-	 * Evaluates `value` as a command and executes it.
+	 * Evaluates `node` as a command and executes it.
 	 * This also includes scene commands.
 	 * @param value - Command to execute.
 	 * @param slice - Optional stack slice (used to debug some commands).
 	 * @internal
 	 */
-	protected override exec(value: unknown) {
-		const { type, args } = this.unpack(value);
+	protected override exec(node: ScriptNode) {
+		const { type, args } = this.unpack(node);
 		switch (type) {
 			case 'page': {
 				const argSchema = SceneStateSchema.strict().deepPartial();
-				const data = argSchema.parse(this.eval(args));
+				const data = this.validate(argSchema, this.eval(args));
 				const next = this.stack.peek()?.value;
 				this.setVar(SceneGlobal.YIELD, !next || this.unpack(next).type !== 'menu');
-				this.setState(data);
+				this.setState(data as SceneState);
 				break;
 			}
 			case 'menu': {
-				const argSchema = zod.record(zod.string(), zod.array(zod.unknown()));
-				const data = argSchema.parse(args);
-				const keys = Object.keys(data);
+				const argSchema = zod.record(zod.string(), zod.array(zod.any()));
+				const data = this.validate(argSchema, args);
 				this.setVar(SceneGlobal.YIELD, true);
 				this.setMenu(
-					keys.map((label) => ({
+					Object.entries(data).map(([label, code]) => ({
 						id: camelCase(label),
 						label,
-						code: data[label]!,
+						path: this.path(code)!,
 					})),
 				);
 				break;
@@ -220,7 +218,7 @@ export class Scene extends Script {
 					path: zod.string(),
 					volume: zod.number().optional(),
 				});
-				const data = argSchema.parse(this.eval(args));
+				const data = this.validate(argSchema, this.eval(args));
 				this.emit('play', data);
 				break;
 			}
@@ -228,14 +226,14 @@ export class Scene extends Script {
 				const argSchema = zod.object({
 					seconds: zod.number(),
 				});
-				const data = argSchema.parse(this.eval(args));
+				const data = this.validate(argSchema, this.eval(args));
 				this.emit('wait', data);
 				this.setVar(SceneGlobal.YIELD, true);
 				break;
 			}
 			case 'show': {
 				const argSchema = SceneSpriteSchema;
-				const data = argSchema.parse(this.eval(args));
+				const data = this.validate(argSchema, this.eval(args));
 				const sprites = uniqBy([data, ...this.getState().sprites], 'id');
 				this.setState({ sprites });
 				break;
@@ -244,13 +242,13 @@ export class Scene extends Script {
 				const argSchema = zod.object({
 					id: zod.string(),
 				});
-				const data = argSchema.parse(this.eval(args));
+				const data = this.validate(argSchema, this.eval(args));
 				const sprites = this.getState().sprites.filter((sprite) => sprite.id !== data.id);
 				this.setState({ sprites });
 				break;
 			}
 			default: {
-				super.exec(value);
+				super.exec(node);
 				break;
 			}
 		}

@@ -3,7 +3,7 @@
  */
 import { defineStore } from 'pinia';
 import { shallowRef, triggerRef } from 'vue';
-import { Scene, ScriptListener } from '../core';
+import { Scene, ScriptSource, ScriptListener } from '../core';
 import { useParser } from './parser';
 
 /**
@@ -29,7 +29,7 @@ export const useScene = defineStore('scene', () => {
 	 */
 	const init = () => {
 		if (parser.data) {
-			scene.value = new Scene(parser.data.script);
+			scene.value = new Scene(parser.data.script as ScriptSource);
 			scene.value.next();
 		}
 	};

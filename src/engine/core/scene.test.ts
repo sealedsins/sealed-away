@@ -65,7 +65,7 @@ describe('Scene', () => {
 		expect(() => scene.next()).toThrowError(
 			expect.objectContaining({
 				name: 'ScriptError',
-				message: "Arguments: Unrecognized key(s) in object: 'unknownProperty'",
+				message: "Unrecognized key(s) in object: 'unknownProperty'",
 				path: [4],
 			}),
 		);

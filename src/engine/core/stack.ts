@@ -4,26 +4,25 @@
 import { diffArray } from '../utils/diff';
 
 /**
- * Call Stack Frame.
- * @typeParam T - Code line type.
+ * Exeuction Stack Frame.
+ * @typeParam T - Frame command type.
  * @typeParam M - Frame metadata.
  */
-export interface StackFrame<T = unknown, M = never> {
-	meta?: M;
+export type StackFrame<T = unknown> = {
 	programCounter: number;
 	code: Array<T>;
-}
+};
 
 /**
  * Execution Stack Slice.
- * @typeParam T - Code line type.
+ * @typeParam T - Frame command type.
  * @typeParam M - Frame metadata.
  */
-export interface StackSlice<T = unknown, M = never> {
-	frame: StackFrame<T, M>;
+export type StackSlice<T = unknown> = {
+	frame: StackFrame<T>;
 	index: number;
 	value: T;
-}
+};
 
 /**
  * Execution Stack Error.
@@ -34,11 +33,11 @@ export class StackError extends Error {
 
 /**
  * Execution Stack.
- * @typeParam T - Code line type.
+ * @typeParam T - Frame command type.
  * @typeParam M - Frame metadata.
  */
 export class Stack<T = unknown, M = never> {
-	private stack: Array<StackFrame<T, M>> = [];
+	private stack: Array<StackFrame<T>> = [];
 
 	/**
 	 * Patches given frame with a new code, updating the program counter accordingly.
@@ -46,7 +45,7 @@ export class Stack<T = unknown, M = never> {
 	 * @param code - Updated code.
 	 * @returns Given stack frame.
 	 */
-	public static patch<T, M>(frame: StackFrame<T, M>, code: StackFrame<T, M>['code']) {
+	public static patch<T>(frame: StackFrame<T>, code: StackFrame<T>['code']) {
 		let index = 0;
 		for (const change of diffArray(frame.code, code)) {
 			if (index >= frame.programCounter) {
@@ -100,7 +99,7 @@ export class Stack<T = unknown, M = never> {
 	 * @param code - Frame code.
 	 * @returns Created frame.
 	 */
-	public push(code: StackFrame<T, M>['code']): StackFrame<T, M> {
+	public push(code: StackFrame<T>['code']): StackFrame<T> {
 		const frame = { programCounter: 0, code };
 		this.stack.unshift(frame);
 		return frame;
@@ -110,7 +109,7 @@ export class Stack<T = unknown, M = never> {
 	 * Peeks a slice from the top of the stack.
 	 * @returns Stack slice from the top of the stack.
 	 */
-	public peek(): StackSlice<T, M> | null {
+	public peek(): StackSlice<T> | null {
 		const frame = this.stack[0];
 		const value = frame?.code[frame.programCounter];
 		if (!frame || !value) {
@@ -127,7 +126,7 @@ export class Stack<T = unknown, M = never> {
 	 * Pulls a slice from the top of the stack.
 	 * @returns Stack slice from the top of the stack.
 	 */
-	public pull(): StackSlice<T, M> | null {
+	public pull(): StackSlice<T> | null {
 		const slice = this.peek();
 		if (!slice) {
 			return null;

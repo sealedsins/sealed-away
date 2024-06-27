@@ -2,7 +2,7 @@
  * Sealed Sins, 2023-2024.
  */
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { Script } from './script';
+import { Script, ScriptSource } from './script';
 
 const spyOnLog = () => {
 	return vi.spyOn(console, 'log').mockImplementation(() => null);
@@ -15,7 +15,7 @@ describe('Script', () => {
 
 	it('implements save and load functionality', () => {
 		// prettier-ignore
-		const source = [
+		const source: ScriptSource = [
 			{ print: 'Hello A!' }, 
 			{ print: Script.fmt('Hello {{ B }}!') }, 
 			{ print: 'Hello C!' },
@@ -109,7 +109,7 @@ describe('Script', () => {
 
 	it('throws a correct stack trace in a loaded state', () => {
 		// prettier-ignore
-		const source = [
+		const source: ScriptSource = [
 			{ print: 'Hello A!' }, 
 			{ print: 'Hello B!' }, 
 			{ throw: 'Hello C!' },
@@ -143,7 +143,7 @@ describe('Script', () => {
 		expect(() => script.step()).toThrowError(
 			expect.objectContaining({
 				name: 'ScriptError',
-				message: 'Arguments: Expected string, received object',
+				message: 'Expected string, received object',
 				path: [0],
 			}),
 		);
