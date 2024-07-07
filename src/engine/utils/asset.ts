@@ -33,8 +33,8 @@ export const resolve = (src: string) => {
  * @param src - Source to load.
  * @returns Loaded blob.
  */
-export const load = (src: string) =>
-	new Promise<Blob>((resolve, reject) => {
+export const load = (src: string) => {
+	return new Promise<Blob>((resolve, reject) => {
 		const xhr = new XMLHttpRequest();
 		xhr.open('GET', src);
 		xhr.responseType = 'blob';
@@ -42,29 +42,32 @@ export const load = (src: string) =>
 		xhr.onloadend = () => resolve(xhr.response);
 		xhr.send();
 	});
+};
 
 /**
  * Reads `src` Blob as a Base64 string.
  * @param src - Blob to read.
  * @returns Base64 string.
  */
-export const readAsBase64 = (src: Blob) =>
-	new Promise<string>((resolve, reject) => {
+export const readAsBase64 = (src: Blob) => {
+	return new Promise<string>((resolve, reject) => {
 		const reader = new FileReader();
 		reader.readAsDataURL(src);
 		reader.onloadend = () => resolve(reader.result as string);
 		reader.onerror = () => reject();
 	});
+};
 
 /**
  * Reads `src` Blob as a raw text.
  * @param src - Blob to read.
  * @returns Plain string.
  */
-export const readAsText = (src: Blob) =>
-	new Promise<string>((resolve, reject) => {
+export const readAsText = (src: Blob) => {
+	return new Promise<string>((resolve, reject) => {
 		const reader = new FileReader();
 		reader.readAsText(src);
 		reader.onloadend = () => resolve(reader.result as string);
 		reader.onerror = () => reject();
 	});
+};

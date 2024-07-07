@@ -127,7 +127,7 @@ const handleWait = async (event: ScriptEvent) => {
 	wait.value = true;
 	setTimeout(() => {
 		wait.value = false;
-		store.next();
+		handleNext();
 	}, time);
 };
 
