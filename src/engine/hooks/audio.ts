@@ -1,10 +1,10 @@
 /**
  * Sealed Sins, 2023-2024.
  */
-import { ref, watch } from 'vue';
 import { Howl } from 'howler';
+import { ref, watch } from 'vue';
+import { useWindowFocus } from '@vueuse/core';
 import { useCache } from '../stores';
-import { useFocus } from './focus';
 
 /**
  * Fade duration in miliseconds.
@@ -25,8 +25,8 @@ export interface AudioOptions {
  * Audio player.
  */
 export const useAudio = () => {
+	const focus = useWindowFocus();
 	const cache = useCache();
-	const focus = useFocus();
 
 	/**
 	 * Loop storage.

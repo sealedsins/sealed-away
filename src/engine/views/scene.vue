@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue';
 import { sha1 as hash } from 'object-hash';
+import { ref, watch, computed, onMounted, nextTick } from 'vue';
+import { onKeyStroke } from '@vueuse/core';
 import { ScriptEvent } from '../core';
 import { onKeydown, useAudio, AudioOptions } from '../hooks';
 import { useScene, useSaves } from '../stores';
@@ -146,6 +147,14 @@ const handleWait = async (event: ScriptEvent) => {
 		handleNext();
 	}, time);
 };
+
+watch(paused, () => {
+	if (paused.value) {
+		audio.pause();
+	} else {
+		audio.resume();
+	}
+});
 
 onMounted(() => {
 	nextTick(() => {

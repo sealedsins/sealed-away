@@ -25,6 +25,7 @@
 		"@fortawesome/free-regular-svg-icons": "^6.5.1",
 		"@fortawesome/free-solid-svg-icons": "^6.5.1",
 		"@fortawesome/vue-fontawesome": "^3.0.5",
+		"@vueuse/core": "^10.11.0",
 		"diff": "^5.1.0",
 		"howler": "^2.2.4",
 		"lodash": "^4.17.21",

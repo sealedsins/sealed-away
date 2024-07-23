@@ -14,6 +14,7 @@ import * as asset from '../utils/asset';
 export const ConfigSchema = zod.object({
 	meta: zod.object({
 		title: zod.string(),
+		icon: zod.string(),
 	}),
 	title: zod.object({
 		buttons: zod.array(

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { shallowRef, onMounted, onErrorCaptured } from 'vue';
+import { useTitle, useFavicon } from '@vueuse/core';
 import TransitionFadeDelayed from './components/transition/fade-delayed.vue';
 import { useCache, useParser, useScene } from './stores';
 
@@ -12,6 +13,9 @@ import ErrorView from './views/error.vue';
 const props = defineProps<{
 	src: string;
 }>();
+
+const domTitle = useTitle();
+const domIcon = useFavicon();
 
 const cache = useCache();
 const { scene } = storeToRefs(useScene());
@@ -34,9 +38,11 @@ const loadGame = async () => {
 
 const loadMeta = async () => {
 	const meta = parser.data?.config?.meta;
-	if (meta) {
-		document.title = meta.title ?? document.title;
+	if (!meta) {
+		return;
 	}
+	domTitle.value = meta.title;
+	domIcon.value = meta.icon;
 };
 
 onErrorCaptured((err) => {

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import TitleImage from '../components/image.vue';
-import TitleButton from '../components/button.vue';
 import { useScene, useParser, useSaves } from '../stores';
-import { onKeydown } from '../hooks/input';
+import { onKeydown } from '../hooks';
+import TitleButton from '../components/button.vue';
+import TitleImage from '../components/image.vue';
 
 const parser = useParser();
 const scene = useScene();
@@ -55,7 +55,10 @@ const handleButton = (button: (typeof buttons)['value'][number]) => {
 };
 
 onKeydown((e) => {
-	if (!e.repeat && (e.code === 'Space' || e.code === 'Enter')) {
+	if (e.repeat) {
+		return;
+	}
+	if (e.code === 'Space' || e.code === 'Enter') {
 		handleLoad();
 	}
 });
