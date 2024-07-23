@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
+import ViteVue from '@vitejs/plugin-vue';
 
 export default defineConfig({
-	plugins: [vue()],
 	publicDir: false,
+	plugins: [ViteVue(), ViteImageOptimizer()],
 	server: {
 		port: 8080,
 		fs: {
