@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import TitleImage from '../components/image.vue';
 import TitleButton from '../components/button.vue';
 import { useScene, useParser, useSaves } from '../stores';
-import { onKeydown } from '../utils/input';
+import { onKeydown } from '../hooks/input';
 
 const parser = useParser();
 const scene = useScene();

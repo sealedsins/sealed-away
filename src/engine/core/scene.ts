@@ -45,6 +45,17 @@ export const enum SceneGlobal {
 }
 
 /**
+ * Scene Background Schema.
+ */
+export const SceneBackgroundSchema = zod
+	.object({
+		image: zod.string().nullable(),
+		position: zod.string(),
+		color: zod.string(),
+	})
+	.strict();
+
+/**
  * Scene Sprite Schema.
  */
 export const SceneSpriteSchema = zod
@@ -57,18 +68,26 @@ export const SceneSpriteSchema = zod
 	.strict();
 
 /**
+ * Scene Sound Schema.
+ */
+export const SceneSoundSchema = zod
+	.object({
+		path: zod.string(),
+		volume: zod.number().optional(),
+		loop: zod.boolean().optional(),
+	})
+	.strict();
+
+/**
  * Scene State Schema.
  */
 export const SceneStateSchema = zod
 	.object({
 		name: zod.string(),
 		text: zod.string(),
+		background: SceneBackgroundSchema,
 		sprites: zod.array(SceneSpriteSchema),
-		background: zod.object({
-			image: zod.string().nullable(),
-			position: zod.string(),
-			color: zod.string(),
-		}),
+		loop: SceneSoundSchema.optional(),
 	})
 	.strict();
 
@@ -214,12 +233,19 @@ export class Scene extends Script {
 				break;
 			}
 			case 'play': {
+				const argSchema = SceneSoundSchema;
+				const data = this.validate(argSchema, this.eval(args));
+				this.setState({ loop: data });
+				this.emit('play', data);
+				break;
+			}
+			case 'stop': {
 				const argSchema = zod.object({
-					path: zod.string(),
-					volume: zod.number().optional(),
+					fade: zod.boolean().optional(),
 				});
 				const data = this.validate(argSchema, this.eval(args));
-				this.emit('play', data);
+				this.setState({ loop: undefined });
+				this.emit('stop', data);
 				break;
 			}
 			case 'wait': {

@@ -4,12 +4,12 @@
 import { onMounted, onUnmounted, handleError, getCurrentInstance } from 'vue';
 
 /**
- * Creates a new global keyboard event listener.
+ * Keyboard event listener hook.
  * @param listener - Event listener.
  */
 export const onKeydown = (listener: (e: KeyboardEvent) => void) => {
 	const instance = getCurrentInstance();
-	const handlerWrapper = (e: KeyboardEvent) => {
+	const strappedListener = (e: KeyboardEvent) => {
 		try {
 			listener(e);
 		} catch (err) {
@@ -19,10 +19,10 @@ export const onKeydown = (listener: (e: KeyboardEvent) => void) => {
 	};
 
 	onMounted(() => {
-		window.addEventListener('keydown', handlerWrapper);
+		window.addEventListener('keydown', strappedListener);
 	});
 
 	onUnmounted(() => {
-		window.removeEventListener('keydown', handlerWrapper);
+		window.removeEventListener('keydown', strappedListener);
 	});
 };

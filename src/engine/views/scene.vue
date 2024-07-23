@@ -2,8 +2,8 @@
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { sha1 as hash } from 'object-hash';
 import { ScriptEvent } from '../core';
-import { useScene, useCache, useSaves } from '../stores';
-import { onKeydown } from '../utils/input';
+import { onKeydown, useAudio, AudioOptions } from '../hooks';
+import { useScene, useSaves } from '../stores';
 
 import TransitionFade from '../components/transition/fade.vue';
 import SceneButton from '../components/button.vue';
@@ -11,12 +11,23 @@ import SceneImage from '../components/image.vue';
 import SceneTypewriter from '../components/scene/typewriter.vue';
 import ScenePause from '../components/scene/pause.vue';
 
+const audio = useAudio();
 const store = useScene();
-const cache = useCache();
 const saves = useSaves();
 
+/**
+ * Scene looped typewriter.
+ */
 const typewriter = ref<typeof SceneTypewriter>();
+
+/**
+ * Scene pause state.
+ */
 const paused = ref(false);
+
+/**
+ * Scene `wait` state.
+ */
 const wait = ref(false);
 
 /**
@@ -94,6 +105,7 @@ const handleLoad = () => {
  */
 const handleExit = () => {
 	store.$reset();
+	audio.stop();
 };
 
 /**
@@ -110,16 +122,20 @@ const handleFullscreen = () => {
 /**
  * Event handler: Scene `play` event.
  */
-const handlePlay = async (event: ScriptEvent) => {
-	const audio = new Audio();
-	const data = event.data as { path: string; volume?: number };
-	audio.src = await cache.readAsBase64(await cache.load(data.path));
-	audio.volume = data.volume ?? 1.0;
-	audio.play();
+const handleAudioPlay = async (event: ScriptEvent) => {
+	audio.play(event.data as AudioOptions);
 };
 
 /**
- * Event handler: Scene `play` event.
+ * Event handler: Scene `stop` event.
+ */
+const handleAudioStop = async (event: ScriptEvent) => {
+	const { fade } = event.data as { fade?: boolean };
+	audio.stop(fade);
+};
+
+/**
+ * Event handler: Scene `wait` event.
  */
 const handleWait = async (event: ScriptEvent) => {
 	const data = event.data as { seconds: number };
@@ -135,12 +151,26 @@ onMounted(() => {
 	nextTick(() => {
 		typewriter.value?.skipTyping();
 	});
-	store.subscribe((event) => {
-		if (event.type === 'play') {
-			handlePlay(event);
+	nextTick(() => {
+		const loop = state.value?.loop;
+		if (loop) {
+			audio.play(loop);
 		}
-		if (event.type === 'wait') {
-			handleWait(event);
+	});
+	store.subscribe((event) => {
+		switch (event.type) {
+			case 'wait': {
+				handleWait(event);
+				break;
+			}
+			case 'play': {
+				handleAudioPlay(event);
+				break;
+			}
+			case 'stop': {
+				handleAudioStop(event);
+				break;
+			}
 		}
 	});
 });
