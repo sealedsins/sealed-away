@@ -146,7 +146,8 @@ export class Serializer {
 				const text = `Unknown serializable entity: ${value.constructor.name ?? value}`;
 				throw new ReferenceError(text);
 			}
-			const entity = Object.create(matchingClass.prototype) as SerializableEntity;
+			const entityPrototype = matchingClass.prototype as object;
+			const entity = Object.create(entityPrototype) as SerializableEntity;
 			return entity.fromJSON.call(undefined, value);
 		});
 	}
