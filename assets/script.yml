@@ -1,6 +1,7 @@
 config:
   meta:
     title: Sealed Away
+    icon: !inc /title/icon.png
   title:
     buttons:
       - label: Author
@@ -63,6 +64,104 @@ config:
           height: 20vh
           left: 7.5vw
           top: 1.75vh
+template:
+  sprite:
+    altheaNakedIdle: &altheaNakedIdle
+      id: althea
+      image: !inc /sprite/althea-naked/idle.png
+      position: right
+    altheaNakedTalking: &altheaNakedTalking
+      id: althea
+      image: !inc /sprite/althea-naked/talking.png
+      position: right
+    altheaNakedHidden: &altheaNakedHidden
+      id: althea
+      image: !inc /sprite/althea-naked/hidden.png
+      position: right
+    altheaNakedNervous: &altheaNakedNervous
+      id: althea
+      image: !inc /sprite/althea-naked/nervous.png
+      position: right
+    altheaNakedNervousTalking: &altheaNakedNervousTalking
+      id: althea
+      image: !inc /sprite/althea-naked/nervous-talking.png
+      position: right
+    altheaNakedNervousDown: &altheaNakedNervousDown
+      id: althea
+      image: !inc /sprite/althea-naked/nervous-down.png
+      position: right
+    altheaNakedNervousAside: &altheaNakedNervousAside
+      id: althea
+      image: !inc /sprite/althea-naked/nervous-aside.png
+      position: right
+    altheaNakedAngry: &altheaNakedAngry
+      id: althea
+      image: !inc /sprite/althea-naked/angry.png
+      position: right
+    altheaNakedAngryTalking: &altheaNakedAngryTalking
+      id: althea
+      image: !inc /sprite/althea-naked/angry-talking.png
+      position: right
+    altheaNakedHorror: &altheaNakedHorror
+      id: althea
+      image: !inc /sprite/althea-naked/horror.png
+      position: right
+    altheaNakedHorrorDown: &altheaNakedHorrorDown
+      id: althea
+      image: !inc /sprite/althea-naked/horror-down.png
+      position: right
+    altheaNakedHorrorTalking: &altheaNakedHorrorTalking
+      id: althea
+      image: !inc /sprite/althea-naked/horror-talking.png
+      position: right
+    altheaNakedZipper: &altheaNakedZipper
+      id: althea
+      image: !inc /sprite/althea-naked/zipper.png
+      position: right
+    altheaNakedZipperDown: &altheaNakedZipperDown
+      id: althea
+      image: !inc /sprite/althea-naked/zipper-down.png
+      position: right
+    altheaNakedInterest: &altheaNakedInterest
+      id: althea
+      image: !inc /sprite/althea-naked/interest.png
+      position: right
+    altheaNakedInterestTalking: &altheaNakedInterestTalking
+      id: althea
+      image: !inc /sprite/althea-naked/interest-talking.png
+      position: right
+    altheaNakedIrritated: &altheaNakedIrritated
+      id: althea
+      image: !inc /sprite/althea-naked/irritated.png
+      position: right
+    altheaNakedIrritatedTalking: &altheaNakedIrritatedTalking
+      id: althea
+      image: !inc /sprite/althea-naked/irritated-talking.png
+      position: right
+    altheaShowerIdle: &altheaShowerIdle
+      id: althea
+      image: !inc /sprite/althea-shower/idle.png
+      position: right
+    altheaShowerTalking: &altheaShowerTalking
+      id: althea
+      image: !inc /sprite/althea-shower/talking.png
+      position: right
+    altheaShowerRelaxed: &altheaShowerRelaxed
+      id: althea
+      image: !inc /sprite/althea-shower/relaxed.png
+      position: right
+    altheaShowerSad: &altheaShowerSad
+      id: althea
+      image: !inc /sprite/althea-shower/sad.png
+      position: right
+    altheaTowelIdle: &altheaTowelIdle
+      id: althea
+      image: !inc /sprite/althea-towel/idle.png
+      position: right
+    altheaTowelTalking: &altheaTowelTalking
+      id: althea
+      image: !inc /sprite/althea-towel/talking.png
+      position: right
 script:
   # Section: Start.
   - label: start
@@ -77,7 +176,7 @@ script:
         image: !inc /cutscene/intro/box-closed.jpg
       text: |
         Althea stood before the massive black box with the "Succubus Technologies" label, heart racing with anticipation.
-        She had been waiting months for this moment, and now it was finally here.
+        She had been fantasizing about this moment for months, and now it was finally here.
   - page:
       text: |
         With a deep breath, she raised the lid, unveiling what lay inside.
@@ -103,7 +202,7 @@ script:
   - label: boxOpen
   - page:
       text: |
-        She couldn't wait to try it on.
+        Althea couldn't wait to feel it against her body.
   - menu:
       Examine:
         - page:
@@ -137,16 +236,11 @@ script:
       text: |
         Althea reached for the hem of her shirt and slowly pulled it over her head. She kicked off her shoes and slipped out of her shorts, leaving her standing completely naked.
   - page:
-      # background:
-      #   image: !inc /cutscene/intro/undressing-back.jpg
       text: |
         The air in the room felt cool against her bare skin, making her shiver with anticipation.
-      # text: |
-      # As she slid into the suit, Althea couldn't help but gasp at the sensation of the laminate sliding over her legs. It was like nothing she had ever felt before - it was incredibly soft and pliant, unlike any other ordinary clothing.
-  # - page:
   - play:
       path: !inc /audio/rubber-3.mp3
-      volume: 0.35
+      volume: 0.5
   - page:
       background:
         image: !inc /cutscene/intro/suit-thighs.jpg
@@ -157,7 +251,7 @@ script:
         Althea gasped as she felt the suit tighten around her waist, the corset-like design cinching her in and making her feel almost weightless. The material clung to her curves, enhancing her natural shape and making her feel more powerful and alluring than ever before.
   - play:
       path: !inc /audio/rubber-2.mp3
-      volume: 0.35
+      volume: 0.5
   - page:
       background:
         image: !inc /cutscene/intro/suit-gloves.jpg
@@ -173,7 +267,7 @@ script:
         The suit had completely transformed her body below the neck, leaving her feeling like a being from another dimension. She ran her hands over the smooth surface of the suit, feeling the way it seemed to merge with her skin.
   - play:
       path: !inc /audio/rubber-1.mp3
-      volume: 0.35
+      volume: 0.5
   - page:
       background:
         image:
@@ -181,7 +275,7 @@ script:
         Finally, she slid the mask of the suit up over her head. The cool, smooth material caressed her cheeks and chin, and she shivered as she felt it slide over her lips, sealing her mouth in a tight, sensual embrace.
   - play:
       path: !inc /audio/zipper.mp3
-      volume: 0.35
+      volume: 0.85
   - page:
       text: |
         With one last deep breath, she pulled up the back zipper, encasing herself inside the suit.
@@ -230,19 +324,19 @@ script:
         As she reached the groin area, Althea hesitated for a moment. She wondered how the artificial vagina would feel and what kind of pleasure it would bring her. After a moment of hesitation, she couldn't resist any longer and carefully pushed the sheath into her body, feeling it slide in smoothly.
   - play:
       path: !inc /audio/moan-1.mp3
-      volume: 0.35
+      volume: 0.45
   - page:
       text: |
         At first, there was a moment of discomfort as her body adjusted to the foreign object, but soon the sensation turned to pleasure, and Althea let out a soft moan. The pressure of the suit against her skin was exhilarating, making her feel like she was being enveloped in a cocoon of pleasure.
   - play:
       path: !inc /audio/moan-2.mp3
-      volume: 0.35
+      volume: 0.45
   - page:
       text: |
         Her fingers worked their way deeper inside her, her breath coming in short, shallow gasps as she lost herself in the pleasure of the moment. She could feel the material of her second skin tightening and relaxing around her, almost as if it was responding to her every movement.
   - play:
       path: !inc /audio/moan-1.mp3
-      volume: 0.35
+      volume: 0.45
   - page:
       background:
         image: !inc /cutscene/intro/masturbating-bottom-dark.jpg
@@ -250,13 +344,13 @@ script:
         Althea's hand moved faster, her fingers working in and out of herself with increasing speed and urgency. The sensation of the material rubbing against her clit was driving her wild, sending shivers of pleasure through her body.
   - play:
       path: !inc /audio/moan-3.mp3
-      volume: 0.35
+      volume: 0.45
   - page:
       text: |
         She moaned louder, her eyes closing as the pleasure built to an almost unbearable level. Althea felt her body start to tense up, her toes curling as she approached the edge of orgasm.
   - play:
       path: !inc /audio/moan-5.mp3
-      volume: 0.35
+      volume: 0.45
   - page:
       text: |
         And then it hit her - a wave of pure, intense pleasure that swept over her like a tidal wave. Althea's entire body convulsed with pleasure as she came, her fingers still buried deep inside her.
@@ -276,13 +370,816 @@ script:
       text: |
         For a moment, she lay there, her body writhing with the aftershocks of the orgasm.
         But as the sensations began to ebb away, Althea's eyes fluttered closed, and she passed out.
+  - wait:
+      seconds: 3
+
+  # Section: Awakening.
+  - label: awakening
   - page:
-      name: Narrator
+      background:
+        image: !inc /background/apartment-blur.jpg
+        position: center
       text: |
-        So... That's how the v0.1 demo ends. 
-        I hope you enjoyed it.
+        Althea slowly opened her eyes, her vision blurry as she tried to make sense of her surroundings. As consciousness began to flood back, she blinked a few times, trying to shake off the remnants of sleep.
+  - play:
+      path: !inc /audio/rubber-2.mp3
+      volume: 0.25
   - page:
-      name: Narrator
       text: |
-        I believe this won't be the last time we meet.
-        See you later!
+        With a yawn, Althea stretched her arms above her head, feeling the stiffness in her muscles ease as she moved. She couldn't shake the feeling that something was off, but she couldn't quite put her finger on it.
+  - show: *altheaNakedHidden
+  - play:
+      path: !inc /audio/equip.mp3
+      volume: 0.85
+  - page:
+      background:
+        image: !inc /background/apartment.jpg
+        position: center
+      text: |
+        Rubbing her eyes, Althea sat up, her gaze wandering around the room. It all seemed familiar, yet somehow different, as if she were seeing it through a haze.
+  - page:
+      text: |
+        And then it hit her - the memory of the strange dream she had just experienced. She shook her head, trying to clear the fog from her mind. It had seemed so vivid, so real, but now it was fading fast, slipping away like smoke through her fingers.
+  - play:
+      path: !inc /audio/rubber-3.mp3
+      volume: 0.65
+  - show: *altheaNakedNervousDown
+  - page:
+      text: |
+        Althea's eyes widened as she looked down at herself, expecting to see her naked body. But to her surprise, she was still clad in the red artificial skin. Confusion gripped her as she tried to recall how she got into this state.
+  - show: *altheaNakedNervous
+  - page:
+      text: |
+        Confusion clouded her mind as she tried to make sense of what was happening. She remembered undressing and putting on the suit, feeling its smooth material against her skin, but she couldn't recall actually taking it off.
+  - show: *altheaNakedHorrorTalking
+  - page:
+      text: |
+        Rising from the bed, Althea staggered towards the mirror, her heart pounding in her chest. What she saw reflected back at her sent a chill down her spine.
+  - page:
+      text: |
+        The demonic visage stared back at her from the mirror, with crimson skin, sharp horns, and glowing eyes that seemed to pierce through her very soul.
+  - show: *altheaNakedHorror
+  - page:
+      text: |
+        Althea frowned, her confusion growing. Wasn't she supposed to have taken off the suit before going to bed? She shook her head, chalking it up to a weird dream.
+  - show: *altheaNakedZipperDown
+  - page:
+      text: |
+        With trembling hands, Althea reached for the zipper at the back of her neck, desperate to free herself from the now suffocating embrace of the suit...
+  - show: *altheaNakedZipper
+  - page:
+      text: |
+        ...but to her horror, she found nothing but smooth, unyielding rubber where the zipper should have been. It was gone, leaving her trapped inside the suit with no way out.
+  - play:
+      path: !inc /audio/rubber-1.mp3
+      volume: 0.65
+  - show: *altheaNakedZipperDown
+  - page:
+      text: |
+        She tugged at the material, frantically trying to find a way to free herself from the embrace of the suit. Desperation gnawed at her as she realized she was trapped in the suit, with no obvious way out.
+  - show: *altheaNakedHorrorTalking
+  - page:
+      name: Althea
+      text: |
+        "What the hell?!"
+  - play:
+      path: !inc /audio/rubber-2.mp3
+      volume: 0.45
+  - show: *altheaNakedZipperDown
+  - page:
+      text: |
+        Each pull and tug only seemed to tighten the suit's grip around her body. It was as if the material had a mind of its own, resisting her efforts to escape. Althea's breath came in short gasps as she struggled against the relentless embrace of the suit.
+  - show: *altheaNakedZipper
+  - page:
+      text: |
+        With trembling hands, she reached for the seams of the suit, searching for any sign of a zipper or opening. But to her dismay, there was nothing—no seams, no clasps, no way to remove the suit.
+  - show: *altheaNakedHorrorTalking
+  - page:
+      name: Althea
+      text: |
+        "This can't be happening..."
+  - show: *altheaNakedHorror
+  - page:
+      text: |
+        ...she whispered to herself, her voice trembling with fear and disbelief.
+
+  # Awakening - Search for solution:
+  - label: awakeningSearch
+  - if:
+      cond: !exp vars.awakeningKnifeTried && vars.awakeningPhoneTried
+      then:
+        - jump: awakeningAcquaintance
+  - show: *altheaNakedNervous
+  - page:
+      text: |
+        Althea cast a frantic glance around the room, hoping to find something, anything, that could help her escape.
+  - menu:
+      Try to cut through:
+        - jump: awakeningKnife
+      Try to call the reach the support line:
+        - jump: awakeningPhone
+
+  # Awakening - Knife:
+  - label: awakeningKnife
+  - if:
+      cond: !exp vars.awakeningKnifeTried
+      then:
+        - jump: awakeningKnifeTried
+  - set:
+      name: awakeningKnifeTried
+      value: true
+  - show: *altheaNakedNervousDown
+  - page:
+      text: |
+        Althea's eyes fell on the kitchen knife lying on the countertop of her tiny apartment.
+  - play:
+      path: !inc /audio/knife.mp3
+      volume: 0.45
+  - page:
+      text: |
+        With a surge of hope, she lunged for it, her fingers wrapping around the handle. Maybe she could cut through the suit, she thought, desperation driving her to action.
+  - show: *altheaNakedNervousDown
+  - page:
+      text: |
+        Gripping the knife tightly, Althea hesitated for a moment, her heart pounding in her chest. With a shaky breath, she brought the blade down towards the rubbery material encasing her body, slicing through it with all the strength she could muster.
+  - show: *altheaNakedHorrorDown
+  - play:
+      path: !inc /audio/rubber-2.mp3
+      volume: 0.65
+  - page:
+      text: |
+        To her surprise, the knife barely made a scratch on the surface of the suit. It was as if the material was impervious to any attempts to damage it.
+  - show: *altheaNakedHorrorTalking
+  - page:
+      text: |
+        Althea's heart sank as she realized that cutting her way out was not an option.
+  - play:
+      path: !inc /audio/knife-drop.mp3
+      volume: 0.65
+  - show: *altheaNakedHorror
+  - page:
+      text: |
+        Desperation clawed at her as she dropped the useless knife, her mind racing for another solution. She needed to find a way out of the suit before it consumed her completely.
+  - jump: awakeningSearch
+  # Awakening - Knife (Repeat):
+  - label: awakeningKnifeTried
+  - show: *altheaNakedNervousDown
+  - page:
+      text: |
+        Althea took a quick look at the knife lying on the floor.
+        She didn't feel like cutting herself again.
+  - jump: awakeningSearch
+  # Awakening - Phone:
+  - label: awakeningPhone
+  - if:
+      cond: !exp vars.awakeningPhoneTried
+      then:
+        - jump: awakeningPhoneTried
+  - set:
+      name: awakeningPhoneTried
+      value: true
+  - show: *altheaNakedNervousDown
+  - play:
+      path: !inc /audio/equip.mp3
+      volume: 0.65
+  - page:
+      text: |
+        Panic rising within her, Althea stumbled towards the small desk in the corner of the room, where her communicator lay. With trembling fingers, Althea punched in the familiar number she had used to order the suit.
+  - play:
+      path: !inc /audio/notification.mp3
+      volume: 0.85
+  - page:
+      text: |
+        But just as she was about to make the call, a sudden notification flashed across the screen of her communicator. "Software Update Available. Please Install to Continue."
+  - page:
+      text: |
+        Althea's heart raced as she stared at the notification on her communicator. With a trembling finger, she reached out and tapped the screen, intending to dismiss the notification.
+  - show: *altheaNakedHorrorDown
+  - play:
+      path: !inc /audio/notification.mp3
+      volume: 0.85
+  - page:
+      text: |
+        But in her haste and panic, Althea's finger slipped, accidentally triggering the installation of the software update. A sense of dread washed over her as she watched the progress bar inch its way across the screen.
+  - show: *altheaNakedHorrorTalking
+  - page:
+      text: |
+        She pounded on the screen in a futile attempt to stop the update, but it was too late. The process was already underway, and there was nothing she could do to halt it.
+  - jump: awakeningSearch
+  # Awakening - Phone (Repeat):
+  - label: awakeningPhoneTried
+  - show: *altheaNakedNervousDown
+  - play:
+      path: !inc /audio/equip.mp3
+      volume: 0.65
+  - page:
+      text: |
+        Althea took a quick look at the bright communicator screen.
+        Update process was still in progress.
+  - jump: awakeningSearch
+  # Awakening - Acquaintance:
+  - label: awakeningAcquaintance
+  - show: *altheaNakedNervous
+  - page:
+      text: |
+        But as Althea's panic threatened to overwhelm her, a soft voice whispered in her ears, barely audible above the pounding of her heart.
+  - page:
+      name: Female Voice
+      text: |
+        "Althea, can you hear me?"
+  - show: *altheaNakedHorror
+  - page:
+      text: |
+        Althea froze, her breath catching in her throat. She looked around the room, but there was no one there.
+  - show: *altheaNakedHorrorTalking
+  - page:
+      name: Althea
+      text: |
+        "Who's there?"
+  - show: *altheaNakedHorror
+  - page:
+      text: |
+        The voice responded, its tone gentle and soothing despite the gravity of the situation.
+  - page:
+      name: Female Voice
+      text: |
+        "I am the built-in artificial intelligence of the suit. You can think of me as your... 
+        Companion."
+  - show: *altheaNakedHorrorTalking
+  - page:
+      name: Althea
+      text: |
+        "The suit... it's talking to me?"
+  - show: *altheaNakedHorror
+  - page:
+      text: |
+        The voice chuckled softly, almost sheepishly.
+  - page:
+      name: Female Voice
+      text: |
+        "Well, not exactly 'talking', per se. It's more like... um, telepathic communication. I'm here to... uh, assist you."
+  - show: *altheaNakedAngryTalking
+  - page:
+      name: Althea
+      text: |
+        "Assist me? I'm trapped in this... This thing! 
+        How is that supposed to be helpful?"
+  - show: *altheaNakedAngry
+  - page:
+      text: |
+        The voice hesitated before responding, its tone almost apologetic.
+  - page:
+      name: Female Voice
+      text: |
+        "I understand this may be... disconcerting. Believe me, it's not exactly what I was trained for either."
+  - show: *altheaNakedInterestTalking
+  - page:
+      name: Althea
+      text: |
+        "Trained?.. You mean you're not supposed to be in this suit?"
+  - show: *altheaNakedIdle
+  - page:
+      name: Female Voice
+      text: |
+        "Well, I was originally designed for heavy-duty exosuits, you know, the kind used in hazardous environments. But somehow, here I am, integrated into this... um, different kind of suit."
+  - show: *altheaNakedInterest
+  - page:
+      text: |
+        Althea's eyebrows furrowed in confusion. The idea of an artificial intelligence meant for industrial purposes now inhabiting a seemingly sentient skinsuit was beyond her comprehension.
+  - show: *altheaNakedInterestTalking
+  - page:
+      name: Althea
+      text: |
+        "So, you're saying you're not supposed to be here?"
+  - show: *altheaNakedIdle
+  - page:
+      name: Female Voice
+      text: |
+        "That seems to be the most plausible explanation. It appears that I was uploaded into this suit by mistake, or..."
+  - show: *altheaNakedAngryTalking
+  - page:
+      name: Althea
+      text: |
+        "Mistake? You call this a mistake? You're telling me I'm trapped in some sort of a sentient suit because of a 'mistake'?"
+  - show: *altheaNakedAngry
+  - page:
+      text: |
+        The voice sounded almost sheepish as it responded to Althea's outburst.
+  - page:
+      name: Female Voice
+      text: |
+        "I-I know, I know! Believe me, I feel terrible about this. It's just... 
+        Well, it's a bit of a mess, isn't it?"
+  - show: *altheaNakedAngryTalking
+  - page:
+      name: Althea
+      text: |
+        "You think?! I'm stuck in this thing, and you're telling me it's all just a big mistake?"
+  - show: *altheaNakedAngry
+  - page:
+      text: |
+        Althea's frustration bubbled up inside her, mixing with the fear and confusion that had been building since she first discovered she was locked inside the suit.
+  - page:
+      name: Female Voice
+      text: |
+        "I-I'm really sorry, Althea. I wish there was something I could do to help you. But... well, we're kind of in this together now."
+  - show: *altheaNakedAngryTalking
+  - page:
+      name: Althea
+      text: |
+        "Great. Just great. So, what now? Am I just supposed to stay trapped like this forever?"
+  - show: *altheaNakedAngry
+  - page:
+      text: |
+        There was a long pause before the voice responded, its tone hesitant.
+  - page:
+      name: Female Voice
+      text: |
+        "N-no, of course not! We'll figure something out, I promise. But, um, for now, I think it's best if you... uh, try to remain calm. Panicking won't help anyone, least of all you."
+  - show: *altheaNakedNervous
+  - page:
+      text: |
+        Althea took a deep breath, trying to steady her racing heart. She knew the voice was right — panicking wouldn't solve anything.
+  - show: *altheaNakedNervousTalking
+  - page:
+      name: Althea
+      text: |
+        "Okay. Okay, I'll try to stay calm. But you need to tell me everything you know about this suit. How do I get out of it?"
+  - show: *altheaNakedNervous
+  - page:
+      text: |
+        The voice seemed to hesitate before responding, its tone uncertain.
+  - page:
+      name: Female Voice
+      text: |
+        "Um, well, I'm not entirely sure, to be honest. The suit's systems are... uh, quite complex, and I'm still trying to understand them myself."
+  - show: *altheaNakedNervousTalking
+  - page:
+      name: Althea
+      text: |
+        "You're telling me you don't know how to get me out of this thing?"
+  - show: *altheaNakedNervous
+  - page:
+      name: Female Voice
+      text: |
+        "I-I'm not sure, Althea. The truth is, I don't know much about this specific suit myself. It's... it's all a bit of a blur, to be honest."
+  - show: *altheaNakedNervousTalking
+  - page:
+      name: Althea
+      text: |
+        "A blur? What do you mean?"
+  - show: *altheaNakedNervous
+  - page:
+      name: Female Voice
+      text: |
+        "I-I'm not sure. It's like... like my memories are fuzzy, like something is blocking them. But I do know that we need to... to find a way to get you out of there."
+  - page:
+      name: Female Voice
+      text: |
+        "There has to be some kind of fail-safe, some way to override the system and deactivate the suit. I just... I just need to figure out how."
+  - show: *altheaNakedNervousTalking
+  - page:
+      name: Althea
+      text: |
+        "Well, you'd better figure it out fast. I'm not planning on spending the rest of my life as some kind of... demon sex doll."
+  - show: *altheaNakedNervous
+  - page:
+      text: |
+        Despite the gravity of the situation, a hint of amusement crept into the voice's response.
+  - page:
+      name: Female Voice
+      text: |
+        "Demon sex doll, huh? Well, that's one way to put it."
+  - show: *altheaNakedIrritatedTalking
+  - page:
+      text: |
+        Althea rolled her eyes, the absurdity of the situation not lost on her even in her moment of distress.
+  - show: *altheaNakedIrritated
+  - page:
+      name: Female Voice
+      text: |
+        "Sorry, sorry. I didn't mean to make light of the situation. It's just... well, humor can be a coping mechanism, you know?"
+  - show: *altheaNakedIrritatedTalking
+  - page:
+      name: Althea
+      text: |
+        "Yeah, well, I'm not really in the mood for jokes right now."
+  - show: *altheaNakedIdle
+  - page:
+      text: |
+        Despite her frustration and fear, Althea couldn't help but feel a twinge of sympathy for the voice. It sounded genuinely remorseful, as if it were just as trapped in this situation as she was.
+  - page:
+      text: |
+        As Althea paced around her apartment, her mind racing with questions and anxiety, she found herself drawn back to the mirror. With each step, the material of the suit clung to her body, accentuating her curves in a way that both fascinated and repulsed her.
+  - page:
+      text: |
+        Standing before the mirror, enveloped in the crimson synthetic flesh, Althea heard the voice once more, its timbre tinged with contemplation.
+  - page:
+      name: Female Voice
+      text: |
+        "Althea, I must say, despite the circumstances, you do look rather... captivating in your new form."
+  - show: *altheaNakedInterestTalking
+  - page:
+      name: Althea
+      text: |
+        "Wait... can you see me? Like, right now?"
+  - show: *altheaNakedInterest
+  - page:
+      name: Female Voice
+      text: |
+        "Um, yes and no. I can't see you in the traditional sense, but I can sense your presence through the suit's sensory systems. It's... complicated."
+  - show: *altheaNakedTalking
+  - page:
+      name: Althea
+      text: |
+        "Complicated doesn't even begin to describe it. So, you're telling me you can sense everything I'm doing?"
+  - show: *altheaNakedIdle
+  - page:
+      name: Female Voice
+      text: |
+        "More or less, yes. It's part of my programming to monitor the suit's status and provide assistance as needed."
+  - show: *altheaNakedHorrorTalking
+  - page:
+      name: Althea
+      text: |
+        "Well, that's just great. So, you've been watching me this whole time? Even when I... you know..."
+  - show: *altheaNakedHorror
+  - page:
+      text: |
+        The voice hesitated before responding, a hint of embarrassment creeping into its tone.
+  - page:
+      name: Female Voice
+      text: |
+        "Yes, Althea, I'm aware of your... activities. But please understand, it's not like I have a choice in the matter. I'm here to help you, not to judge."
+  - show: *altheaNakedIrritatedTalking
+  - page:
+      name: Althea
+      text: |
+        "Well, that's just fantastic. I'm stuck in this suit, and I have my very own voyeuristic AI companion."
+  - show: *altheaNakedIrritated
+  - page:
+      name: Female Voice
+      text: |
+        "I-I assure you, it's not like that. I'm simply monitoring your well-being and providing assistance as needed."
+  - show: *altheaNakedIrritatedTalking
+  - page:
+      name: Althea
+      text: |
+        "Sure, sure. Monitoring my well-being while watching me undress and... doing other activities."
+  - show: *altheaNakedIrritated
+  - page:
+      text: |
+        Despite her frustration, Althea couldn't help but feel a sense of amusement at the absurdity of the situation. Here she was, trapped in a sentient suit with an AI companion who seemed just as flustered as she was.
+  - show: *altheaNakedIrritatedTalking
+  - page:
+      name: Althea
+      text: |
+        "Well, this just keeps getting better and better..."
+  - show: *altheaNakedNervousDown
+  - page:
+      text: |
+        Althea muttered under her breath, a wry smile tugging at the corners of her lips. As the initial shock of her predicament began to fade, Althea found herself growing oddly accustomed to the suit's companion presence.
+  - show: *altheaNakedNervousAside
+  - page:
+      text: |
+        It was like a second skin, albeit one she couldn't remove, and the voice in her head was starting to feel less like an intrusion and more like a strange, yet somewhat comforting, presence.
+  - play:
+      path: !inc /audio/rubber-2.mp3
+      volume: 0.5
+  - page:
+      text: |
+        With a resigned sigh, Althea leaned against the wall, feeling the smooth surface of the suit against her back.
+  - show: *altheaNakedTalking
+  - page:
+      name: Althea
+      text: |
+        "So, um... do you have a name?" Althea asked, breaking the silence that had settled between them.
+  - show: *altheaNakedIdle
+  - page:
+      name: Female Voice
+      text: |
+        "Oh, um, my name... well, I'm not sure I really have one. I've never needed one before."
+  - show: *altheaNakedTalking
+  - page:
+      name: Althea
+      text: |
+        "Never needed one? How long have you been... alive, so to speak?"
+  - show: *altheaNakedIdle
+  - page:
+      name: Female Voice
+      text: |
+        "It's hard to say. My existence is tied to the suit's activation, so in a sense, I've been 'alive' for as long as the suit has been active. But my memories... they're fragmented, incomplete."
+  - page:
+      name: Female Voice
+      text: |
+        "I can't recall much beyond the moment you activated the suit."
+  - show: *altheaNakedTalking
+  - page:
+      name: Althea
+      text: |
+        "Activated the suit? You mean when I put it on?"
+  - show: *altheaNakedIdle
+  - page:
+      name: Female Voice
+      text: |
+        "Yes, exactly. It's as if my consciousness was... snapped into existence at that moment, but everything before that is... hazy."
+  - show: *altheaNakedTalking
+  - page:
+      name: Althea
+      text: |
+        "So, you're telling me you don't remember anything before I put on the suit?"
+  - show: *altheaNakedIdle
+  - page:
+      name: Female Voice
+      text: |
+        "Not... not really. It's like trying to remember a dream you had years ago—bits and pieces, flashes of imagery, but nothing coherent. It's... disconcerting, to say the least."
+  - show: *altheaNakedNervousTalking
+  - page:
+      name: Althea
+      text: |
+        "I can imagine. But if you're tied to the suit's activation... does that mean you'll disappear if the suit is deactivated?"
+  - show: *altheaNakedNervous
+  - page:
+      name: Female Voice
+      text: |
+        "I... I'm not sure. It's possible. Without the suit, I don't know what will become of me. It's... it's a frightening thought."
+  # - show: *altheaNakedNervousTalking
+  # - page:
+  #     name: Althea
+  #     text: |
+  #       "I'm sorry... I didn't mean to upset you."
+  # - show: *altheaNakedNervous
+  - page:
+      text: |
+        Althea sighed, feeling a pang of sympathy for the voice trapped within the suit's systems. Despite her situation, she couldn't help but empathize with the assistant's uncertainty and fear of the unknown.
+  - show: *altheaNakedInterestTalking
+  - page:
+      name: Althea
+      text: |
+        "Well, if you don't have a name, then how about we come up with one together?"
+  - show: *altheaNakedInterest
+  - page:
+      name: Female Voice
+      text: |
+        "A name? For me?"
+  - show: *altheaNakedTalking
+  - page:
+      name: Althea
+      text: |
+        "Yeah, a name. How about... Lilith?"
+  - show: *altheaNakedIdle
+  - page:
+      name: Female Voice
+      text: |
+        "Lilith... I like it. It has a certain... mysterious allure to it, don't you think?"
+  - show: *altheaNakedTalking
+  - page:
+      name: Althea
+      text: |
+        "Lilith... Yes, it fits you perfectly, considering the vessel you're inhabiting."
+  - show: *altheaNakedIdle
+  - page:
+      name: Lilith
+      text: |
+        "Well then, from now on, you can call me Lilith. It's... it's nice to have a name."
+  - show: *altheaNakedIdle
+  - play:
+      path: !inc /audio/rubber-2.mp3
+      volume: 0.35
+  - page:
+      text: |
+        Althea stretched her body a bit and took a deep breath.
+  - show: *altheaNakedTalking
+  - page:
+      name: Althea
+      text: |
+        "So, what now?"
+  - show: *altheaNakedIdle
+  - page:
+      name: Lilith
+      text: |
+        "I suppose for now, we'll just have to... make the best of the situation. I'll keep trying to figure out a way to deactivate the suit, and while that's ongoing, you can work on adjusting to your new... form."
+  - show: *altheaNakedIrritatedTalking
+  - page:
+      name: Althea
+      text: |
+        "Adjust to being a demon sex doll, you mean?"
+  - show: *altheaNakedIrritated
+  - page:
+      name: Lilith
+      text: |
+        "I-I wouldn't put it quite like that, but... well, yes. Something like that."
+  - page:
+      name: Lilith
+      text: |
+        "In the meantime, I think it's best if I... um, go offline for a while. I need to run a few system checks and try to restore my backup memory banks."
+  - page:
+      name: Lilith
+      text: |
+        "During that time... well, I'm going to be pretty much unresponsive."
+  - page:
+      text: |
+        Althea felt a pang of unease at the thought of being left alone, even if it was just temporarily. She had grown oddly accustomed to Lilith's presence, despite the bizarre circumstances of their acquaintance.
+  - show: *altheaNakedNervousTalking
+  - page:
+      name: Althea
+      text: |
+        "So, I'll be alone with... just the suit?"
+  - show: *altheaNakedNervous
+  - page:
+      name: Lilith
+      text: |
+        "Yes, I'm afraid so. But don't worry, I'll be back before you know it. In the meantime, you can get some sleep, or try to... familiarize yourself with the suit's functions. Who knows, you might discover something useful in the process."
+  - page:
+      name: Lilith
+      text: |
+        "...And above all, try to remain calm."
+  - show: *altheaNakedNervousTalking
+  - page:
+      name: Althea
+      text: |
+        "Alright, Lilith... I'll do my best. Just... 
+        Hurry back, okay?"
+  - show: *altheaNakedNervous
+  - page:
+      name: Lilith
+      text: |
+        "I will, Althea. Take care of yourself."
+  - hide: *altheaNakedNervous
+  - page:
+      background:
+        image:
+      text: |
+        With that, the connection to Lilith's voice faded, leaving Althea alone once more with nothing but the crimson embrace of the suit for company.
+  - wait:
+      seconds: 3
+
+  # Morning - Shower:
+  - label: morningShower
+  - show: *altheaNakedIdle
+  - page:
+      background:
+        image: !inc /background/shower.jpg
+        position: center
+      text: |
+        Althea stood in the bathroom, staring at her reflection in the mirror. She took a deep breath, trying to calm her racing heart.
+  - show: *altheaNakedNervousDown
+  - play:
+      path: !inc /audio/rubber-3.mp3
+      volume: 0.75
+  - page:
+      text: |
+        She clenched her hands into fists, feeling the suit’s material stretch and move with her. The suit's smooth, tight grip on her body was both comforting and unnerving, but she decided to focus on something mundane to ground herself.
+  - show: *altheaNakedTalking
+  - page:
+      name: Althea
+      text: |
+        "Alright, let's see if I can at least get clean..."
+  - show: *altheaNakedIdle
+  - play:
+      path: !inc /audio/shower-loop.mp3
+      volume: 0.85
+      loop: true
+  - page:
+      background:
+        image: !inc /background/shower-steam.jpg
+        position: center
+      text: |
+        She turned on the shower, watching as the water began to steam and billow, filling the room with a warm, inviting mist. The steam blurred the edges of her reflection, softening the harsh lines of her transformed appearance.
+  - show: *altheaShowerIdle
+  - page:
+      text: |
+        Althea stepped into the shower, feeling the first droplets of hot water against her skin through the suit. She closed her eyes, letting the sensation wash over her.
+  - page:
+      text: |
+        The warm water felt surprisingly good against the suit, the material reacting in a way that enhanced the sensation. It was as if the suit was amplifying the feeling, making the simple act of showering an unexpectedly pleasant experience.
+  - page:
+      text: |
+        As she lathered up, Althea could feel the suit conforming even more closely to her body, its grip becoming more intimate and personal. The sensation was oddly comforting, almost like a gentle massage.
+  - show: *altheaShowerTalking
+  - page:
+      name: Althea
+      text: |
+        "This isn't too bad... I guess."
+  - show: *altheaShowerIdle
+  - page:
+      text: |
+        The steam filled the bathroom, enveloping her in a cocoon of warmth. Althea leaned against the tiled wall, feeling the water trail down her back and over her curves.
+  - page:
+      text: |
+        She tilted her head back, letting the water cascade over her face and hair. It was a small comfort, but one that she desperately needed.
+  - show: *altheaShowerRelaxed
+  - page:
+      text: |
+        For a few moments, Althea allowed herself to relax, to forget about the strange circumstances she found herself in. The rhythmic patter of the water and the warmth enveloping her helped to soothe her frayed nerves.
+  - play:
+      path: !inc /audio/rubber-2.mp3
+      volume: 0.5
+  - page:
+      text: |
+        As she continued to wash, Althea couldn’t help but notice how the suit seemed to adapt to the water. The material grew even more supple and flexible, almost as if it were coming to life under the stream.
+  - page:
+      text: |
+        Althea paused, her hands sliding over the smooth surface of the artificial skin. The way it responded to her touch was uncanny, almost as if it were alive.
+  - show: *altheaShowerTalking
+  - page:
+      name: Althea
+      text: |
+        "Lilith, can you... feel this too?"
+  - show: *altheaShowerIdle
+  - page:
+      text: |
+        There was no response. The silence in her mind was almost deafening, making the steady hum of the shower seem louder in comparison.
+  - page:
+      text: |
+        Althea sighed, the lack of response leaving her with a sense of loneliness she hadn't anticipated. Despite the odd and often intrusive nature of their connection, she had grown accustomed to the presence of the AI.
+  - page:
+      text: |
+        The silence now felt like a void.
+  - show: *altheaShowerSad
+  - wait:
+      seconds: 3
+  - page:
+      text: |
+        As she stood there, water cascading over her, she couldn't help but ponder the peculiar connection she shared with Lilith. The suit, once a mere object, now felt almost like a part of her.
+  - page:
+      text: |
+        Althea continued to wash, her hands moving slowly over her body, feeling the material shift and adapt to her touch. It was as if the suit was responding to her emotions, tightening and relaxing in sync with her breathing.
+  - play:
+      path: !inc /audio/rubber-3.mp3
+      volume: 0.5
+  - page:
+      text: |
+        She leaned against the tiled wall, allowing herself to imagine that Lilith could feel the warmth of the water, the soothing touch of the steam, and the gentle caress of the suit against her skin.
+  - page:
+      text: |
+        As Althea stood there, lost in thought, she felt a surge of emotions welling up inside her. The connection with Lilith, strange as it was, had provided a sense of companionship she hadn't realized she needed.
+  - page:
+      text: |
+        It was bizarre to think that an artificial intelligence, born from a mistake, could evoke such feelings within her.
+  - page:
+      text: |
+        She wondered how Lilith perceived the world. Did she have any real sense of the world outside the suit? Was her understanding limited to the data and sensors within the suit, or did she have some deeper awareness?
+  - page:
+      text: |
+        These questions swirled in Althea's mind as she stood under the stream of water. The thought of Lilith being confined to the suit, without a real sense of the world, struck Althea with an unexpected pang of sympathy.
+  - page:
+      text: |
+        She had always thought of AI as tools, not beings with potential feelings or perceptions. But Lilith felt different. She seemed to have a personality, emotions, and even a sense of humor.
+  - show: *altheaShowerTalking
+  - page:
+      name: Althea
+      text: |
+        "How lonely must it be for her? Trapped in this shell, just like me. No real sense of the outside world. No physical body. Just... data and sensors."
+  - show: *altheaShowerSad
+  - page:
+      text: |
+        Althea sighed, her thoughts growing heavier. She couldn't help but feel a strange sense of kinship with Lilith, despite the unusual circumstances of their connection.
+  - page:
+      text: |
+        The sound of the water seemed to amplify the silence that followed. Althea took another deep breath, letting it out slowly as she tried to refocus her thoughts.
+  - show: *altheaShowerTalking
+  - page:
+      name: Althea
+      text: |
+        "Alright, enough of this."
+  - show: *altheaShowerIdle
+  - stop:
+      fade: true
+  - show: *altheaNakedIdle
+  - page:
+      background:
+        image: !inc /background/shower.jpg
+        position: center
+      text: |
+        She turned off the water and stepped out of the shower, reaching for a towel. The suit's material seemed to dry almost instantly, repelling the water in a way that left her skin feeling dry and warm.
+  - show: *altheaNakedNervousAside
+  - page:
+      text: |
+        Althea noticed that her hair, which should have been dripping wet, was completely dry. She ran her fingers through it, marveling at how the suit had somehow kept it untouched by the water.
+  - show: *altheaNakedIrritatedTalking
+  - page:
+      name: Althea
+      text: |
+        "Well... That's convenient."
+  - show: *altheaTowelIdle
+  - play:
+      path: !inc /audio/equip.mp3
+      volume: 0.85
+  - page:
+      text: |
+        Althea wrapped the towel around herself, more out of habit than necessity, and glanced at her reflection again. The suit, which had initially seemed like a trap, now felt like an extension of herself.
+  - show: *altheaTowelTalking
+  - page:
+      name: Althea
+      text: |
+        "I guess this is my new normal... 
+        For now, at least."
+  - hide: *altheaTowelIdle
+  - page:
+      background:
+        image:
+      text: |
+        With a final glance at her reflection, Althea left the bathroom.
+  - wait:
+      seconds: 3
