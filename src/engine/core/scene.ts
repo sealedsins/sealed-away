@@ -87,7 +87,7 @@ export const SceneStateSchema = zod
 		text: zod.string(),
 		background: SceneBackgroundSchema,
 		sprites: zod.array(SceneSpriteSchema),
-		loop: SceneSoundSchema.optional(),
+		loop: SceneSoundSchema.or(zod.null()),
 	})
 	.strict();
 
@@ -99,6 +99,7 @@ export class Scene extends Script {
 		name: '',
 		text: '',
 		sprites: [],
+		loop: null,
 		background: {
 			image: null,
 			position: 'center',
@@ -235,8 +236,10 @@ export class Scene extends Script {
 			case 'play': {
 				const argSchema = SceneSoundSchema;
 				const data = this.validate(argSchema, this.eval(args));
-				this.setState({ loop: data });
 				this.emit('play', data);
+				if (data.loop) {
+					this.setState({ loop: data });
+				}
 				break;
 			}
 			case 'stop': {
@@ -244,7 +247,7 @@ export class Scene extends Script {
 					fade: zod.boolean().optional(),
 				});
 				const data = this.validate(argSchema, this.eval(args));
-				this.setState({ loop: undefined });
+				this.setState({ loop: null });
 				this.emit('stop', data);
 				break;
 			}

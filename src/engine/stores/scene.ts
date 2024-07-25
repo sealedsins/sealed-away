@@ -2,7 +2,7 @@
  * Sealed Sins, 2023-2024.
  */
 import { defineStore } from 'pinia';
-import { shallowRef, triggerRef } from 'vue';
+import { computed, shallowRef, triggerRef } from 'vue';
 import { Scene, ScriptSource, ScriptListener } from '../core';
 import { useParser } from './parser';
 
@@ -16,6 +16,27 @@ export const useScene = defineStore('scene', () => {
 	 * Active scene.
 	 */
 	const scene = shallowRef<Scene>();
+
+	/**
+	 * Active scene state.
+	 */
+	const state = computed(() => {
+		return scene.value?.getState();
+	});
+
+	/**
+	 * Active scene visible menu.
+	 */
+	const menu = computed(() => {
+		return scene.value?.getMenu();
+	});
+
+	/**
+	 * Active scene execution status.
+	 */
+	const done = computed(() => {
+		return scene.value?.isDone() ?? true;
+	});
 
 	/**
 	 * Forces scene state to refresh.
@@ -38,6 +59,15 @@ export const useScene = defineStore('scene', () => {
 	 * Executes the next scene frame.
 	 */
 	const next = () => {
+		scene.value?.next();
+		refresh();
+	};
+
+	/**
+	 * Jumps to the given `label`.
+	 */
+	const jump = (label: string) => {
+		scene.value?.jump(label);
 		scene.value?.next();
 		refresh();
 	};
@@ -79,8 +109,12 @@ export const useScene = defineStore('scene', () => {
 
 	return {
 		scene,
+		state,
+		menu,
+		done,
 		init,
 		next,
+		jump,
 		pick,
 		emit,
 		subscribe,
