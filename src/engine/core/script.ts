@@ -249,7 +249,6 @@ export class Script {
 		}
 		try {
 			this.exec(slice.value);
-			this.emit('step');
 		} catch (err: any) {
 			const path = this.path(slice.value) ?? undefined;
 			const text = err.message ?? err.toString();

@@ -149,22 +149,6 @@ describe('Script', () => {
 		);
 	});
 
-	it('emits `step` event', () => {
-		const script = new Script([
-			{ print: 'Hello A!' },
-			{ print: 'Hello B!' },
-			{ print: 'Hello C!' },
-		]);
-		spyOnLog();
-		const listener = vi.fn();
-		script.subscribe(listener);
-		script.step();
-		script.step();
-		script.step();
-		expect(listener).toHaveBeenCalledTimes(3);
-		expect(script.isDone()).toBe(true);
-	});
-
 	it('implements `if` command', () => {
 		const script = new Script([
 			{
