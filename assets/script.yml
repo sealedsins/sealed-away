@@ -1,3 +1,7 @@
+#
+# Sealed Away
+# Sealed Sins, 2023-2024.
+#
 config:
   meta:
     title: Sealed Away
@@ -1022,7 +1026,8 @@ script:
         image: !inc /background/shower.jpg
         position: center
       text: |
-        Althea stood in the bathroom, staring at her reflection in the mirror. She took a deep breath, trying to calm her racing heart.
+        Althea stood in the bathroom, staring at her reflection in the mirror. 
+        She took a deep breath, trying to calm her racing heart.
   - show: *altheaNakedNervousDown
   - play:
       path: !inc /audio/rubber-3.mp3
@@ -1098,7 +1103,7 @@ script:
         The silence now felt like a void.
   - show: *altheaShowerSad
   - wait:
-      seconds: 3
+      seconds: 1
   - page:
       text: |
         As she stood there, water cascading over her, she couldn't help but ponder the peculiar connection she shared with Lilith. The suit, once a mere object, now felt almost like a part of her.
@@ -1181,5 +1186,88 @@ script:
         image:
       text: |
         With a final glance at her reflection, Althea left the bathroom.
+  - wait:
+      seconds: 3
+
+  # Label: Demo v2 ending.
+  - label: demoCliffhanger
+  - play:
+      path: !inc /audio/notification.mp3
+      volume: 0.85
+  - page:
+      background:
+        image:
+      name: Communicator
+      text: |
+        Incoming message from Succubus Technologies.
+  - page:
+      name: Communicator
+      text: |
+        "Dear Customer, 
+        We have detected a potential manufacturing defect within our latest batch of products."
+  - page:
+      name: Communicator
+      text: |
+        "If you are experiencing any issues, please refrain from attempting to forcibly remove the suit and contact our customer support immediately."
+  - page:
+      name: Communicator
+      text: |
+        "Tampering with the suit may cause serious injuries and permanent damage to the product. We deeply apologize for any inconvenience and are working diligently to resolve the issue."
+  - page:
+      name: Communicator
+      text: |
+        "Thank you for your understanding and cooperation.
+        - Succubus Technologies Inc."
+  - wait:
+      seconds: 3
+  # - page:
+  #     text: |
+  #       Meanwhile, somewhere deep within the suit's electronics...
+  - play:
+      path: !inc /audio/notification-system.mp3
+      volume: 0.5
+  - page:
+      name: Suit Firmware
+      text: |
+        > Initiating system diagnostics...
+  - wait:
+      seconds: 1
+  - play:
+      path: !inc /audio/notification-system.mp3
+      volume: 0.5
+  - page:
+      name: Suit Firmware
+      text: |
+        > Diagnostics complete.
+        > Listing found issues...
+  - page:
+      name: Suit Firmware
+      text: |
+        > [CRITICAL] Companion Integration: Erroneous Upload (Origin Unknown)
+        > [CRITICAL] Locking Mechanism: Irreversible Engagement
+  - page:
+      name: Suit Firmware
+      text: |
+        > [CRITICAL] Sensory Feedback: Amplified Beyond Safe Parameters
+        > [CRITICAL] Network: Blocked by firewall settings
+  - page:
+      name: Suit Firmware
+      text: |
+        > Initiating full system shutdown...
+  - wait:
+      seconds: 1
+  - play:
+      path: !inc /audio/notification-system.mp3
+      volume: 0.5
+  - page:
+      name: Suit Firmware
+      text: |
+        > Shutdown aborted by an unknown system process.
+        > Please contact support.
+  - page:
+      name: Suit Firmware
+      text: |
+        > End of diagnostics report.
+        > To be continued...
   - wait:
       seconds: 3
