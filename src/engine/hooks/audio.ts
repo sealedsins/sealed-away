@@ -18,6 +18,7 @@ const AUDIO_FADE = 350;
 export interface AudioOptions {
 	path: string;
 	volume?: number;
+	rate?: number;
 	loop?: boolean;
 }
 
@@ -48,6 +49,7 @@ export const useAudio = () => {
 		const audio = new Howl({
 			src: [sound],
 			volume: opts.volume,
+			rate: opts.rate,
 			loop: opts.loop,
 		});
 		audio.play();

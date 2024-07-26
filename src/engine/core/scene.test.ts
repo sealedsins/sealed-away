@@ -123,19 +123,44 @@ describe('Scene', () => {
 		});
 	});
 
-	it('implements `play` command', () => {
+	it('implements `play` and `stop` command', () => {
 		// prettier-ignore
 		const scene = new Scene([
-			{ play: { path: 'test' }},
+			{ play: { path: 'a' }},
+			{ page: {} },
+			{ play: { path: 'b', loop: true }},
+			{ page: {} },
+			{ stop: {} },
 		]);
 
-		const playListener = vi.fn();
-		scene.subscribe(playListener);
+		const listener = vi.fn();
+		scene.subscribe(listener);
+
 		scene.next();
-		expect(scene.isDone()).toBe(true);
-		expect(playListener).toHaveBeenCalledWith({
+		expect(scene.getState()).toMatchObject({
+			loop: null,
+		});
+		expect(listener).toHaveBeenLastCalledWith({
 			type: 'play',
-			data: { path: 'test' },
+			data: { path: 'a' },
+		});
+
+		scene.next();
+		expect(scene.getState()).toMatchObject({
+			loop: { path: 'b', loop: true },
+		});
+		expect(listener).toHaveBeenLastCalledWith({
+			type: 'play',
+			data: { path: 'b', loop: true },
+		});
+
+		scene.next();
+		expect(scene.getState()).toMatchObject({
+			loop: null,
+		});
+		expect(listener).toHaveBeenLastCalledWith({
+			type: 'stop',
+			data: {},
 		});
 	});
 
@@ -145,11 +170,11 @@ describe('Scene', () => {
 			{ wait: { seconds: 5 }},
 		]);
 
-		const waitListener = vi.fn();
-		scene.subscribe(waitListener);
+		const listener = vi.fn();
+		scene.subscribe(listener);
 		scene.next();
 		expect(scene.isDone()).toBe(true);
-		expect(waitListener).toHaveBeenCalledWith({
+		expect(listener).toHaveBeenCalledWith({
 			type: 'wait',
 			data: { seconds: 5 },
 		});

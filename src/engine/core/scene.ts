@@ -74,6 +74,7 @@ export const SceneSoundSchema = zod
 	.object({
 		path: zod.string(),
 		volume: zod.number().optional(),
+		rate: zod.number().optional(),
 		loop: zod.boolean().optional(),
 	})
 	.strict();
