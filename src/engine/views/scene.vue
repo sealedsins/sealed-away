@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { sha1 as hash } from 'object-hash';
 import { ref, watch, computed, onMounted, nextTick } from 'vue';
-import { onKeyStroke } from '@vueuse/core';
+import { storeToRefs } from 'pinia';
 import { ScriptEvent } from '../core';
-import { onKeydown, useAudio, AudioOptions } from '../hooks';
+import { onKeypress, useAudio, AudioOptions } from '../hooks';
 import { useScene, useSaves } from '../stores';
 
 import TransitionFade from '../components/transition/fade.vue';
@@ -13,11 +13,13 @@ import SceneTypewriter from '../components/scene/typewriter.vue';
 import ScenePause from '../components/scene/pause.vue';
 
 const audio = useAudio();
-const store = useScene();
 const saves = useSaves();
+const scene = useScene();
+
+const { state, menu } = storeToRefs(scene);
 
 /**
- * Scene looped typewriter.
+ * Scene text typewriter.
  */
 const typewriter = ref<typeof SceneTypewriter>();
 
@@ -27,23 +29,9 @@ const typewriter = ref<typeof SceneTypewriter>();
 const paused = ref(false);
 
 /**
- * Scene `wait` state.
+ * Scene `wait` command state.
  */
 const wait = ref(false);
-
-/**
- * Scene state.
- */
-const state = computed(() => {
-	return store.scene?.getState();
-});
-
-/**
- * Scene menu.
- */
-const menu = computed(() => {
-	return store.scene?.getMenu();
-});
 
 /**
  * Fullscreen support indicator.
@@ -53,9 +41,9 @@ const hasFullscreen = computed(() => {
 });
 
 /**
- * Scene save file precense indicator.
+ * Scene save file precense.
  */
-const hasSaveFile = computed(() => {
+const hasSavefile = computed(() => {
 	return saves.slots.length > 0;
 });
 
@@ -65,13 +53,12 @@ const hasSaveFile = computed(() => {
 const handleNext = () => {
 	if (wait.value || paused.value) {
 		return;
-	}
-	if (typewriter.value?.typing) {
+	} else if (typewriter.value?.typing) {
 		typewriter.value?.skipTyping();
-	} else if (store.scene?.isDone()) {
+	} else if (scene.done) {
 		handleExit();
 	} else {
-		store.next();
+		scene.next();
 	}
 };
 
@@ -79,7 +66,7 @@ const handleNext = () => {
  * Event handler: Scene menu pick.
  */
 const handleMenu = (id: string) => {
-	store.pick(id);
+	scene.pick(id);
 };
 
 /**
@@ -95,17 +82,15 @@ const handleSave = () => {
  */
 const handleLoad = () => {
 	paused.value = false;
+	nextTick(() => typewriter.value?.skipTyping());
 	saves.load(0);
-	nextTick(() => {
-		typewriter.value?.skipTyping();
-	});
 };
 
 /**
  * Event handler: Exit button (pause menu).
  */
 const handleExit = () => {
-	store.$reset();
+	scene.$reset();
 	audio.stop();
 };
 
@@ -124,15 +109,16 @@ const handleFullscreen = () => {
  * Event handler: Scene `play` event.
  */
 const handleAudioPlay = async (event: ScriptEvent) => {
-	audio.play(event.data as AudioOptions);
+	const data = event.data as AudioOptions;
+	audio.play(data);
 };
 
 /**
  * Event handler: Scene `stop` event.
  */
 const handleAudioStop = async (event: ScriptEvent) => {
-	const { fade } = event.data as { fade?: boolean };
-	audio.stop(fade);
+	const data = event.data as { fade?: boolean };
+	audio.stop(data.fade);
 };
 
 /**
@@ -141,13 +127,13 @@ const handleAudioStop = async (event: ScriptEvent) => {
 const handleWait = async (event: ScriptEvent) => {
 	const data = event.data as { seconds: number };
 	const time = data.seconds * 1000;
+	setTimeout(() => (wait.value = false), time);
 	wait.value = true;
-	setTimeout(() => {
-		wait.value = false;
-		handleNext();
-	}, time);
 };
 
+/**
+ * Watch: Pause background loop on pause.
+ */
 watch(paused, () => {
 	if (paused.value) {
 		audio.pause();
@@ -156,17 +142,56 @@ watch(paused, () => {
 	}
 });
 
+/**
+ * Watch: Resume execution after the `wait` command.
+ */
+watch(wait, () => {
+	if (!wait.value) {
+		handleNext();
+	}
+});
+
+/**
+ * Event: Keyboard bindings.
+ */
+onKeypress((e) => {
+	if (paused.value) {
+		return;
+	}
+	if (e.code === 'Space' || e.code === 'Enter') {
+		handleNext();
+	}
+	if (e.code === 'Escape') {
+		paused.value = true;
+	}
+});
+
+/**
+ * Lifecycle: Skip typing.
+ */
 onMounted(() => {
 	nextTick(() => {
 		typewriter.value?.skipTyping();
 	});
+});
+
+/**
+ * Lifecycle: Load loop sound.
+ */
+onMounted(() => {
 	nextTick(() => {
-		const loop = state.value?.loop;
+		const loop = scene.state?.loop;
 		if (loop) {
 			audio.play(loop);
 		}
 	});
-	store.subscribe((event) => {
+});
+
+/**
+ * Lifecycle: Subscribe for scene events.
+ */
+onMounted(() => {
+	scene.subscribe((event) => {
 		switch (event.type) {
 			case 'wait': {
 				handleWait(event);
@@ -183,16 +208,6 @@ onMounted(() => {
 		}
 	});
 });
-
-onKeydown((e) => {
-	if (e.repeat || paused.value) {
-		return;
-	}
-	if (e.code === 'Space' || e.code === 'Enter') {
-		handleNext();
-		return;
-	}
-});
 </script>
 
 <template>
@@ -208,7 +223,7 @@ onKeydown((e) => {
 		<TransitionFade>
 			<ScenePause
 				v-show="paused"
-				:disableLoad="!hasSaveFile"
+				:disableLoad="!hasSavefile"
 				@resume="paused = false"
 				@save="handleSave()"
 				@load="handleLoad()"

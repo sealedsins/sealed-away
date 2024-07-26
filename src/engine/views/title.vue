@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useScene, useParser, useSaves } from '../stores';
-import { onKeydown } from '../hooks';
+import { onKeypress } from '../hooks';
 import TitleButton from '../components/button.vue';
 import TitleImage from '../components/image.vue';
 
@@ -54,10 +54,7 @@ const handleButton = (button: (typeof buttons)['value'][number]) => {
 	}
 };
 
-onKeydown((e) => {
-	if (e.repeat) {
-		return;
-	}
+onKeypress((e) => {
 	if (e.code === 'Space' || e.code === 'Enter') {
 		handleLoad();
 	}

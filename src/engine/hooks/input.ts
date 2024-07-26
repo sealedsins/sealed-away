@@ -9,7 +9,7 @@ import { onMounted, onUnmounted, handleError, getCurrentInstance } from 'vue';
  */
 export const onKeydown = (listener: (e: KeyboardEvent) => void) => {
 	const instance = getCurrentInstance();
-	const strappedListener = (e: KeyboardEvent) => {
+	const strapped = (e: KeyboardEvent) => {
 		try {
 			listener(e);
 		} catch (err) {
@@ -19,10 +19,22 @@ export const onKeydown = (listener: (e: KeyboardEvent) => void) => {
 	};
 
 	onMounted(() => {
-		window.addEventListener('keydown', strappedListener);
+		window.addEventListener('keydown', strapped);
 	});
 
 	onUnmounted(() => {
-		window.removeEventListener('keydown', strappedListener);
+		window.removeEventListener('keydown', strapped);
+	});
+};
+
+/**
+ * Keyboard press event listener (non-repeating).
+ * @param listener - Event listener.
+ */
+export const onKeypress = (listener: (e: KeyboardEvent) => void) => {
+	return onKeydown((e) => {
+		if (!e.repeat) {
+			listener(e);
+		}
 	});
 };

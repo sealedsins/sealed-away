@@ -10,7 +10,7 @@ import { useCache } from '../stores';
  * Fade duration in miliseconds.
  * @internal
  */
-export const AUDIO_FADE = 350;
+const AUDIO_FADE = 350;
 
 /**
  * Audio parameters.

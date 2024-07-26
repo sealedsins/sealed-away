@@ -261,9 +261,8 @@ export class Script {
 	 * Jumps to the given `label`.
 	 * @remarks Labels are allowed only in the top-level code.
 	 * @param label - Label to jump.
-	 * @internal
 	 */
-	protected jump(label: string) {
+	public jump(label: string) {
 		const targetIndex = this.source.findIndex((cmd) => isEqual(cmd, { label }));
 		if (targetIndex < 0) {
 			throw new ScriptError(`Label "${label}" is not found`);
