@@ -2,6 +2,9 @@
  * Sealed Sins, 2023-2024.
  */
 
+// TODO: HMR asset handling: https://vitejs.dev/guide/api-hmr#hot-accept-deps-cb
+// TODO: More configuration to the asset folder
+
 /**
  * Asset path storage.
  * @internal
