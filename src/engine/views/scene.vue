@@ -215,6 +215,20 @@ onMounted(() => {
 		}
 	});
 });
+
+/**
+ * Lifecycle: Development tools initialization.
+ */
+onMounted(() => {
+	(window as any).$vn = {
+		jump: scene.jump,
+		save: handleSave,
+		load: handleLoad,
+	};
+	return () => {
+		(window as any).$vn = undefined;
+	};
+});
 </script>
 
 <template>
