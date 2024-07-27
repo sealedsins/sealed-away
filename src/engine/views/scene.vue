@@ -19,33 +19,48 @@ const scene = useScene();
 const { state, menu } = storeToRefs(scene);
 
 /**
- * Scene text typewriter.
+ * Reactive: Scene text typewriter controller.
  */
 const typewriter = ref<typeof SceneTypewriter>();
 
 /**
- * Scene pause state.
+ * Reactive: Scene pause state.
  */
 const paused = ref(false);
 
 /**
- * Scene `wait` command state.
+ * Reactive: Scene `wait` command state.
  */
 const wait = ref(false);
 
 /**
- * Fullscreen support indicator.
+ * Computed: Fullscreen support indicator.
  */
 const hasFullscreen = computed(() => {
 	return !!document.documentElement.requestFullscreen;
 });
 
 /**
- * Scene save file precense.
+ * Computed: Scene save file precense.
  */
 const hasSavefile = computed(() => {
 	return saves.slots.length > 0;
 });
+
+/**
+ * Event handler: Scene initialization.
+ */
+const handleInit = () => {
+	nextTick(() => {
+		typewriter.value?.skipTyping();
+	});
+	const loop = scene.state?.loop;
+	if (loop) {
+		audio.play(loop);
+	} else {
+		audio.stop();
+	}
+};
 
 /**
  * Event handler: Scene next step.
@@ -63,27 +78,30 @@ const handleNext = () => {
 };
 
 /**
- * Event handler: Scene menu pick.
+ * Event handler: Menu choice.
+ * @param id - Choice ID.
  */
 const handleMenu = (id: string) => {
 	scene.pick(id);
 };
 
 /**
- * Event handler: Save button (pause menu).
+ * Event handler: Save scene state.
+ * @param slot - Save slot to save.
  */
-const handleSave = () => {
+const handleSave = (slot: number) => {
 	paused.value = false;
-	saves.save(0);
+	saves.save(slot);
 };
 
 /**
- * Event handler: Load button (pause menu).
+ * Event handler: Load scene state.
+ * @param slot - Save slot to load.
  */
-const handleLoad = () => {
+const handleLoad = (slot: number) => {
 	paused.value = false;
-	nextTick(() => typewriter.value?.skipTyping());
-	saves.load(0);
+	saves.load(slot);
+	handleInit();
 };
 
 /**
@@ -106,7 +124,8 @@ const handleFullscreen = () => {
 };
 
 /**
- * Event handler: Scene `play` event.
+ * Event handler: Scene `play` event handler.
+ * @param event - Event to handle.
  */
 const handleAudioPlay = async (event: ScriptEvent) => {
 	const data = event.data as AudioOptions;
@@ -114,7 +133,8 @@ const handleAudioPlay = async (event: ScriptEvent) => {
 };
 
 /**
- * Event handler: Scene `stop` event.
+ * Event handler: Scene `stop` event handler.
+ * @param event - Event to handle.
  */
 const handleAudioStop = async (event: ScriptEvent) => {
 	const data = event.data as { fade?: boolean };
@@ -122,7 +142,8 @@ const handleAudioStop = async (event: ScriptEvent) => {
 };
 
 /**
- * Event handler: Scene `wait` event.
+ * Event handler: Scene `wait` event handler.
+ * @param event - Event to handle.
  */
 const handleWait = async (event: ScriptEvent) => {
 	const data = event.data as { seconds: number };
@@ -167,28 +188,14 @@ onKeypress((e) => {
 });
 
 /**
- * Lifecycle: Skip typing.
+ * Lifecycle: Scene initialization.
  */
 onMounted(() => {
-	nextTick(() => {
-		typewriter.value?.skipTyping();
-	});
+	handleInit();
 });
 
 /**
- * Lifecycle: Load loop sound.
- */
-onMounted(() => {
-	nextTick(() => {
-		const loop = scene.state?.loop;
-		if (loop) {
-			audio.play(loop);
-		}
-	});
-});
-
-/**
- * Lifecycle: Subscribe for scene events.
+ * Lifecycle: Scene event handling.
  */
 onMounted(() => {
 	scene.subscribe((event) => {
@@ -225,8 +232,8 @@ onMounted(() => {
 				v-show="paused"
 				:disableLoad="!hasSavefile"
 				@resume="paused = false"
-				@save="handleSave()"
-				@load="handleLoad()"
+				@save="handleSave(0)"
+				@load="handleLoad(0)"
 				@exit="handleExit()"
 			/>
 		</TransitionFade>

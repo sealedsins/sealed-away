@@ -2,7 +2,7 @@
  * Sealed Sins, 2023-2024.
  */
 import { Howl } from 'howler';
-import { ref, watch } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 import { useWindowFocus } from '@vueuse/core';
 import { useCache } from '../stores';
 
@@ -52,12 +52,14 @@ export const useAudio = () => {
 			rate: opts.rate,
 			loop: opts.loop,
 		});
-		audio.play();
 		if (opts.loop) {
 			stop();
 			loopVolume.value = audio.volume();
 			loop.value = audio;
 		}
+		nextTick(() => {
+			audio.play();
+		});
 	};
 
 	/**
