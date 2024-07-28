@@ -4,7 +4,7 @@
 import { Howl } from 'howler';
 import { ref, watch, nextTick } from 'vue';
 import { useWindowFocus } from '@vueuse/core';
-import { useCache } from '../stores';
+import { useAssets } from '../stores';
 
 /**
  * Fade duration in miliseconds.
@@ -27,7 +27,7 @@ export interface AudioOptions {
  */
 export const useAudio = () => {
 	const focus = useWindowFocus();
-	const cache = useCache();
+	const asset = useAssets();
 
 	/**
 	 * Loop storage.
@@ -45,7 +45,7 @@ export const useAudio = () => {
 	 * @returns Audio object.
 	 */
 	const play = async (opts: AudioOptions) => {
-		const sound = await cache.readAsBase64(await cache.load(opts.path));
+		const sound = await asset.readAsBase64(await asset.load(opts.path));
 		const audio = new Howl({
 			src: [sound],
 			volume: opts.volume,

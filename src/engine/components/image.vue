@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import TransitionFade from './transition/fade.vue';
 import { ref, watchEffect } from 'vue';
-import { useCache } from '../stores';
+import { useAssets } from '../stores';
 
 const props = defineProps<{
 	src?: string;
 }>();
 
-const cache = useCache();
+const asset = useAssets();
 const srcData = ref<string>();
 
 const loadImage = async () => {
@@ -17,8 +17,8 @@ const loadImage = async () => {
 	}
 	try {
 		const dataToLoad = props.src;
-		const dataLoaded = await cache.load(dataToLoad);
-		const dataBase64 = await cache.readAsBase64(dataLoaded);
+		const dataLoaded = await asset.load(dataToLoad);
+		const dataBase64 = await asset.readAsBase64(dataLoaded);
 
 		// Wait until image is decoded.
 		const decodedImg = new Image();

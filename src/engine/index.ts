@@ -3,19 +3,16 @@
  */
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import { resolve } from './utils/asset';
 import FontAwesomeIcon from './icons';
 import App from './app.vue';
 
 export class VN {
-	private fullSrc: string;
-
 	constructor(public readonly src: string) {
-		this.fullSrc = resolve(src);
+		return;
 	}
 
 	public render(domId: string) {
-		const app = createApp(App, { src: this.fullSrc });
+		const app = createApp(App, { src: this.src });
 		app.component('font-awesome-icon', FontAwesomeIcon);
 		app.use(createPinia());
 		app.mount(`#${domId}`);
