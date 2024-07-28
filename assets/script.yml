@@ -476,7 +476,8 @@ script:
   - show: *altheaNakedNervous
   - page:
       text: |
-        Althea cast a frantic glance around the room, hoping to find something, anything, that could help her escape.
+        Althea cast a frantic glance around the room, hoping to find something...
+        Anything that could help her escape.
   - menu:
       Try to cut through:
         - jump: awakeningKnife
@@ -687,7 +688,8 @@ script:
   - page:
       name: Female Voice
       text: |
-        "I-I'm really sorry, Althea. I wish there was something I could do to help you. But... well, we're kind of in this together now."
+        "I-I'm really sorry, Althea. I wish there was something I could do to help you. 
+        But... well, we're kind of in this together now."
   - show: *altheaNakedAngryTalking
   - page:
       name: Althea
@@ -696,7 +698,7 @@ script:
   - show: *altheaNakedAngry
   - page:
       text: |
-        There was a long pause before the voice responded, its tone hesitant.
+        The voice responded after a brief pause.
   - page:
       name: Female Voice
       text: |
@@ -709,7 +711,8 @@ script:
   - page:
       name: Althea
       text: |
-        "Okay. Okay, I'll try to stay calm. But you need to tell me everything you know about this suit. How do I get out of it?"
+        "Okay. Okay, I'll try to stay calm. But you need to tell me everything you know about this suit. 
+        So how do I get out of it?"
   - show: *altheaNakedNervous
   - page:
       text: |
@@ -727,7 +730,8 @@ script:
   - page:
       name: Female Voice
       text: |
-        "I-I'm not sure, Althea. The truth is, I don't know much about this specific suit myself. It's... it's all a bit of a blur, to be honest."
+        "I-I'm not sure, Althea. The truth is, I don't know much about this specific suit myself. 
+        It's... it's all a bit of a blur, to be honest."
   - show: *altheaNakedNervousTalking
   - page:
       name: Althea
@@ -741,12 +745,14 @@ script:
   - page:
       name: Female Voice
       text: |
-        "There has to be some kind of fail-safe, some way to override the system and deactivate the suit. I just... I just need to figure out how."
+        "There has to be some kind of fail-safe, some way to override the system and deactivate the suit. I just... 
+        I just need to figure out how."
   - show: *altheaNakedNervousTalking
   - page:
       name: Althea
       text: |
-        "Well, you'd better figure it out fast. I'm not planning on spending the rest of my life as some kind of... demon sex doll."
+        "Well, you'd better figure it out fast. I'm not planning on spending the rest of my life as some kind of... 
+        Demon sex doll."
   - show: *altheaNakedNervous
   - page:
       text: |
@@ -763,7 +769,8 @@ script:
   - page:
       name: Female Voice
       text: |
-        "Sorry, sorry. I didn't mean to make light of the situation. It's just... well, humor can be a coping mechanism, you know?"
+        "Sorry, sorry. I didn't mean to make light of the situation. It's just... 
+        Well, humor can be a coping mechanism, you know?"
   - show: *altheaNakedIrritatedTalking
   - page:
       name: Althea
@@ -782,7 +789,8 @@ script:
   - page:
       name: Female Voice
       text: |
-        "Althea, I must say, despite the circumstances, you do look rather... captivating in your new form."
+        "Althea, I must say, despite the circumstances, you do look rather... 
+        Captivating in your new form."
   - show: *altheaNakedInterestTalking
   - page:
       name: Althea
@@ -807,7 +815,8 @@ script:
   - page:
       name: Althea
       text: |
-        "Well, that's just great. So, you've been watching me this whole time? Even when I... you know..."
+        "Well, that's just great. So, you've been watching me this whole time? 
+        Even when I... you know..."
   - show: *altheaNakedHorror
   - page:
       text: |
@@ -815,7 +824,8 @@ script:
   - page:
       name: Female Voice
       text: |
-        "Yes, Althea, I'm aware of your... activities. But please understand, it's not like I have a choice in the matter. I'm here to help you, not to judge."
+        "Yes, Althea, I'm aware of your... activities. But please understand, it's not like I have a choice in the matter. 
+        I'm here to help you, not to judge!"
   - show: *altheaNakedIrritatedTalking
   - page:
       name: Althea
@@ -830,7 +840,8 @@ script:
   - page:
       name: Althea
       text: |
-        "Sure, sure. Monitoring my well-being while watching me undress and... doing other activities."
+        "Sure, sure. Monitoring my well-being while watching me undress and... 
+        Doing other activities."
   - show: *altheaNakedIrritated
   - page:
       text: |
@@ -858,12 +869,14 @@ script:
   - page:
       name: Althea
       text: |
-        "So, um... do you have a name?" Althea asked, breaking the silence that had settled between them.
+        "So, um... do you have a name?"
+      # Althea asked, breaking the silence that had settled between them.
   - show: *altheaNakedIdle
   - page:
       name: Female Voice
       text: |
-        "Oh, um, my name... well, I'm not sure I really have one. I've never needed one before."
+        "Oh, um, my name... well, I'm not sure I really have one. 
+        I've never needed one before."
   - show: *altheaNakedTalking
   - page:
       name: Althea
@@ -907,7 +920,8 @@ script:
   - page:
       name: Female Voice
       text: |
-        "I... I'm not sure. It's possible. Without the suit, I don't know what will become of me. It's... it's a frightening thought."
+        "I... I'm not sure. It's possible. Without the suit, I don't know what will become of me. 
+        It's... it's a frightening thought."
   # - show: *altheaNakedNervousTalking
   # - page:
   #     name: Althea
@@ -973,7 +987,8 @@ script:
   - page:
       name: Lilith
       text: |
-        "I-I wouldn't put it quite like that, but... well, yes. Something like that."
+        "I-I wouldn't put it quite like that, but... well, yes. 
+        Something like that."
   - page:
       name: Lilith
       text: |
@@ -989,7 +1004,7 @@ script:
   - page:
       name: Althea
       text: |
-        "So, I'll be alone with... just the suit?"
+        "So, I'll be alone... All this time?"
   - show: *altheaNakedNervous
   - page:
       name: Lilith
@@ -1027,7 +1042,7 @@ script:
         image: !inc /background/shower.jpg
         position: center
       text: |
-        Althea stood in the bathroom, staring at her reflection in the mirror. 
+        Althea stood in the bathroom, staring at her reflection in the mirror.
         She took a deep breath, trying to calm her racing heart.
   - show: *altheaNakedNervousDown
   - play:
@@ -1098,7 +1113,7 @@ script:
         There was no response. The silence in her mind was almost deafening, making the steady hum of the shower seem louder in comparison.
   - page:
       text: |
-        Althea sighed, the lack of response leaving her with a sense of loneliness she hadn't anticipated. Despite the odd and often intrusive nature of their connection, she had grown accustomed to the presence of the AI.
+        Althea sighed, replaying their recent conversations in her head. The lack of response left her with a sense of loneliness she hadn't anticipated. Despite the odd and often intrusive nature of their connection, she had grown accustomed to the presence of her artificial companion.
   - page:
       text: |
         The silence now felt like a void.
@@ -1131,12 +1146,14 @@ script:
         These questions swirled in Althea's mind as she stood under the stream of water. The thought of Lilith being confined to the suit, without a real sense of the world, struck Althea with an unexpected pang of sympathy.
   - page:
       text: |
-        She had always thought of AI as tools, not beings with potential feelings or perceptions. But Lilith felt different. She seemed to have a personality, emotions, and even a sense of humor.
+        She had always thought of AI as tools, not beings with potential feelings or perceptions. But Lilith... felt different. 
+        She seemed to have a personality, emotions, and even a sense of humor.
   - show: *altheaShowerTalking
   - page:
       name: Althea
       text: |
-        "How lonely must it be for her? Trapped in this shell, just like me. No real sense of the outside world. No physical body. Just... data and sensors."
+        "How lonely must it be for her? No real sense of the outside world. No physical body. 
+        Just... data and sensors."
   - show: *altheaShowerSad
   - page:
       text: |
@@ -1220,55 +1237,59 @@ script:
         "Thank you for your understanding and cooperation.
         - Succubus Technologies Inc."
   - wait:
-      seconds: 3
+      seconds: 1
+  # - page:
+  #     text: |
+  #       Meanwhile, somewhere deep within the suit's electronics...
+  # - play:
+  #     path: !inc /audio/notification-system.mp3
+  #     volume: 0.35
+  # - page:
+  #     name: Suit Firmware
+  #     text: |
+  #       > Initiating system diagnostics...
+  # - wait:
+  #     seconds: 1
+  # - play:
+  #     path: !inc /audio/notification-system.mp3
+  #     volume: 0.35
+  # - page:
+  #     name: Suit Firmware
+  #     text: |
+  #       > Diagnostics complete.
+  #       > Listing found issues...
+  # - page:
+  #     name: Suit Firmware
+  #     text: |
+  #       > [CRITICAL] Companion Integration: Unsigned upload (Origin Unknown)
+  #       > [CRITICAL] Locking Mechanism: Irreversible engagement
+  # - page:
+  #     name: Suit Firmware
+  #     text: |
+  #       > [CRITICAL] Sensory Feedback: Amplified beyond safe parameters
+  #       > [CRITICAL] Network: Blocked by firewall settings
+  # - page:
+  #     name: Suit Firmware
+  #     text: |
+  #       > Initiating full system shutdown...
+  # - wait:
+  #     seconds: 1
+  # - play:
+  #     path: !inc /audio/notification-system.mp3
+  #     volume: 0.35
+  # - page:
+  #     name: Suit Firmware
+  #     text: |
+  #       > Shutdown aborted by an unknown system process.
+  #       > Please contact support.
+  # - page:
+  #     name: Suit Firmware
+  #     text: |
+  #       > End of diagnostics report.
+  # - wait:
+  #     seconds: 1
   - page:
       text: |
-        Meanwhile, somewhere deep within the suit's electronics...
-  - play:
-      path: !inc /audio/notification-system.mp3
-      volume: 0.35
-  - page:
-      name: Suit Firmware
-      text: |
-        > Initiating system diagnostics...
+        To be continued...
   - wait:
       seconds: 1
-  - play:
-      path: !inc /audio/notification-system.mp3
-      volume: 0.35
-  - page:
-      name: Suit Firmware
-      text: |
-        > Diagnostics complete.
-        > Listing found issues...
-  - page:
-      name: Suit Firmware
-      text: |
-        > [CRITICAL] Companion Integration: Erroneous Upload (Origin Unknown)
-        > [CRITICAL] Locking Mechanism: Irreversible Engagement
-  - page:
-      name: Suit Firmware
-      text: |
-        > [CRITICAL] Sensory Feedback: Amplified Beyond Safe Parameters
-        > [CRITICAL] Network: Blocked by firewall settings
-  - page:
-      name: Suit Firmware
-      text: |
-        > Initiating full system shutdown...
-  - wait:
-      seconds: 1
-  - play:
-      path: !inc /audio/notification-system.mp3
-      volume: 0.35
-  - page:
-      name: Suit Firmware
-      text: |
-        > Shutdown aborted by an unknown system process.
-        > Please contact support.
-  - page:
-      name: Suit Firmware
-      text: |
-        > End of diagnostics report.
-        > To be continued...
-  - wait:
-      seconds: 3
