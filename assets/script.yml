@@ -621,7 +621,8 @@ script:
   - page:
       name: Female Voice
       text: |
-        "Well, not exactly 'talking', per se. It's more like... um, telepathic communication. I'm here to... uh, assist you."
+        "Well, not exactly 'talking', per se. It's more like... um, telepathic communication. 
+        I'm here to... uh, assist you."
   - show: *altheaNakedAngryTalking
   - page:
       name: Althea
@@ -1043,7 +1044,7 @@ script:
   - show: *altheaNakedIdle
   - play:
       path: !inc /audio/shower-loop.mp3
-      volume: 0.85
+      volume: 0.5
       loop: true
   - page:
       background:
@@ -1220,12 +1221,12 @@ script:
         - Succubus Technologies Inc."
   - wait:
       seconds: 3
-  # - page:
-  #     text: |
-  #       Meanwhile, somewhere deep within the suit's electronics...
+  - page:
+      text: |
+        Meanwhile, somewhere deep within the suit's electronics...
   - play:
       path: !inc /audio/notification-system.mp3
-      volume: 0.5
+      volume: 0.35
   - page:
       name: Suit Firmware
       text: |
@@ -1234,7 +1235,7 @@ script:
       seconds: 1
   - play:
       path: !inc /audio/notification-system.mp3
-      volume: 0.5
+      volume: 0.35
   - page:
       name: Suit Firmware
       text: |
@@ -1258,7 +1259,7 @@ script:
       seconds: 1
   - play:
       path: !inc /audio/notification-system.mp3
-      volume: 0.5
+      volume: 0.35
   - page:
       name: Suit Firmware
       text: |

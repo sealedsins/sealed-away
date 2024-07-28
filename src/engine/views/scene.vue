@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { sha1 as hash } from 'object-hash';
-import { ref, watch, computed, onMounted, nextTick } from 'vue';
-import { storeToRefs } from 'pinia';
+import { ref, watch, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import { ScriptEvent } from '../core';
 import { onKeypress, useAudio, AudioOptions } from '../hooks';
-import { useScene, useSaves } from '../stores';
+import { useScene, useSaves, useAssets } from '../stores';
 
 import TransitionFade from '../components/transition/fade.vue';
 import SceneButton from '../components/button.vue';
@@ -12,11 +11,10 @@ import SceneImage from '../components/image.vue';
 import SceneTypewriter from '../components/scene/typewriter.vue';
 import ScenePause from '../components/scene/pause.vue';
 
+const asset = useAssets();
 const audio = useAudio();
 const saves = useSaves();
 const scene = useScene();
-
-const { state, menu } = storeToRefs(scene);
 
 /**
  * Reactive: Scene text typewriter controller.
@@ -48,7 +46,7 @@ const hasSavefile = computed(() => {
 });
 
 /**
- * Event handler: Scene initialization.
+ * Event handler: Scene (re)initialization.
  */
 const handleInit = () => {
 	nextTick(() => {
@@ -175,7 +173,7 @@ watch(wait, () => {
 /**
  * Event: Keyboard bindings.
  */
-onKeypress((e) => {
+onKeypress(async (e) => {
 	if (paused.value) {
 		return;
 	}
@@ -225,20 +223,38 @@ onMounted(() => {
 		save: handleSave,
 		load: handleLoad,
 	};
-	return () => {
+	onUnmounted(() => {
 		(window as any).$vn = undefined;
-	};
+	});
+});
+
+/**
+ * Development: Vite HMR subscription.
+ */
+onMounted(() => {
+	const unsubcribe = asset.subscribe(async () => {
+		await scene.reload();
+		console.log('Reloading scene...');
+		handleInit();
+	});
+	onUnmounted(() => {
+		unsubcribe();
+	});
 });
 </script>
 
 <template>
-	<div v-if="state" class="scene" :style="{ backgroundColor: state.background.color }">
+	<div
+		v-if="scene.state"
+		class="scene"
+		:style="{ backgroundColor: scene.state.background.color }"
+	>
 		<SceneImage
 			class="background"
-			:src="state.background.image ?? undefined"
+			:src="scene.state.background.image ?? undefined"
 			:style="{
 				transition: 'opacity 0.5s ease-in-out, object-position 2.5s ease-in-out',
-				objectPosition: state.background.position,
+				objectPosition: scene.state.background.position,
 			}"
 		/>
 		<TransitionFade>
@@ -256,7 +272,7 @@ onMounted(() => {
 				<div class="sprites">
 					<TransitionFade group>
 						<SceneImage
-							v-for="sprite in state.sprites"
+							v-for="sprite in scene.state.sprites"
 							class="sprites__item"
 							:key="hash(sprite)"
 							:src="sprite.image"
@@ -276,9 +292,9 @@ onMounted(() => {
 					</scene-button>
 				</div>
 				<TransitionFade>
-					<div v-if="menu" class="menu">
+					<div v-if="scene.menu" class="menu">
 						<scene-button
-							v-for="item in menu"
+							v-for="item in scene.menu"
 							class="menu__item"
 							@click="handleMenu(item.id)"
 						>
@@ -287,11 +303,11 @@ onMounted(() => {
 					</div>
 				</TransitionFade>
 				<div v-if="!wait" class="text" @click="handleNext()">
-					<div v-if="state.name" class="text__name">
-						{{ state.name }}
+					<div v-if="scene.state.name" class="text__name">
+						{{ scene.state.name }}
 					</div>
 					<div class="text__body">
-						<SceneTypewriter ref="typewriter" :text="state.text" />
+						<SceneTypewriter ref="typewriter" :text="scene.state.text" />
 					</div>
 				</div>
 			</div>
@@ -402,7 +418,7 @@ $interface-width: 1100px;
 		// max-height: 7.75em;
 		height: 100%;
 
-		@media (max-width: $interface-width) {
+		@media (max-width: $breakpoint-mobile) {
 			text-align: justify;
 			white-space: normal;
 		}

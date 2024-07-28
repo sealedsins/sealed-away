@@ -1,8 +1,8 @@
 /**
  * Sealed Sins, 2023-2024.
  */
-import { defineStore } from 'pinia';
 import { reactive, watchEffect } from 'vue';
+import { defineStore, acceptHMRUpdate } from 'pinia';
 import { loadCompressed, saveCompressed } from '../utils/storage';
 import { useScene } from './scene';
 
@@ -78,3 +78,10 @@ export const useSaves = defineStore('saves', () => {
 		load,
 	};
 });
+
+/**
+ * Savestate management store HMR.
+ */
+if (import.meta.hot) {
+	import.meta.hot.accept(acceptHMRUpdate(useSaves, import.meta.hot));
+}

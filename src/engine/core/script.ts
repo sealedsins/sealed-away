@@ -126,7 +126,7 @@ export class Script {
 		ScriptExp,
 	});
 
-	constructor(public source: ScriptSource = []) {
+	constructor(protected source: ScriptSource = []) {
 		this.stack.push(source);
 	}
 
@@ -180,12 +180,14 @@ export class Script {
 	 */
 	public emit<T>(type: string, data?: T) {
 		const event = { type, data };
-		this.subs.forEach((listener) => listener.call(this, event));
+		this.subs.forEach((listener) => {
+			listener.call(this, event);
+		});
 	}
 
 	/**
 	 * Subscribes to incoming events.
-	 * Use the `emit` command to trigger this.
+	 * Use the `emit` command to trigger subscribers.
 	 * @param listener - Event listener.
 	 * @returns Unsubscribe function.
 	 */
@@ -196,6 +198,16 @@ export class Script {
 			const index = subs.indexOf(listener);
 			subs.splice(index, 1);
 		};
+	}
+
+	/**
+	 * Patches script with a new source.
+	 * @param source - Updated source.
+	 */
+	public patch(source: ScriptSource) {
+		const state = this.save();
+		this.source = source;
+		this.load(state);
 	}
 
 	/**
@@ -211,11 +223,6 @@ export class Script {
 
 	/**
 	 * Loads script state.
-	 *
-	 * @remarks
-	 * Loading state with a different source may cause unwanted state losses.
-	 * Use with caution.
-	 *
 	 * @param state - State to load.
 	 * @returns Script.
 	 */

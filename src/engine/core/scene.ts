@@ -168,6 +168,13 @@ export class Scene extends Script {
 		}
 	}
 
+	public override load(state: string) {
+		super.load(state);
+		this.stack.peek()!.frame.programCounter--;
+		super.step();
+		return this;
+	}
+
 	/**
 	 * Executes the next scene frame.
 	 * Does nothing if an active menu is present.

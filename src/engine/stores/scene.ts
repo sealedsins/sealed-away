@@ -1,8 +1,8 @@
 /**
  * Sealed Sins, 2023-2024.
  */
-import { defineStore } from 'pinia';
 import { computed, shallowRef, triggerRef } from 'vue';
+import { defineStore, acceptHMRUpdate } from 'pinia';
 import { Scene, ScriptSource, ScriptListener } from '../core';
 import { useParser } from './parser';
 
@@ -37,13 +37,6 @@ export const useScene = defineStore('scene', () => {
 	const done = computed(() => {
 		return scene.value?.isDone() ?? true;
 	});
-
-	/**
-	 * Forces scene state to refresh.
-	 */
-	const refresh = () => {
-		triggerRef(scene);
-	};
 
 	/**
 	 * Loads scene using parser store data.
@@ -101,6 +94,24 @@ export const useScene = defineStore('scene', () => {
 	};
 
 	/**
+	 * Forces scene refresh.
+	 */
+	const refresh = () => {
+		triggerRef(scene);
+	};
+
+	/**
+	 * Forces scene reload from the source.
+	 */
+	const reload = async () => {
+		if (parser.data && scene.value) {
+			await parser.fetchLast();
+			scene.value.patch(parser.data.script as ScriptSource);
+			refresh();
+		}
+	};
+
+	/**
 	 * Resets scene state.
 	 */
 	const $reset = () => {
@@ -119,6 +130,14 @@ export const useScene = defineStore('scene', () => {
 		emit,
 		subscribe,
 		refresh,
+		reload,
 		$reset,
 	};
 });
+
+/**
+ * Scene store HMR.
+ */
+if (import.meta.hot) {
+	import.meta.hot.accept(acceptHMRUpdate(useScene, import.meta.hot));
+}

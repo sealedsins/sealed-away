@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia';
 import { shallowRef, onMounted, onErrorCaptured } from 'vue';
 import { useTitle, useFavicon } from '@vueuse/core';
 import TransitionFadeDelayed from './components/transition/fade-delayed.vue';
-import { useCache, useParser, useScene } from './stores';
+import { useAssets, useParser, useScene } from './stores';
 
 import LoadingView from './views/loading.vue';
 import TitleView from './views/title.vue';
@@ -17,7 +17,7 @@ const props = defineProps<{
 const domTitle = useTitle();
 const domIcon = useFavicon();
 
-const cache = useCache();
+const asset = useAssets();
 const { scene } = storeToRefs(useScene());
 const parser = useParser();
 
@@ -28,11 +28,11 @@ const isDevMode = import.meta.env.DEV;
 const loadGame = async () => {
 	if (isDevMode) {
 		console.log('Development mode is detected, disabling asset preloading.');
-		await parser.fetch(props.src);
+		await parser.fetch(asset.resolve(props.src));
 	} else {
 		console.log('Loading game assets...');
-		await cache.loadAll();
-		await parser.fetch(props.src);
+		await asset.loadAll();
+		await parser.fetch(asset.resolve(props.src));
 	}
 };
 

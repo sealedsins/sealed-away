@@ -2,10 +2,10 @@
  * Sealed Sins, 2023-2024.
  */
 import zod from 'zod';
-import { defineStore } from 'pinia';
-import { shallowRef, computed } from 'vue';
+import { ref, shallowRef, computed } from 'vue';
+import { defineStore, acceptHMRUpdate } from 'pinia';
 import { Parser, ParserContext } from '../core';
-import * as asset from '../utils/asset';
+import { useAssets } from './asset';
 
 /**
  * Game config schema.
@@ -53,6 +53,7 @@ export const ParserSchema = zod.object({
  * Contains YAML fetching and parsing logic.
  */
 export const useParser = defineStore('parser', () => {
+	const asset = useAssets();
 	const customTags = [{ tag: '!inc', resolve: asset.resolve }];
 
 	/**
@@ -64,6 +65,11 @@ export const useParser = defineStore('parser', () => {
 	 * Parser context.
 	 */
 	const context = shallowRef<ParserContext>();
+
+	/**
+	 * Parser context source.
+	 */
+	const source = ref<string>();
 
 	/**
 	 * Parser context data.
@@ -82,13 +88,24 @@ export const useParser = defineStore('parser', () => {
 	};
 
 	/**
-	 * Fetches given `src`, then parses it and stores the result inside the parser context.
+	 * Fetches the given `src`, parses it, and stores the result within the store context.
 	 * @param src - Path to load and parse.
 	 */
 	const fetch = async (src: string) => {
 		const blob = await asset.load(src);
 		const data = await asset.readAsText(blob);
+		source.value = src;
 		parse(data);
+	};
+
+	/**
+	 * Fetches the last known source, parses it, and stores the result within the store context.
+	 * Does nothing if the store was not fetched before.
+	 */
+	const fetchLast = async () => {
+		if (source.value) {
+			await fetch(source.value);
+		}
 	};
 
 	/**
@@ -101,9 +118,18 @@ export const useParser = defineStore('parser', () => {
 	return {
 		parser,
 		context,
+		source,
 		data,
 		parse,
 		fetch,
+		fetchLast,
 		$reset,
 	};
 });
+
+/**
+ * Parser store HMR.
+ */
+if (import.meta.hot) {
+	import.meta.hot.accept(acceptHMRUpdate(useParser, import.meta.hot));
+}
