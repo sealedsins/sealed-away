@@ -1,32 +1,33 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useScene, useParser, useSaves } from '../stores';
+import { computed, onMounted, onUnmounted } from 'vue';
+import { useParser, useAssets, useScene, useSaves } from '../stores';
 import { onKeypress } from '../hooks';
 import TitleButton from '../components/button.vue';
 import TitleImage from '../components/image.vue';
 
 const parser = useParser();
+const asset = useAssets();
 const scene = useScene();
 const saves = useSaves();
 
 /**
- * Custom images to render.
+ * Computed: Title screen images.
  */
 const images = computed(() => {
 	return parser.data?.config?.title?.images ?? [];
 });
 
 /**
- * Custom buttons to render.
+ * Computed: Title screen custom buttons.
  */
 const buttons = computed(() => {
 	return parser.data?.config?.title?.buttons ?? [];
 });
 
 /**
- * Save file presence indicator.
+ * Computed: Scene save file precense.
  */
-const hasSaveFile = computed(() => {
+const hasSave = computed(() => {
 	return saves.slots.length > 0;
 });
 
@@ -54,10 +55,25 @@ const handleButton = (button: (typeof buttons)['value'][number]) => {
 	}
 };
 
+/**
+ * Event: Keyboard bindings.
+ */
 onKeypress((e) => {
 	if (e.code === 'Space' || e.code === 'Enter') {
 		handleLoad();
 	}
+});
+
+/**
+ * Lifecycle: Vite HMR subscription.
+ */
+onMounted(() => {
+	const unsubcribe = asset.subscribe(async () => {
+		await parser.fetchLast();
+	});
+	onUnmounted(() => {
+		unsubcribe();
+	});
 });
 </script>
 
@@ -80,7 +96,7 @@ onKeypress((e) => {
 		</div>
 		<div class="title__buttons">
 			<TitleButton class="title__button" @click="handleStart"> Start </TitleButton>
-			<TitleButton class="title__button" @click="handleLoad" :disabled="!hasSaveFile">
+			<TitleButton class="title__button" @click="handleLoad" :disabled="!hasSave">
 				Load
 			</TitleButton>
 			<TitleButton

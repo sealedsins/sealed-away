@@ -41,7 +41,7 @@ const hasFullscreen = computed(() => {
 /**
  * Computed: Scene save file precense.
  */
-const hasSavefile = computed(() => {
+const hasSave = computed(() => {
 	return saves.slots.length > 0;
 });
 
@@ -229,7 +229,7 @@ onMounted(() => {
 });
 
 /**
- * Development: Vite HMR subscription.
+ * Lifecycle: Vite HMR subscription.
  */
 onMounted(() => {
 	const unsubcribe = asset.subscribe(async () => {
@@ -260,7 +260,7 @@ onMounted(() => {
 		<TransitionFade>
 			<ScenePause
 				v-show="paused"
-				:disableLoad="!hasSavefile"
+				:disableLoad="!hasSave"
 				@resume="paused = false"
 				@save="handleSave(0)"
 				@load="handleLoad(0)"
