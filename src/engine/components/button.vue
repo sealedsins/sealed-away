@@ -1,5 +1,5 @@
 <template>
-	<button class="button" tabindex="-1">
+	<button class="button" tabindex="-1" @keyup.prevent>
 		<slot></slot>
 	</button>
 </template>

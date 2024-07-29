@@ -261,6 +261,7 @@ onMounted(() => {
 			<ScenePause
 				v-show="paused"
 				:disableLoad="!hasSave"
+				@click.stop
 				@resume="paused = false"
 				@save="handleSave(0)"
 				@load="handleLoad(0)"
@@ -268,7 +269,7 @@ onMounted(() => {
 			/>
 		</TransitionFade>
 		<TransitionFade>
-			<div v-show="!paused" class="interface" @click.self="handleNext()">
+			<div v-show="!paused" class="interface" @click="handleNext()">
 				<div class="sprites">
 					<TransitionFade group>
 						<SceneImage
@@ -283,7 +284,7 @@ onMounted(() => {
 						/>
 					</TransitionFade>
 				</div>
-				<div class="interface__buttons">
+				<div class="interface__buttons" @click.stop>
 					<scene-button :focus="false" @click="paused = true">
 						<font-awesome-icon icon="fa-solid fa-pause" />
 					</scene-button>
@@ -292,7 +293,7 @@ onMounted(() => {
 					</scene-button>
 				</div>
 				<TransitionFade>
-					<div v-if="scene.menu" class="menu">
+					<div v-if="scene.menu" class="menu" @click.stop>
 						<scene-button
 							v-for="item in scene.menu"
 							class="menu__item"
@@ -302,7 +303,7 @@ onMounted(() => {
 						</scene-button>
 					</div>
 				</TransitionFade>
-				<div v-if="!wait" class="text" @click="handleNext()">
+				<div v-if="!wait" class="text">
 					<div v-if="scene.state.name" class="text__name">
 						{{ scene.state.name }}
 					</div>

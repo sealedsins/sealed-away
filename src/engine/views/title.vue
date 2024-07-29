@@ -154,6 +154,7 @@ $interface-width: 1100px;
 		@media (max-width: $breakpoint-mobile) {
 			font-size: 1em;
 			margin: 0.25em;
+			width: 100%;
 		}
 	}
 
