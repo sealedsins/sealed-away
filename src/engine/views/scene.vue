@@ -278,8 +278,8 @@ onMounted(() => {
 							:key="hash(sprite)"
 							:src="sprite.image"
 							:style="{
-								marginLeft: sprite.position === 'right' && '50%',
-								marginRight: sprite.position === 'left' && '50%',
+								marginLeft: sprite.position === 'right' && '55%',
+								marginRight: sprite.position === 'left' && '55%',
 							}"
 						/>
 					</TransitionFade>
@@ -324,22 +324,10 @@ $interface-width: 1100px;
 	position: absolute;
 	background: #222;
 	overflow: hidden;
-
 	width: 100%;
 	height: 100%;
 	left: 0;
 	top: 0;
-
-	line-height: 1.35;
-	font-size: 18.5px;
-
-	@media (max-width: $breakpoint-tablet) {
-		font-size: 18px;
-	}
-
-	@media (max-width: $breakpoint-mobile) {
-		font-size: 14.5px;
-	}
 }
 
 .background {
@@ -361,6 +349,7 @@ $interface-width: 1100px;
 	align-items: flex-start;
 
 	max-width: $interface-width;
+	min-width: 75vw;
 	height: 100%;
 	width: 100%;
 
@@ -464,8 +453,11 @@ $interface-width: 1100px;
 		object-fit: contain;
 		object-position: center bottom;
 		min-width: $breakpoint-tablet * 0.5;
-		width: 30%;
 		height: 90%;
+
+		@media (max-width: $breakpoint-mobile) {
+			width: 30%;
+		}
 	}
 }
 </style>

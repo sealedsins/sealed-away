@@ -147,7 +147,6 @@ $interface-width: 1100px;
 	}
 
 	&__button {
-		font-size: 1.25em;
 		margin: 3.5rem 1.5rem;
 		width: 250px;
 
