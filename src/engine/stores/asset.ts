@@ -5,6 +5,7 @@ import { ref, shallowRef } from 'vue';
 import { defineStore, acceptHMRUpdate } from 'pinia';
 import commonPathPrefix from 'common-path-prefix';
 import { mapKeys } from 'lodash';
+import { alter } from '../utils/object';
 
 /**
  * Normalizes asset data.
@@ -161,9 +162,7 @@ export const useAssets = defineStore('asset', () => {
  */
 if (import.meta.hot) {
 	import.meta.hot.accept((upd) => {
-		const updatedAssets = normalize(upd?.assets ?? {});
-		Object.keys(assets).forEach((key) => delete assets[key]);
-		Object.assign(assets, updatedAssets);
+		alter(assets, normalize(upd?.assets ?? {}));
 		acceptHMRUpdate(useAssets, import.meta.hot)(upd);
 		const store = useAssets();
 		store.$reset();

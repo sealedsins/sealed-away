@@ -1,6 +1,7 @@
 /**
  * Sealed Sins, 2023-2024.
  */
+import { clear } from '../utils/object';
 
 /**
  * Variable scope.
@@ -22,9 +23,7 @@ export class Scope<T = unknown> {
 	 * Clears scope variables.
 	 */
 	public clear() {
-		for (const key of Object.keys(this.vars)) {
-			delete this.vars[key];
-		}
+		clear(this.vars);
 	}
 
 	/**
