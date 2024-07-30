@@ -20,7 +20,6 @@
 	justify-content: center;
 	align-items: center;
 
-	font-size: 1.25em;
 	font-weight: 100;
 	letter-spacing: 0.075em;
 	color: #fff;

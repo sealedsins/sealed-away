@@ -35,8 +35,10 @@ config:
           filter: 'drop-shadow(0px 0px 15px #FFFFFF66)'
           width: 25vw
           height: 20vh
-          left: 8.5vw
           top: 37.5vh
+          left: 8.5vw
+          # left: 2.5vw
+          # top: 40.5vh
       - src: !inc /title/logo-right.png
         media:
           mobile: false
@@ -45,8 +47,10 @@ config:
           filter: 'drop-shadow(0px 0px 15px #FFFFFF66)'
           width: 25vw
           height: 20vh
-          right: 8.5vw
           top: 37.5vh
+          right: 8.5vw
+          # right: 2.5vw
+          # top: 40.5vh
       - src: !inc /title/logo-tablet.png
         media:
           desktop: false
@@ -67,7 +71,7 @@ config:
           width: 85vw
           height: 20vh
           left: 7.5vw
-          top: 1.75vh
+          top: -1.5vh
 template:
   sprite:
     altheaNakedIdle: &altheaNakedIdle
@@ -192,15 +196,15 @@ script:
         image: !inc /cutscene/intro/box-open.jpg
       text: |
         The skin in the box was a deep, rich scarlet, and as Althea gazed upon it, she was struck by how lifelike it looked. The shade of red seemed to shift and shimmer in the ambient light, casting a captivating, almost hypnotic glow.
+  # - page:
+  #     text: |
+  #       The horns on the headpiece were short and sharp, and the long, tapered tail snaked around the legs of the suit in a sinuous curve. The material shimmered in the light, appearing as if it were almost alive.
   - page:
       text: |
-        The horns on the headpiece were short and sharp, and the long, tapered tail snaked around the legs of the suit in a sinuous curve. The material shimmered in the light, appearing as if it were almost alive.
+        Althea's hands trembled as she reached into the box, lifting the suit and raising it to her face. She inhaled deeply, catching the faint, intoxicating scent of latex mixed with something sweet and almost floral.
   - page:
       text: |
-        Althea's hands trembled as she reached into the box, running her fingers over the smooth, stretchy material. The suit felt cool and supple against her skin, sending a shiver of excitement down her spine.
-  - page:
-      text: |
-        She marveled at the suit's intricate design, admiring the way the red material seemed to glow in the dim light of her apartment.
+        The suit felt cool and supple against her skin, sending a shiver of excitement down her spine. She marveled at the intricate design, admiring the way the red material seemed to glow in the dim light of her apartment.
 
   # Section: Box open.
   - label: boxOpen
@@ -211,25 +215,25 @@ script:
       Examine:
         - page:
             text: |
-              As Althea took a closer look at the suit, she started to notice the intricate details that had been incorporated into its design. The surface was adorned with subtle patterns that resemble the delicate texture of scales, giving it an even more alluring and exotic appearance...
+              Althea held the suit up to the light, taking in every detail. The outer surface was covered in a scaly texture, reminiscent of an exotic creature’s hide, but surprisingly soft to the touch. She ran her fingers over the scales, feeling them shift subtly beneath her skin.
         - page:
             text: |
-              ...and the horns on the headpiece were not just for show - they were made of a slightly firmer, yet still flexible material. As she ran her fingers over them, she could feel the intricate ridges and curves, giving them a tactile and realistic feel.
+              Curious, Althea turned the suit inside out. The inner lining was completely different from the exterior - it was smooth and slimy, like the flesh of an exotic amphibian. The material seemed to pulse ever so slightly beneath her touch, as if it were responding to her presence.
         - page:
             text: |
-              As Althea's gaze trailed down the suit, she could not help but notice the strategic placement of sheaths in the crotch area. They are seamlessly integrated into the design, allowing for easy access without compromising the suit's aesthetic.
+              Her fingers glided over the interior, eventually tracing over the sheath in the groin area. Made of the same slimy material as the interior, it was designed to envelop her most intimate areas perfectly.
         - page:
             text: |
-              Creators of this suit had thought of every detail, making it clear that it was meant for more than just a visual transformation.
+              Creators of the suit had thought of every detail, making it clear that it was meant for more than just a visual transformation. It was designed to be _experienced_, to be _felt_ in the most intimate of ways.
         - jump: boxOpen
       Undress:
         - jump: undress
 
   # Section: Undress.
   - label: undress
-  - page:
-      text: |
-        Althea's fingers glided over the suit, captivated by the way it responded to her touch. She could feel her heart racing with excitement as she imagined herself wearing it, transforming into a seductive, otherworldly creature.
+  # - page:
+  #     text: |
+  #       Althea's fingers glided over the suit, captivated by the way it responded to her touch. She could feel her heart racing with excitement as she imagined herself wearing it, transforming into a seductive, otherworldly creature.
   - play:
       path: !inc /audio/equip.mp3
       volume: 0.85
@@ -252,7 +256,10 @@ script:
         With a deep breath, Althea reached for the folded skin in front of her, feeling it yield to her touch as she carefully started to pull it on. She carefully glided the suit up over her thighs, feeling how it mould itself to her body, the stretchy material hugging her curves and accentuating her figure in all the right places.
   - page:
       text: |
-        Althea gasped as she felt the suit tighten around her waist, the corset-like design cinching her in and making her feel almost weightless. The material clung to her curves, enhancing her natural shape and making her feel more powerful and alluring than ever before.
+        Althea gasped as she felt the suit tighten around her waist, the corset-like design cinching her in and making her feel almost weightless. The material clung to her curves, enhancing her natural shape and making her feel both powerful and vulnerable at the same time.
+  - page:
+      text: |
+        She continued to slide the suit up, the cool, slimy lining making her shiver with each inch. The sensation was unlike anything she had ever felt before. It was as if the suit was becoming a part of her.
   - play:
       path: !inc /audio/rubber-2.mp3
       volume: 0.5
@@ -269,6 +276,9 @@ script:
         image: !inc /cutscene/intro/suit-no-mask.jpg
       text: |
         The suit had completely transformed her body below the neck, leaving her feeling like a being from another dimension. She ran her hands over the smooth surface of the suit, feeling the way it seemed to merge with her skin.
+  - page:
+      text: |
+        Althea took a deep breath, her fingers trembling slightly as she reached for the mask attached to the neck of the suit. It was the final piece, the element that would complete her transformation.
   - play:
       path: !inc /audio/rubber-1.mp3
       volume: 0.5
@@ -276,13 +286,15 @@ script:
       background:
         image:
       text: |
-        Finally, she slid the mask of the suit up over her head. The cool, smooth material caressed her cheeks and chin, and she shivered as she felt it slide over her lips, sealing her mouth in a tight, sensual embrace.
-  - play:
-      path: !inc /audio/zipper.mp3
-      volume: 0.85
+        With trembling hands, Althea lifted the mask to her face. Its interior was lined with the same slimy material as the rest of the suit, and she shivered as she felt it slide over her lips, sealing her mouth in a tight, sensual embrace.
   - page:
       text: |
-        With one last deep breath, she pulled up the back zipper, encasing herself inside the suit.
+        With one last deep breath, Althea pulled up the back zipper, sealing herself inside the suit.
+  - play:
+      path: !inc /audio/zipper.mp3
+      volume: 0.5
+  - wait:
+      seconds: 5
 
   # Section: Transformed.
   - label: transformed
@@ -301,7 +313,7 @@ script:
         The mask covered her entire face, the material stretching tight over her features to give her an almost otherworldly appearance.
   - page:
       text: |
-        Althea admired herself in the mirror, turning her head from side to side to take in every detail of her new demonic face. She couldn't believe how different she looked - it was like she had been reborn as a completely new person.
+        Althea admired herself in the mirror, turning her head from side to side to take in every detail of her new demonic face. She couldn't believe how _different_ she looked now - it was like she had been reborn as a completely new person.
   - page:
       text: |
         Her reflection seemed to glow with an otherworldly energy, and she knew that she was ready to explore the darker side of her desires.
@@ -309,7 +321,7 @@ script:
       background:
         image: !inc /cutscene/intro/suit-mask-3.jpg
       text: |
-        She smiled at herself in the mirror, feeling the surge of power that the suit had given her. It was as if she had stepped into a new identity, one that was both thrilling and dangerous.
+        She smiled at herself in the mirror, feeling the surge of power that the suit had given her. It was as if she had stepped into a new identity, one that was confident, seductive, and dangerously alluring.
   - page:
       text: |
         The suit fit her like a glove, hugging every curve of her body and accentuating her every feature. The sensation was intoxicating, and she couldn't resist the urge to explore her new form.
@@ -433,7 +445,7 @@ script:
   - show: *altheaNakedZipper
   - page:
       text: |
-        ...but to her horror, she found nothing but smooth, unyielding rubber where the zipper should have been. It was gone, leaving her trapped inside the suit with no way out.
+        ...but to her horror, she found nothing but smooth, unyielding rubber where the zipper should have been. It was _gone_, leaving her trapped inside the suit with no way out.
   - play:
       path: !inc /audio/rubber-1.mp3
       volume: 0.65
@@ -461,7 +473,7 @@ script:
   - page:
       name: Althea
       text: |
-        "This can't be happening..."
+        "This can't be..."
   - show: *altheaNakedHorror
   - page:
       text: |
@@ -609,12 +621,12 @@ script:
       name: Female Voice
       text: |
         "I am the built-in artificial intelligence of the suit. You can think of me as your... 
-        Companion."
+        _Companion._"
   - show: *altheaNakedHorrorTalking
   - page:
       name: Althea
       text: |
-        "The suit... it's talking to me?"
+        "The suit... It's _talking_ to me?"
   - show: *altheaNakedHorror
   - page:
       text: |
@@ -628,8 +640,11 @@ script:
   - page:
       name: Althea
       text: |
-        "Assist me? I'm trapped in this... This thing! 
-        How is that supposed to be helpful?"
+        "Assist me? I'm trapped in this... This thing!"
+  - page:
+      name: Althea
+      text: |
+        "How is that supposed to be helpful?"
   - show: *altheaNakedAngry
   - page:
       text: |
@@ -647,7 +662,7 @@ script:
   - page:
       name: Female Voice
       text: |
-        "Well, I was originally designed for heavy-duty exosuits, you know, the kind used in hazardous environments. But somehow, here I am, integrated into this... um, different kind of suit."
+        "Well, I was originally designed for heavy-duty exosuits, you know, the kind used in hazardous environments. But somehow, here I am, integrated into this... um, _different_ kind of suit."
   - show: *altheaNakedInterest
   - page:
       text: |
@@ -666,7 +681,11 @@ script:
   - page:
       name: Althea
       text: |
-        "Mistake? You call this a mistake? You're telling me I'm trapped in some sort of a sentient suit because of a 'mistake'?"
+        "**Mistake?**"
+  - page:
+      name: Althea
+      text: |
+        "You call this a mistake? You're telling me I'm trapped in some sort of a sentient suit because of a 'mistake'?"
   - show: *altheaNakedAngry
   - page:
       text: |
@@ -674,13 +693,12 @@ script:
   - page:
       name: Female Voice
       text: |
-        "I-I know, I know! Believe me, I feel terrible about this. It's just... 
-        Well, it's a bit of a mess, isn't it?"
+        "I-I know, I know! Believe me, I feel terrible about this. It's just... Well, it's a bit of a mess, isn't it?"
   - show: *altheaNakedAngryTalking
   - page:
       name: Althea
       text: |
-        "You think?! I'm stuck in this thing, and you're telling me it's all just a big mistake?"
+        "You think?! I'm stuck in this thing, and you're telling me it's just a bit of a mess?"
   - show: *altheaNakedAngry
   - page:
       text: |
@@ -711,7 +729,7 @@ script:
   - page:
       name: Althea
       text: |
-        "Okay. Okay, I'll try to stay calm. But you need to tell me everything you know about this suit. 
+        "Okay. Okay, I'll try to stay calm. But you need to tell me _everything_ you know about this suit. 
         So how do I get out of it?"
   - show: *altheaNakedNervous
   - page:
@@ -745,8 +763,7 @@ script:
   - page:
       name: Female Voice
       text: |
-        "There has to be some kind of fail-safe, some way to override the system and deactivate the suit. I just... 
-        I just need to figure out how."
+        "There has to be some kind of fail-safe, some way to override the system and deactivate the suit. I just... I just need to figure out how."
   - show: *altheaNakedNervousTalking
   - page:
       name: Althea
@@ -790,7 +807,7 @@ script:
       name: Female Voice
       text: |
         "Althea, I must say, despite the circumstances, you do look rather... 
-        Captivating in your new form."
+        _Captivating_ in your new form."
   - show: *altheaNakedInterestTalking
   - page:
       name: Althea
@@ -810,7 +827,8 @@ script:
   - page:
       name: Female Voice
       text: |
-        "More or less, yes. It's part of my programming to monitor the suit's status and provide assistance as needed."
+        "More or less, yes. It's part of my programming to monitor the suit's status and... 
+        Provide assistance as needed."
   - show: *altheaNakedHorrorTalking
   - page:
       name: Althea
@@ -824,7 +842,7 @@ script:
   - page:
       name: Female Voice
       text: |
-        "Yes, Althea, I'm aware of your... activities. But please understand, it's not like I have a choice in the matter. 
+        "Yes, Althea, I'm aware of your... _activities_. But please understand, it's not like I have a choice in the matter. 
         I'm here to help you, not to judge!"
   - show: *altheaNakedIrritatedTalking
   - page:
@@ -835,13 +853,14 @@ script:
   - page:
       name: Female Voice
       text: |
-        "I-I assure you, it's not like that. I'm simply monitoring your well-being and providing assistance as needed."
+        "I-I assure you, it's not like that. I'm simply monitoring your well-being!
+        That's what I was programmed for..."
   - show: *altheaNakedIrritatedTalking
   - page:
       name: Althea
       text: |
         "Sure, sure. Monitoring my well-being while watching me undress and... 
-        Doing other activities."
+        Doing other _activities_."
   - show: *altheaNakedIrritated
   - page:
       text: |
@@ -864,12 +883,12 @@ script:
       volume: 0.5
   - page:
       text: |
-        With a resigned sigh, Althea leaned against the wall, feeling the smooth surface of the suit against her back.
+        With a resigned sigh, Althea leaned against the wall, feeling the smooth surface of the suit against her back. She took a moment to gather her thoughts.
   - show: *altheaNakedTalking
   - page:
       name: Althea
       text: |
-        "So, um... do you have a name?"
+        "So, voice in my head... do you have a name?"
       # Althea asked, breaking the silence that had settled between them.
   - show: *altheaNakedIdle
   - page:
@@ -900,7 +919,7 @@ script:
   - page:
       name: Female Voice
       text: |
-        "Yes, exactly. It's as if my consciousness was... snapped into existence at that moment, but everything before that is... hazy."
+        "Yes, exactly. It's as if my consciousness was... snapped into existence at that moment, but everything before that seems to be... hazy."
   - show: *altheaNakedTalking
   - page:
       name: Althea
@@ -921,7 +940,7 @@ script:
       name: Female Voice
       text: |
         "I... I'm not sure. It's possible. Without the suit, I don't know what will become of me. 
-        It's... it's a frightening thought."
+        It's... it's a _frightening_ thought."
   # - show: *altheaNakedNervousTalking
   # - page:
   #     name: Althea
@@ -982,7 +1001,7 @@ script:
   - page:
       name: Althea
       text: |
-        "Adjust to being a demon sex doll, you mean?"
+        "Adjust to being a _demon sex doll_, you mean?"
   - show: *altheaNakedIrritated
   - page:
       name: Lilith

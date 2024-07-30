@@ -8,6 +8,7 @@ import { useScene, useSaves, useAssets } from '../stores';
 import TransitionFade from '../components/transition/fade.vue';
 import SceneButton from '../components/button.vue';
 import SceneImage from '../components/image.vue';
+import SceneMarkdown from '../components/markdown.vue';
 import SceneTypewriter from '../components/scene/typewriter.vue';
 import ScenePause from '../components/scene/pause.vue';
 
@@ -174,14 +175,18 @@ watch(wait, () => {
  * Event: Keyboard bindings.
  */
 onKeypress(async (e) => {
-	if (paused.value) {
-		return;
-	}
-	if (e.code === 'Space' || e.code === 'Enter') {
-		handleNext();
-	}
-	if (e.code === 'Escape') {
-		paused.value = true;
+	switch (e.code) {
+		case 'Escape': {
+			paused.value = !paused.value;
+			break;
+		}
+		case 'Enter':
+		case 'Space': {
+			if (!paused.value) {
+				handleNext();
+			}
+			break;
+		}
 	}
 });
 
@@ -308,7 +313,9 @@ onMounted(() => {
 						{{ scene.state.name }}
 					</div>
 					<div class="text__body">
-						<SceneTypewriter ref="typewriter" :text="scene.state.text" />
+						<SceneMarkdown :src="scene.state.text" v-slot="{ html }">
+							<SceneTypewriter ref="typewriter" :html="html" />
+						</SceneMarkdown>
 					</div>
 				</div>
 			</div>

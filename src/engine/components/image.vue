@@ -41,7 +41,7 @@ watchEffect(() => {
 </script>
 
 <template>
-	<TransitionFade mode="in-out">
+	<TransitionFade :mode="src ? 'in-out' : 'out-in'">
 		<img v-show="srcData" :key="srcData" :src="srcData" />
 	</TransitionFade>
 </template>

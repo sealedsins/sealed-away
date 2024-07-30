@@ -1,31 +1,54 @@
 <script setup lang="ts">
-import { isEmpty } from 'lodash';
-import { ref, watchEffect } from 'vue';
+import { ref, watchEffect, onUnmounted } from 'vue';
 
 const props = defineProps<{
-	text: string;
+	html: string;
 }>();
 
+/**
+ * Reactive: Typewriter status.
+ */
 const typing = ref(false);
-const intervalId = ref<number>();
-const textToShow = ref('');
+
+/**
+ * Reactive: Typewriter handler interval ID.
+ * @internal
+ */
+const handlerId = ref<number>();
+
+/**
+ * Reactive: Typewriter visible HTML.
+ * @internal
+ */
+const htmlTyped = ref('');
 
 /**
  * Starts typing animation.
  */
 const startTyping = () => {
+	window.clearInterval(handlerId.value);
+	handlerId.value = window.setInterval(handleInterval, 15);
+	htmlTyped.value = '';
 	typing.value = true;
-	intervalId.value = window.setInterval(handleInterval, 15);
-	textToShow.value = '';
 };
 
 /**
  * Stops typing animation.
  */
 const skipTyping = () => {
+	window.clearInterval(handlerId.value);
+	htmlTyped.value = props.html;
 	typing.value = false;
-	clearInterval(intervalId.value);
-	textToShow.value = props.text;
+};
+
+/**
+ * Types the next character.
+ * @internal
+ */
+const typeNext = () => {
+	if (htmlTyped.value.length < props.html.length) {
+		htmlTyped.value = htmlTyped.value + props.html[htmlTyped.value.length];
+	}
 };
 
 /**
@@ -33,24 +56,38 @@ const skipTyping = () => {
  * @internal
  */
 const handleInterval = () => {
-	if (textToShow.value !== props.text) {
-		textToShow.value = textToShow.value + props.text[textToShow.value.length];
-	} else {
-		window.clearInterval(intervalId.value);
-		typing.value = false;
+	const html = props.html;
+	if (htmlTyped.value.length >= html.length) {
+		skipTyping();
+		return;
+	}
+	typeNext();
+	if (htmlTyped.value.endsWith('<')) {
+		while (!htmlTyped.value.endsWith('>') && htmlTyped.value.length < html.length) {
+			typeNext();
+		}
+	}
+	if (htmlTyped.value.endsWith('&')) {
+		while (!htmlTyped.value.endsWith(';') && htmlTyped.value.length < html.length) {
+			typeNext();
+		}
 	}
 };
 
 defineExpose({ startTyping, skipTyping, typing });
 watchEffect(() => {
-	if (!isEmpty(props.text)) {
+	if (props.html.length > 0) {
 		startTyping();
 	} else {
-		textToShow.value = '';
+		skipTyping();
 	}
+});
+
+onUnmounted(() => {
+	clearInterval(handlerId.value);
 });
 </script>
 
 <template>
-	{{ textToShow }}
+	<span v-html="htmlTyped"></span>
 </template>
